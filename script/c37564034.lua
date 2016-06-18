@@ -20,6 +20,9 @@ function c37564034.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e4:SetValue(aux.tgoval)
+	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return e:GetHandler():GetOverlayCount()>0
+	end)
 	c:RegisterEffect(e4)
 end
 function c37564034.filter(c)
