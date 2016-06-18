@@ -38,7 +38,7 @@ function c1100083.initial_effect(c)
 	c:RegisterEffect(e2)  
 end
 function c1100083.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+return e:GetHandler():IsAttackable()
 end
 function c1100083.spcon(e,tp,eg,ep,ev,re,r,rp)
    return e:GetHandler():GetAttack()>e:GetHandler():GetBaseAttack()

@@ -38,7 +38,7 @@ function c1100091.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c1100091.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+	return e:GetHandler():IsAttackable()
 end
 function c1100091.ffilter(c)
 	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_BEASTWARRIOR) 

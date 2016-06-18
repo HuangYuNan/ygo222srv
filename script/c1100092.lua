@@ -36,7 +36,7 @@ function c1100092.initial_effect(c)
 	c:RegisterEffect(e2)   
 end
 function c1100092.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+	return e:GetHandler():IsAttackable()
 end
 function c1100092.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -61,7 +61,7 @@ function c1100092.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local mc=e:GetHandler():GetOverlayCount()
 	if chk==0 then return mc>1 and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,mc-1,nil)
+	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,mc,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c1100092.op(e,tp,eg,ep,ev,re,r,rp)

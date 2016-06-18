@@ -74,5 +74,5 @@ function c1100089.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1100089.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+return e:GetHandler():IsAttackable()
 end

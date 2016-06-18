@@ -56,7 +56,7 @@ function c1100081.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1100081.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+	return e:GetHandler():IsAttackable() 
 end
 function c1100081.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp

@@ -67,5 +67,5 @@ function c1100090.atkop(e,tp,eg,ep,ev,re,r,rp)
 	c:RegisterEffect(e1)
 end
 function c1100090.becon(e)
-return e:GetHandler():IsAttackable() and e:GetHandler():GetOverlayCount()==0
+return e:GetHandler():IsAttackable()
 end
