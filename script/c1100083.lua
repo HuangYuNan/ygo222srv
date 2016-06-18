@@ -47,7 +47,7 @@ function c1100083.spfilter(c,e,tp)
 	return c:IsSetCard(0x6240) and c:IsType(TYPE_MONSTER) and not c:IsCode(1100083) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1100083.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1100083.spfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c1100083.spop(e,tp,eg,ep,ev,re,r,rp)
