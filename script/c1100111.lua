@@ -116,7 +116,7 @@ function c1100111.tdop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1100111.refilter(c)
-	return c:IsSetCard(0xa242) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0xa242) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c1100111.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(c1100111.refilter,tp,LOCATION_GRAVE,0,nil)
