@@ -43,17 +43,19 @@ end
 function c1100083.spcon(e,tp,eg,ep,ev,re,r,rp)
    return e:GetHandler():GetAttack()>e:GetHandler():GetBaseAttack()
 end
-function c1100083.spfilter(c,e,tp)
-	return c:IsSetCard(0x6240) and c:IsType(TYPE_MONSTER) and not c:IsCode(1100083) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+function c1100083.filter1(c,e,tp)
+	return c:IsSetCard(0x6240) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1100083)
 end
 function c1100083.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1100083.spfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c1100083.filter1,tp,LOCATION_HAND+LOCATION_DECK,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function c1100083.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(c1100083.spfilter,tp,LOCATION_DECK,0,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c1100083.filter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
 	if tc then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
