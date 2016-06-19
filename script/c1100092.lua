@@ -59,9 +59,10 @@ end
 function c1100092.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsDestructable() end
 	local mc=e:GetHandler():GetOverlayCount()
-	if chk==0 then return mc>1 and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return mc>1 and Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,nil) and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_ONFIELD,1,mc,nil)
+	e:GetHandler():RemoveOverlayCard(tp,mc,mc,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
 function c1100092.op(e,tp,eg,ep,ev,re,r,rp)
