@@ -35,7 +35,7 @@ function c1100086.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c1100086.val(e,c)
-	return e:GetHandler():GetDefense()
+	return c:GetDefense()
 end
 function c1100086.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
