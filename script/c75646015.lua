@@ -57,7 +57,6 @@ function c75646015.initial_effect(c)
 	e7:SetCode(EFFECT_PIERCE)
 	c:RegisterEffect(e7)
 end
-end
 function c75646015.infilter1(c)
 	return c:IsFaceup() and c:IsCode(75646002)
 end
