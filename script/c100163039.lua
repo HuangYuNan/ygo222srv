@@ -16,7 +16,7 @@ function c100163039.initial_effect(c)
 	e1:SetValue(500)
 	c:RegisterEffect(e1)
 	e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_DEFENCE)
+	e2:SetCode(EFFECT_UPDATE_DEFENSE)
 	e2:SetValue(300)
 	c:RegisterEffect(e2)
 	--tohand

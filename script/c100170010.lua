@@ -16,7 +16,7 @@ function c100170010.initial_effect(c)
 	e2:SetValue(c100170010.value)
 	c:RegisterEffect(e2)
 	e3=e2:Clone()
-	e3:SetCode(EFFECT_UPDATE_DEFENCE)
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
 	--Equip limit
 	local e4=Effect.CreateEffect(c)

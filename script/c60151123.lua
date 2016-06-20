@@ -92,7 +92,7 @@ function c60151123.rmop(e,tp,eg,ep,ev,re,r,rp)
 			local tc=Duel.GetFirstTarget()
 			local tc2=g1:GetFirst()
 			local atk=tc2:GetAttack()
-			local def=tc2:GetDefence()
+			local def=tc2:GetDefense()
 			if tc:IsRelateToEffect(e) and tc:IsFaceup() then
 				local e1=Effect.CreateEffect(e:GetHandler())
 				e1:SetType(EFFECT_TYPE_SINGLE)
