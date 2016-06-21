@@ -5,6 +5,7 @@ function c1100086.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,1186)
 	c:RegisterEffect(e1)
 	--pierce
 	local e1=Effect.CreateEffect(c)
