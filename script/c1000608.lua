@@ -36,7 +36,7 @@ function c1000608.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 		local sg1=g1:Select(tp,1,1,nil)
 		Duel.SendtoHand(sg1,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,sg)
+		Duel.ConfirmCards(1-tp,sg1)
 		elseif g2:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(1000608,1)) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 		local sg2=g2:Select(tp,1,1,nil)
