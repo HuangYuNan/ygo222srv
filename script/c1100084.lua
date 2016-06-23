@@ -45,6 +45,7 @@ function c1100084.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c1100084.condition(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT)~=0
+		and re:GetHandler():IsSetCard(0x6240)
 end
 function c1100084.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsRelateToEffect(e) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0

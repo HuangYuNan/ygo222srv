@@ -1,7 +1,7 @@
 --破坏女神 阿努比斯
 function c1100107.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),2,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),2,3)
 	c:EnableReviveLimit()
 	--spsummon limit
 	local e5=Effect.CreateEffect(c)

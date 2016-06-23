@@ -6,6 +6,7 @@ function c1100106.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_SUMMON_PROC)
+	e1:SetCountLimit(1,11106)
 	e1:SetCondition(c1100106.ntcon)
 	c:RegisterEffect(e1)
 	--Destroy
@@ -19,17 +20,16 @@ function c1100106.initial_effect(c)
 	e2:SetTarget(c1100106.destg)
 	e2:SetOperation(c1100106.desop)
 	c:RegisterEffect(e2)
-	--search
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(1100106,1))
-	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,1100106)
-	e2:SetCost(c1100106.thcost)
-	e2:SetTarget(c1100106.thtg)
-	e2:SetOperation(c1100106.thop)
-	c:RegisterEffect(e2)
+	--th
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(1100105,1))
+	e4:SetCategory(CATEGORY_TOHAND)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCountLimit(1,11106)
+	e4:SetTarget(c1100105.thtg)
+	e4:SetOperation(c1100105.thop)
+	c:RegisterEffect(e4)
 end
 function c1100106.ntcon(e,c,minc)
 	if c==nil then return true end
@@ -53,20 +53,16 @@ function c1100106.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c1100106.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
 function c1100106.thfilter(c)
-	return c:IsSetCard(0xa242) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0xa242) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c1100106.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1100106.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1100106.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
 end
 function c1100106.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c1100106.thfilter,tp,LOCATION_DECK,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c1100106.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)

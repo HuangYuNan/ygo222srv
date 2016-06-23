@@ -35,8 +35,11 @@ function c1100086.initial_effect(c)
 	e3:SetOperation(c1100086.spop)
 	c:RegisterEffect(e3)
 end
+function c1100086.filter(c)
+	return c:IsFaceup() and c:IsSetCard(0x6204)
+end
 function c1100086.val(e,c)
-	return c:GetDefense()
+	return Duel.GetMatchingGroupCount(c1100086.filter,c:GetControler(),LOCATION_MZONE,0,nil)*200
 end
 function c1100086.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

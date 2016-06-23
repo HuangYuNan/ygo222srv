@@ -3,6 +3,15 @@ function c1100089.initial_effect(c)
 	--超量召唤
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x6240),3,3)
 	c:EnableReviveLimit() 
+	--atk/def
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(c1100089.atktg)
+	e1:SetValue(c1100089.atkval)
+	c:RegisterEffect(e1)
 	--todeck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(1100089,0))
@@ -41,6 +50,12 @@ function c1100089.initial_effect(c)
 	e2:SetTargetRange(1,0)
 	e2:SetCondition(c1100089.becon)
 	c:RegisterEffect(e2)  
+end
+function c1100089.atktg(e,c)
+	return c:IsSetCard(0x6240)
+end
+function c1100089.atkval(e,c)
+	return e:GetHandler():GetOverlayCount()*300
 end
 function c1100089.con(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetAttack()>e:GetHandler():GetBaseAttack()

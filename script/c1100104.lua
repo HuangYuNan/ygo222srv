@@ -31,9 +31,13 @@ function c1100104.initial_effect(c)
 	Duel.AddCustomActivityCounter(1100104,ACTIVITY_SPSUMMON,c1100104.counterfilter)
 	--multi attack
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetCode(EFFECT_EXTRA_ATTACK)
-	e5:SetValue(1)
+	e5:SetDescription(aux.Stringid(1100104,1))
+	e5:SetCategory(CATEGORY_TOHAND)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e5:SetCode(EVENT_TO_GRAVE)
+	e5:SetCountLimit(1,1100104)
+	e5:SetTarget(c1100104.thtg)
+	e5:SetOperation(c1100104.thop)
 	c:RegisterEffect(e5)
 end
 function c1100104.cfilter(c,tp)
@@ -100,4 +104,18 @@ function c1100104.lvop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
-
+function c1100104.thfilter(c)
+	return c:IsSetCard(0xa242) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+end
+function c1100104.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1100104.thfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+end
+function c1100104.thop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c1100104.thfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end

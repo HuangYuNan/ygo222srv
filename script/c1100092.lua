@@ -1,7 +1,7 @@
 --月夜的狼女·今泉影狼
 function c1100092.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x6240),3,2,nil,nil,5)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x6240),3,2)
 	c:EnableReviveLimit() 
 	--atk
 	local e3=Effect.CreateEffect(c)
@@ -9,6 +9,15 @@ function c1100092.initial_effect(c)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetOperation(c1100092.atkop)
 	c:RegisterEffect(e3)
+	--atk/def
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_UPDATE_ATTACK)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(c1100092.atktg)
+	e1:SetValue(c1100092.atkval)
+	c:RegisterEffect(e1)
 	--atkup
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(1100092,0))
@@ -34,6 +43,12 @@ function c1100092.initial_effect(c)
 	e2:SetTargetRange(1,0)
 	e2:SetCondition(c1100092.becon)
 	c:RegisterEffect(e2)   
+end
+function c1100092.atktg(e,c)
+	return c:IsSetCard(0x6240)
+end
+function c1100092.atkval(e,c)
+	return e:GetHandler():GetOverlayCount()*200
 end
 function c1100092.becon(e)
 	return e:GetHandler():IsAttackable()

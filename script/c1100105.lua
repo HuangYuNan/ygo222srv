@@ -6,6 +6,7 @@ function c1100105.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,11105)
 	e1:SetCondition(c1100105.spcon)
 	e1:SetTarget(c1100105.sptg)
 	e1:SetOperation(c1100105.spop)
@@ -28,11 +29,10 @@ function c1100105.initial_effect(c)
 	--
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(1100105,1))
-	e4:SetCategory(CATEGORY_TOHAND)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCost(c1100105.cost1)
+	e4:SetCategory(CATEGORY_RECOVER)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCountLimit(1,11105)
 	e4:SetTarget(c1100105.target1)
 	e4:SetOperation(c1100105.operation1)
 	c:RegisterEffect(e4)
@@ -73,23 +73,14 @@ function c1100105.operation(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Damage(p,d,REASON_EFFECT)
 end
-function c1100105.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
-function c1100105.filter1(c)
-	return c:IsSetCard(0xa242) and c:IsType(TYPE_MONSTER) and not c:IsCode(1100105) and c:IsAbleToHand()
-end
-function c1100105.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c1100105.filter1(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c1100105.filter1,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c1100105.filter1,tp,LOCATION_GRAVE,0,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+function c1100105.target1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeck() end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(2000)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
 end
 function c1100105.operation1(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 then
-		Duel.ConfirmCards(1-tp,tc)
-	end
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)
+	Duel.Recover(p,d,REASON_EFFECT)
 end
