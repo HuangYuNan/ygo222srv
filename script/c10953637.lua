@@ -66,7 +66,7 @@ function c10953637.cfilter(c)
 	return c:IsFaceup() and c:IsCode(5012615)
 end
 function c10953637.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c10953637.cfilter,0,LOCATION_ONFIELD,0,1,nil)
+	return Duel.IsExistingMatchingCard(c10953637.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c10953637.repcon(e)
 	local c=e:GetHandler()
