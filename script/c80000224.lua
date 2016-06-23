@@ -107,7 +107,7 @@ function c80000224.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ
 end 
 function c80000224.filter(c,atk)
-	return c:IsFaceup() and c:GetDEFENSE()<=atk and c:IsDestructable()
+	return c:IsFaceup() and c:GetDefense()<=atk and c:IsDestructable()
 end
 function c80000224.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

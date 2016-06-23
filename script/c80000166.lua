@@ -48,7 +48,7 @@ function c80000166.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chkc then return chkc:IsOnField() and c80000166.filter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and 
-		Duel.IsPlayerCanSpecialSummonMonster(tp,80000169,0x2d0,0x4011,c:GetBaseAttack(),c:GetBaseDEFENSE(),c:GetOriginalLevel(),c:GetOriginalRace(),c:GetOriginalAttribute()) end
+		Duel.IsPlayerCanSpecialSummonMonster(tp,80000169,0x2d0,0x4011,c:GetBaseAttack(),c:GetBaseDefense(),c:GetOriginalLevel(),c:GetOriginalRace(),c:GetOriginalAttribute()) end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(80000166,0))
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
@@ -56,7 +56,7 @@ end
 function c80000166.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 		local atk=c:GetAttack()
-		local def=c:GetDEFENSE()
+		local def=c:GetDefense()
 		local lv=c:GetLevel()
 		local race=c:GetRace()
 		local att=c:GetAttribute()
@@ -194,7 +194,7 @@ function c80000166.tokenatk(e,c)
 	return e:GetOwner():GetAttack()
 end
 function c80000166.tokendef(e,c)
-	return e:GetOwner():GetDEFENSE()
+	return e:GetOwner():GetDefense()
 end
 function c80000166.tokenlv(e,c)
 	return e:GetOwner():GetLevel()

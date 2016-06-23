@@ -36,7 +36,7 @@ function c80000199.operation(e,tp,eg,ep,ev,re,r,rp)
 	if tc and c:IsFaceup() and c:IsRelateToEffect(e) then
 		local code=tc:GetOriginalCode()
 		local ba=tc:GetBaseAttack()
-		local bc=tc:GetBaseDEFENSE()
+		local bc=tc:GetBaseDefense()
 		local reset_flag=RESET_EVENT+0x1fe0000
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

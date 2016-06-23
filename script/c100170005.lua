@@ -54,7 +54,7 @@ function c100170005.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0x5cd) and e:GetLabelObject()~=se
 end
 function c100170005.filter(c,e,tp)
-	return c:IsDEFENSEBelow(1500) and c:IsSetCard(0x5cd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsDefenseBelow(1500) and c:IsSetCard(0x5cd) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c100170005.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
