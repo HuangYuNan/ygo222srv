@@ -1,4 +1,4 @@
---ÊØ»¤Å®Éñ ÓÈÄÝ
+--ï¿½Ø»ï¿½Å®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 function c1101102.initial_effect(c)
 	--draw1
 	local e1=Effect.CreateEffect(c)
@@ -72,9 +72,9 @@ end
 function c1101102.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c1101102.filter(chkc) end
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-		and Duel.IsExistingTarget(c1101102.filter,tp,LOCATION_GRAVE,0,3,nil) end
+		and Duel.IsExistingTarget(c1101102.spfilter,tp,LOCATION_GRAVE,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c1101102.filter,tp,LOCATION_GRAVE,0,3,3,nil)
+	local g=Duel.SelectTarget(tp,c1101102.spfilter,tp,LOCATION_GRAVE,0,3,3,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,3,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end

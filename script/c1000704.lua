@@ -48,7 +48,7 @@ function c1000704.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e6:SetRange(LOCATION_PZONE)
 	e6:SetTargetRange(1,0)
-	e6:SetTarget(c1000702.splimit)
+	e6:SetTarget(c1000704.splimit)
 	c:RegisterEffect(e6)
 end
 function c1000704.sccon(e)
