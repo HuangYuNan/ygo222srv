@@ -5,6 +5,7 @@ function c11200081.initial_effect(c)
 	a:SetRange(LOCATION_REMOVED)
 	a:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	a:SetCountLimit(1)
+	a:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	a:SetTarget(c11200081.tga)
 	a:SetOperation(c11200081.opa)
 	a:SetDescription(1118)
@@ -20,7 +21,7 @@ function c11200081.initial_effect(c)
 	c:RegisterEffect(b)
 end
 function c11200081.tga(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
+	if chk==0 then return e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.GetTurnPlayer()==tp end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,0)
 end
 function c11200081.opa(e,tp)

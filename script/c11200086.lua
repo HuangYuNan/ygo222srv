@@ -41,7 +41,8 @@ function c11200086.coa(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,550)
 end
 function c11200086.opa(e,tp)
-	for i=0,c11200086.t[tp]==Duel.GetTurnCount()and c11200086.v[tp]or 0 do
+	Debug.Message(c11200086.v[tp])
+	for i=1,(c11200086.t[tp]==Duel.GetTurnCount()and c11200086.v[tp]or 1) do
 		Duel.Damage(1-tp,550,REASON_EFFECT)
 	end
 end

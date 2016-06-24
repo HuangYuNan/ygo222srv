@@ -117,12 +117,15 @@ function c11200082.cod(e,tp,eg,ep,ev,re,r,rp,chk)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())end
 		return Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())and Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_MZONE,0,2,e:GetHandler())
 	end
-	local c=2
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then
-		Duel.Remove(Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_MZONE,0,1,1,e:GetHandler()))
+	local c,g
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1
+	then g=Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 		c=1
+	else g=Group.CreateGroup()
+		c=2
 	end
-	Duel.Remove(Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()),POS_FACEUP,REASON_EFFECT)
+	g:Merge(Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()))
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_GRAVE)
 end
 function c11200082.opd(e,tp)
