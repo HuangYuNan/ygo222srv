@@ -81,6 +81,5 @@ function c1100105.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c1100105.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_EFFECT)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
