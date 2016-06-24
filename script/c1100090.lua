@@ -45,7 +45,7 @@ function c1100090.initial_effect(c)
 	e2:SetCondition(c1100090.becon)
 	c:RegisterEffect(e2)   
 end
-function c22174866.excon(e)
+function c1100090.excon(e)
 	local tp=e:GetHandlerPlayer()
 	return Duel.GetLP(tp)>Duel.GetLP(1-tp)
 end
@@ -53,7 +53,7 @@ function c1100090.ffilter1(c)
 	return c:IsSetCard(0x6240)
 end
 function c1100090.ffilter2(c)
-	return c:IsRace(RACE_BEAST) 
+	return c:IsRace(RACE_BEASTWARRIOR) 
 end
 function c1100090.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

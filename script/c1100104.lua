@@ -35,16 +35,16 @@ function c1100104.initial_effect(c)
 	e5:SetCategory(CATEGORY_TOHAND)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e5:SetCode(EVENT_TO_GRAVE)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e5:SetCountLimit(1,1100104)
 	e5:SetTarget(c1100104.thtg)
 	e5:SetOperation(c1100104.thop)
 	c:RegisterEffect(e5)
 end
 function c1100104.cfilter(c,tp)
-	return c:IsSetCard(0xa242) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c1100104.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetCode())
+	return c:IsSetCard(0xa242) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost() and Duel.IsExistingMatchingCard(c1100104.thfilter,tp,LOCATION_DECK,0,1,nil,c:GetCode())
 end
-function c1100104.thfilter(c,code)
+function c1100104.tgfilter(c,code)
 	return c:IsCode(code) and c:IsAbleToHand()
 end
 function c1100104.cost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -55,12 +55,13 @@ function c1100104.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c1100104.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1033312.tgfilter,tp,LOCATION_DECK,0,1,nil,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_GRAVE)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c1100104.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c1100104.thfilter,tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
+	local g=Duel.SelectMatchingCard(tp,c1100104.tgfilter,tp,LOCATION_DECK,0,1,1,nil,e:GetLabel())
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
@@ -104,8 +105,9 @@ function c1100104.lvop(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 	end
 end
+
 function c1100104.thfilter(c)
-	return c:IsSetCard(0xa242) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
+	return c:IsSetCard(0xa242) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:IsAbleToHand()
 end
 function c1100104.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1100104.thfilter,tp,LOCATION_GRAVE,0,1,nil) end

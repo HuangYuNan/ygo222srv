@@ -112,7 +112,7 @@ function c66678916.limop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c66678916.limop2(e,tp,eg,ep,ev,re,r,rp)
-	if e:GetHandler():GetOverlayCount()>0 and e:GetHandler():GetFlagEffect(66678916)~=0 then
+	if e:GetHandler():GetFlagEffect(66678916)~=0 then
 		Duel.SetChainLimitTillChainEnd(c66678916.chainlm)
 	end
 	e:GetHandler():ResetFlagEffect(66678916)

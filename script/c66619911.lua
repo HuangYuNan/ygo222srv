@@ -13,9 +13,6 @@ function c66619911.initial_effect(c)
 	e1:SetTarget(c66619911.atktg)
 	e1:SetValue(c66619911.atkval)
 	c:RegisterEffect(e1)
-	local e2=e1:Clone()
-	e2:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e2)
 	--attack up
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(58712976,0))
@@ -42,9 +39,14 @@ end
 function c66619911.atkval(e,c)
 	return e:GetHandler():GetOverlayCount()*200
 end
+function c66619911.cfilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
+end
 function c66619911.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619911.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,c66619911.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function c66619911.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

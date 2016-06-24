@@ -13,14 +13,24 @@ function c66619903.initial_effect(c)
 	c:RegisterEffect(e1)
 	--tohand
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetDescription(aux.Stringid(66619903,0))
 	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
+	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCost(c66619903.cost)
-	e2:SetTarget(c66619903.thtg)
-	e2:SetOperation(c66619903.thop)
+	e2:SetTarget(c66619903.tg)
+	e2:SetOperation(c66619903.op)
 	c:RegisterEffect(e2)
+	--tohand
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_TOHAND)
+	e3:SetDescription(aux.Stringid(66619903,0))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCost(c66619903.dcost)
+	e3:SetTarget(c66619903.thtg)
+	e3:SetOperation(c66619903.thop)
+	c:RegisterEffect(e3)
 end
 function c66619903.cfilter(c)
 	return c:IsFaceup() and c:IsCode(66619916)
@@ -44,7 +54,33 @@ function c66619903.spop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+function c66619903.filter1(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_WARRIOR) and c:IsAbleToDeckAsCost()
+end
+function c66619903.filter2(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_FAIRY) and c:IsAbleToDeckAsCost()
+end
 function c66619903.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost()
+		and Duel.IsExistingMatchingCard(c66619903.filter1,tp,LOCATION_GRAVE,0,1,e:GetHandler()) and Duel.IsExistingMatchingCard(c66619903.filter2,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g1=Duel.SelectMatchingCard(tp,c66619903.filter1,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	local g2=Duel.SelectMatchingCard(tp,c66619903.filter2,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	g1:Merge(g2)
+	g1:AddCard(e:GetHandler())
+	Duel.SendtoDeck(g1,nil,2,REASON_COST)
+end
+function c66619903.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c66619903.op(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
+end
+function c66619903.dcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() and e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end

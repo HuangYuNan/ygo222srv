@@ -1,7 +1,7 @@
 --破坏女神 阿图姆
 function c1100110.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),aux.NonTuner(Card.IsSetCard,0x241),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),aux.NonTuner(Card.IsSetCard,0xa242),1)
 	c:EnableReviveLimit()
 	--destroy
 	local e1=Effect.CreateEffect(c)

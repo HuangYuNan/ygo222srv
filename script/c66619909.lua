@@ -18,16 +18,20 @@ function c66619909.initial_effect(c)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_DRAW)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c66619909.drwcon)
 	e2:SetCost(c66619909.darwcost)
 	e2:SetTarget(c66619909.drtg)
 	e2:SetOperation(c66619909.drop)
 	c:RegisterEffect(e2)
+	--must attack
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_MUST_ATTACK)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetTargetRange(0,LOCATION_MZONE)
+	c:RegisterEffect(e3)
 end
 function c66619909.cfilter(c,tp)
 	return c:IsSetCard(0x666) and c:IsControler(tp) and c:GetPreviousControler()==tp
@@ -57,12 +61,6 @@ function c66619909.desop(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToBattle() then
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
-end
-function c66619909.gfilter(c,tp)
-	return c:IsSetCard(0x666) and c:IsControler(tp)
-end
-function c66619909.drwcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c66619909.gfilter,1,nil)
 end
 function c66619909.darwfilter(c)
 	return c:IsFaceup() and c:IsCode(66619916) and c:IsAbleToDeckAsCost()

@@ -86,8 +86,8 @@ function c10950777.paylcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c10950777.cfilter,0,LOCATION_GRAVE,0,2,nil)
 end
 function c10950777.costchk(e,te_or_c,tp)
-	return Duel.CheckLPCost(tp,1000)
+	return Duel.CheckLPCost(tp,800)
 end
 function c10950777.costop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.PayLPCost(tp,1000)
+	Duel.PayLPCost(tp,800)
 end

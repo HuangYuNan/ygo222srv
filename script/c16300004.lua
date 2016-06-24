@@ -10,6 +10,7 @@ function c16300004.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(c16300004.cost)
 	e1:SetHintTiming(0,0x1e0)
+	e1:SetCondition(c16300004.tgcon)
 	e1:SetOperation(c16300004.indop)
 	c:RegisterEffect(e1)
 	--spsummon
@@ -38,6 +39,9 @@ function c16300004.initial_effect(c)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)	
 	Duel.AddCustomActivityCounter(16300004,ACTIVITY_SPSUMMON,c16300004.counterfilter)
+end
+function c16300004.tgcon(e)
+	return e:GetHandler():GetEquipGroup():IsExists(Card.IsCode,1,nil,16310004)
 end
 function c16300004.counterfilter(c)
 	return c:IsSetCard(0xba)

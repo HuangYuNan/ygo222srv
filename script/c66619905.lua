@@ -25,6 +25,16 @@ function c66619905.initial_effect(c)
 	e5:SetCondition(c66619905.effcon)
 	e5:SetOperation(c66619905.effop)
 	c:RegisterEffect(e5)
+	--tohand
+	local e6=Effect.CreateEffect(c)
+	e6:SetCategory(CATEGORY_DRAW)
+	e6:SetDescription(aux.Stringid(66619903,0))
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetRange(LOCATION_GRAVE)
+	e6:SetCost(c66619905.cost)
+	e6:SetTarget(c66619905.tg)
+	e6:SetOperation(c66619905.op)
+	c:RegisterEffect(e6)
 end
 function c66619905.filter(c)
 	return c:IsFaceup() and c:IsCode(66619916)
@@ -70,4 +80,30 @@ function c66619905.effop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		rc:RegisterEffect(e2)
 	end
+end
+function c66619905.filter1(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_BEASTWARRIOR) and c:IsAbleToDeckAsCost()
+end
+function c66619905.filter2(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsRace(RACE_FAIRY) and c:IsAbleToDeckAsCost()
+end
+function c66619905.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost()
+		and Duel.IsExistingMatchingCard(c66619905.filter1,tp,LOCATION_GRAVE,0,1,e:GetHandler()) and Duel.IsExistingMatchingCard(c66619905.filter2,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g1=Duel.SelectMatchingCard(tp,c66619905.filter1,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	local g2=Duel.SelectMatchingCard(tp,c66619905.filter2,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+	g1:Merge(g2)
+	g1:AddCard(e:GetHandler())
+	Duel.SendtoDeck(g1,nil,2,REASON_COST)
+end
+function c66619905.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
+end
+function c66619905.op(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

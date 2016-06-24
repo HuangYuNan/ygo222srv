@@ -1,7 +1,7 @@
 --破坏女神 阿蒙
 function c1100111.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),aux.NonTuner(Card.IsSetCard,0x241),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0xa242),aux.NonTuner(Card.IsSetCard,0xa242),1)
 	c:EnableReviveLimit()
 	--special summon
 	local e1=Effect.CreateEffect(c)
@@ -36,6 +36,7 @@ function c1100111.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
 	e3:SetCost(c1100111.discost)
 	e3:SetCondition(c1100111.discon)
 	e3:SetTarget(c1100111.distg)

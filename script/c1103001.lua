@@ -78,7 +78,6 @@ function c1103001.operation(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(1103001,2)) then
 		local g=Duel.GetFieldGroup(1-tp,LOCATION_HAND,0):RandomSelect(1-tp,1)
 		Duel.SendtoGrave(g,REASON_EFFECT)
-		Duel.SetLP(1-tp,Duel.GetLP(1-tp)/2)
 	end
 end
 function c1103001.cost1(e,tp,eg,ep,ev,re,r,rp,chk)

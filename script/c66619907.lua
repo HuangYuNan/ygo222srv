@@ -17,10 +17,10 @@ function c66619907.initial_effect(c)
 	--th
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(29200014,0))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCondition(c66619907.negcon)
+	e2:SetCondition(c66619907.con)
 	e2:SetCost(c66619907.cost)
 	e2:SetTarget(c66619907.target)
 	e2:SetOperation(c66619907.operation)
@@ -50,25 +50,32 @@ function c66619907.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(bc,nil,2,REASON_EFFECT)
 	end
 end
-function c66619907.negcon(e,tp,eg,ep,ev,re,r,rp)
-	return aux.exccon(e) and Duel.GetTurnPlayer()==tp
+function c66619907.cfilter1(c)
+	return c:IsCode(66619916) and c:IsFaceup() 
+end
+function c66619907.con(e)
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_ONFIELD,0)
+	return g:IsExists(c66619907.cfilter1,1,nil)
+end
+function c66619907.spfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c66619907.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
-	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
-end
-function c66619907.filter2(c,e,tp)
-	return c:IsCode(66619916) and c:IsAbleToHand()
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619907.spfilter,tp,LOCATION_GRAVE,0,3,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c66619907.spfilter,tp,LOCATION_GRAVE,0,3,3,e:GetHandler())
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 end
 function c66619907.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66619907.filter2,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_GRAVE)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function c66619907.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c66619907.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLocation(LOCATION_HAND) then
+		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end

@@ -36,7 +36,7 @@ function c1100086.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c1100086.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x6204)
+	return c:IsFaceup() and c:IsSetCard(0x6240)
 end
 function c1100086.val(e,c)
 	return Duel.GetMatchingGroupCount(c1100086.filter,c:GetControler(),LOCATION_MZONE,0,nil)*200

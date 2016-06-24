@@ -41,7 +41,7 @@ function c1103010.initial_effect(c)
 end
 function c1103010.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
-	return tc:IsControler(tp) and tc:IsFaceup() and tc:IsSetCard(0xa240)
+	return tc:IsControler(tp) and tc:IsLocation(LOCATION_MZONE) and tc:IsFaceup() and tc:IsSetCard(0xa240) and tc:IsType(TYPE_MONSTER)
 end
 function c1103010.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end

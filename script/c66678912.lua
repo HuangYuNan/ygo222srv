@@ -1,7 +1,7 @@
 --忘却之海·东条希
 function c66678912.initial_effect(c)
 	--Xyz
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),5,2)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),5,3)
 	c:EnableReviveLimit()
 	--
 	local e1=Effect.CreateEffect(c)
@@ -37,29 +37,26 @@ function c66678912.initial_effect(c)
 	--
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_CONTROL)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,1,nil) end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local rg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemoveAsCost,tp,LOCATION_HAND,0,1,1,nil)
-		Duel.Remove(rg,POS_FACEUP,REASON_COST)
-	end)
 	e2:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsControlerCanBeChanged() end
-		if chk==0 then return Duel.IsExistingTarget(Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,nil) end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-		local g=Duel.SelectTarget(tp,Card.IsControlerCanBeChanged,tp,0,LOCATION_MZONE,1,1,nil)
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,1,0,0)
+		if chk==0 then return eg:IsExists(c66678912.tfilter,1,e:GetHandler(),tp) end
+		local g=eg:Filter(c66678912.tfilter,nil,tp)
+		Duel.SetTargetCard(eg)
+		Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,g:GetCount(),0,0)
 	end)
 	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local tc=Duel.GetFirstTarget()
-		if tc:IsRelateToEffect(e) and not Duel.GetControl(tc,tp,PHASE_END,1) then
-			if not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
+		local g=eg:Filter(c66678912.filter2,nil,e,tp)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<g:GetCount() then return end
+		local tc=g:GetFirst()
+		while tc do
+			if Duel.GetControl(tc,tp,PHASE_END,1) then
+			elseif not tc:IsImmuneToEffect(e) and tc:IsAbleToChangeControler() then
 				Duel.Destroy(tc,REASON_EFFECT)
 			end
+			tc=g:GetNext()
 		end
 	end)
 	c:RegisterEffect(e2)
@@ -84,6 +81,12 @@ function c66678912.initial_effect(c)
 		Duel.Draw(p,d,REASON_EFFECT)
 	end)
 	c:RegisterEffect(e4)
+end
+function c66678912.filter2(c,e,tp)
+	return c:IsRelateToEffect(e) and c:IsPreviousLocation(LOCATION_EXTRA) and c:IsControlerCanBeChanged() and c:GetSummonPlayer()==1-tp
+end
+function c66678912.tfilter(c,tp)
+	return c:IsPreviousLocation(LOCATION_EXTRA) and c:IsControlerCanBeChanged() and c:GetSummonPlayer()==1-tp
 end
 function c66678912.filter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToDeck()

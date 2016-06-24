@@ -2,7 +2,7 @@
 function c1100091.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcFunRep(c,c1100091.ffilter,2,false)
+	aux.AddFusionProcFunRep(c,c1100091.ffilter,3,false)
 	--Cannot activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -34,16 +34,16 @@ function c1100091.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCost(c66619912.cost)
-	e3:SetTarget(c66619912.rettg)
-	e3:SetOperation(c66619912.retop)
+	e3:SetCost(c1100091.cost)
+	e3:SetTarget(c1100091.rettg)
+	e3:SetOperation(c1100091.retop)
 	c:RegisterEffect(e3)
 end
 function c1100091.becon(e)
 	return e:GetHandler():IsAttackable()
 end
 function c1100091.ffilter(c)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_BEAST) 
+	return c:IsSetCard(0x6240)
 end
 function c1100091.aclimit(e,re,tp,tc)
 	local tc=re:GetHandler()

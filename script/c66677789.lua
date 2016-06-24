@@ -3,7 +3,6 @@ function c66677789.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,7,2)
 	c:SetUniqueOnField(1,0,66677789)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(66677789,2))
 	e1:SetCategory(CATEGORY_HANDES)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
@@ -33,10 +32,10 @@ function c66677789.initial_effect(c)
 		op=0
 	elseif s1 and not s0 then
 		op=1
-	elseif s0 and s1 then
+	else
 		op=Duel.SelectOption(tp,aux.Stringid(66677789,0),aux.Stringid(66677789,1))
 	end
-	if op then e:SetLabel(op) end
+	e:SetLabel(op)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,0)
 	end)
 	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
@@ -44,14 +43,13 @@ function c66677789.initial_effect(c)
 		local g=Group.CreateGroup()
 		if op==0 and Duel.IsExistingMatchingCard(c66677789.tfilter,tp,LOCATION_GRAVE,0,2,nil,0) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			g=Duel.SelectMatchingCard(tp,c66677789.tfilter,tp,LOCATION_GRAVE,0,2,2,nil,0)   
+			g=Duel.SelectMatchingCard(tp,c66677789.tfilter,tp,LOCATION_GRAVE,0,2,2,nil,0)	  
 		elseif op==1 and Duel.IsExistingMatchingCard(c66677789.tfilter,tp,LOCATION_REMOVED,0,2,nil,1) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			g=Duel.SelectMatchingCard(tp,c66677789.tfilter,tp,LOCATION_REMOVED,0,2,2,nil,1)
 		end
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
-			Duel.ConfirmCards(1-tp,g)
 		end
 	end)   
 	c:RegisterEffect(e4)
@@ -89,11 +87,10 @@ function c66677789.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_HANDES,0,0,1-tp,1)
 end
 function c66677789.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
 	if g:GetCount()==0 then return end
-	local sg=g:RandomSelect(tp,1)
-	if c:GetOverlayGroup():IsExists(Card.IsRace,1,nil,RACE_SEASERPENT) and e:GetLabel()==1 and c:IsType(TYPE_XYZ) then
+	local sg=g:RandomSelect(1-tp,1)
+	if c:GetOverlayGroup():IsExists(Card.IsRace,1,nil,RACE_SEASERPENT) and e:GetLabel()==1 and e:GetHandler():IsType(TYPE_XYZ) then
 		Duel.Overlay(c,sg)
 	else
 		Duel.SendtoGrave(sg,REASON_EFFECT)

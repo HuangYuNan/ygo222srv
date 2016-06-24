@@ -29,6 +29,7 @@ function c18750405.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetCondition(c18750405.condition3)
 	e3:SetTarget(c18750405.target3)
@@ -37,6 +38,7 @@ function c18750405.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
 	e4:SetTarget(c18750405.target3)
 	e4:SetOperation(c18750405.operation3)
@@ -101,7 +103,6 @@ end
 function c18750405.operation3(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c18750405.filter2,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 and Duel.Destroy(c,REASON_EFFECT)~=0 then

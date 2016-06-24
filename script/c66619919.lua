@@ -41,19 +41,6 @@ function c66619919.initial_effect(c)
 	e5:SetTargetRange(1,0)
 	e5:SetTarget(c66619919.splimit)
 	c:RegisterEffect(e5)
-	--act in hand
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_SINGLE)
-	e6:SetCode(EFFECT_TRAP_ACT_IN_HAND)
-	e6:SetCondition(c66619919.handcon)
-	c:RegisterEffect(e6)
-end
-function c66619919.cfilter(c)
-	return c:IsCode(66619911) and c:IsFaceup() and c:IsType(TYPE_MONSTER)
-end
-function c66619919.handcon(e)
-	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
-	return g:IsExists(c66619919.cfilter,1,nil)
 end
 function c66619919.splimit(e,c,tp,sumtp,sumpos)
 	return bit.band(sumtp,SUMMON_TYPE_SYNCHRO)==SUMMON_TYPE_SYNCHRO

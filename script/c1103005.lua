@@ -63,7 +63,7 @@ function c1103005.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function c1103005.spfilter(c,e,tp)
-	return  (c:IsRace(RACE_FAIRY) or c:IsSetCard(0xa240)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1103005)
+	return c:IsSetCard(0xa240) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1103005)
 end
 function c1103005.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1

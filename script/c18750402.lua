@@ -27,16 +27,18 @@ function c18750402.initial_effect(c)
 	c:RegisterEffect(e2)
 	--SPECIAL_SUMMON
 	local e3=Effect.CreateEffect(c)
-	e3:SetCategory(CATEGORY_SUMMON)
+	e3:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e3:SetCondition(c18750402.condition3)
 	e3:SetTarget(c18750402.target3)
 	e3:SetOperation(c18750402.operation3)
 	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_SUMMON)
+	e4:SetCategory(CATEGORY_TODECK+CATEGORY_DRAW)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetCode(EVENT_SUMMON_SUCCESS)
 	e4:SetTarget(c18750402.target3)
 	e4:SetOperation(c18750402.operation3)
@@ -63,7 +65,7 @@ function c18750402.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_LEVEL)
-		e1:SetValue(ac)
+		e1:SetValue(-ac)
 		e1:SetReset(RESET_EVENT+0xfe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
 		tc=hg:GetNext()
@@ -92,24 +94,23 @@ function c18750402.operation2(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c18750402.filter(c)
-	return c:IsSetCard(0xab3) and c:IsType(TYPE_MONSTER) and (c:IsSummonable(true,nil) or c:IsMSetable(true,nil))
+	return c:IsSetCard(0xab3) and c:IsAbleToExtra()
 end
 function c18750402.condition3(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
 end
 function c18750402.target3(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c18750402.filter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_SUMMON,nil,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(c18750402.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_DECK)
 end
 function c18750402.operation3(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SUMMON)
-	local g=Duel.SelectMatchingCard(tp,c18750402.filter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
-	local tc=g:GetFirst()
-	if tc then
-		if tc:IsSummonable(true,nil) and (not tc:IsMSetable(true,nil) 
-			or Duel.SelectPosition(tp,tc,POS_FACEUP_ATTACK+POS_FACEDOWN_DEFENSE)==POS_FACEUP_ATTACK) then
-			Duel.Summon(tp,tc,true,nil)
-		else Duel.MSet(tp,tc,true,nil) end
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TODECK)
+	local g=Duel.SelectMatchingCard(p,c18750404.filter,p,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.ConfirmCards(1-p,g)
+		Duel.PSendtoExtra(g,nil,REASON_EFFECT)
+	Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
