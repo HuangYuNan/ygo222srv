@@ -59,7 +59,7 @@ function c18750404.operation(e,tp,eg,ep,ev,re,r,rp)
 	local lc=g:GetFirst()
 	if g:GetCount()>0 then
 		Duel.ConfirmCards(1-p,g)
-		local ct=Duel.PSendtoExtra(g,nil,REASON_EFFECT)
+		local ct=Duel.SendtoExtraP(g,nil,REASON_EFFECT)
 		Duel.ShuffleHand(p)
 		if lc:IsLevelAbove(1) and Duel.SelectYesNo(tp,aux.Stringid(18750404,0)) then
 		local e1=Effect.CreateEffect(e:GetHandler())

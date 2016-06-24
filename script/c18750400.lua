@@ -51,7 +51,7 @@ function c18750400.operation(e,tp,eg,ep,ev,re,r,rp)
 	local lc=g:GetFirst()
 	if g:GetCount()>0 then
 		Duel.ConfirmCards(1-p,g)
-		local ct=Duel.PSendtoExtra(g,nil,REASON_EFFECT)
+		local ct=Duel.SendtoExtraP(g,nil,REASON_EFFECT)
 		Duel.ShuffleHand(p)
 	end
 end

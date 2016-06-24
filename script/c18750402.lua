@@ -110,7 +110,7 @@ function c18750402.operation3(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(p,c18750404.filter,p,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.ConfirmCards(1-p,g)
-		Duel.PSendtoExtra(g,nil,REASON_EFFECT)
+		Duel.SendtoExtraP(g,nil,REASON_EFFECT)
 	Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
