@@ -38,8 +38,8 @@ function c1100102.initial_effect(c)
 	c:RegisterEffect(e4)  
 end
 function c1100102.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckLPCost(tp,500) end
-	Duel.PayLPCost(tp,500)
+	if chk==0 then return Duel.CheckLPCost(tp,1000) end
+	Duel.PayLPCost(tp,1000)
 end
 function c1100102.filter(c,e,tp)
 	return c:IsSetCard(0xa242) and c:IsAttackAbove(2000) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
