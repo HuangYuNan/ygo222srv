@@ -1,15 +1,7 @@
-function fcoRemoveQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083 and c:IsAbleToRemoveAsCost()
-end
-function fRemoveQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083 and c:IsAbleToRemove()
-end
-function fQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083
-end
+function fqinglan(c)local t=c:GetCode()return t>11200079 and t<11200087 and t~=11200083 end
+function fcoRemoveQinglan(c)return fqinglan(c)and c:IsAbleToRemoveAsCost()end
+function fremoveQinglan(c)return fqinglan(c)and c:IsAbleToRemove()end
+function fupQinglan(c)return fqinglan(c)and c:IsFaceup()end
 function c11200086.initial_effect(c)
 	local a=Effect.CreateEffect(c)
 	a:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -42,12 +34,12 @@ function c11200086.coa(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11200086.opa(e,tp)
 	Debug.Message(c11200086.v[tp])
-	for i=1,(c11200086.t[tp]==Duel.GetTurnCount()and c11200086.v[tp]or 1) do
+	for i=1,(c11200086.t[tp]==Duel.GetTurnCount()and c11200086.v[tp]or 1)do
 		Duel.Damage(1-tp,550,REASON_EFFECT)
 	end
 end
 function c11200086.opb(e,tp,eg,ep,ev,re,r,rp)
-	for p=0,1 do if eg:Filter(fQinglan,nil):IsExists(Card.IsControler,1,nil,p)then
+	for p=0,1 do if eg:Filter(fqinglan,nil):IsExists(Card.IsControler,1,nil,p)then
 		if c11200086.t[p]<Duel.GetTurnCount()then
 			c11200086.t[p]=Duel.GetTurnCount()
 			c11200086.v[p]=0

@@ -1,15 +1,7 @@
-function fcoRemoveQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083 and c:IsAbleToRemoveAsCost()
-end
-function fRemoveQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083 and c:IsAbleToRemove()
-end
-function fQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083
-end
+function fqinglan(c)local t=c:GetCode()return t>11200079 and t<11200087 and t~=11200083 end
+function fcoRemoveQinglan(c)return fqinglan(c)and c:IsAbleToRemoveAsCost()end
+function fremoveQinglan(c)return fqinglan(c)and c:IsAbleToRemove()end
+function fupQinglan(c)return fqinglan(c)and c:IsFaceup()end
 function c11200085.initial_effect(c)
 	local a=Effect.CreateEffect(c)
 	a:SetType(EFFECT_TYPE_ACTIVATE)
@@ -30,7 +22,7 @@ function c11200085.initial_effect(c)
 	c:RegisterEffect(b)
 end
 function c11200085.coa(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return 
+	if chk==0 then return
 		Duel.IsExistingMatchingCard(fcoRemoveQinglan,tp,LOCATION_HAND+LOCATION_GRAVE+LOCATION_ONFIELD,0,1,e:GetHandler())and
 		Duel.IsExistingMatchingCard(nil,0,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
 	end

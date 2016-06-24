@@ -1,15 +1,8 @@
-function c11200082.fqinglanMon(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200083
-end
-function fqinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200083
-end
-function c11200082.fremoveQinglan(c)
-	local t=c:GetCode()
-	return t>11200079 and t<11200087 and t~=11200083 and c:IsAbleToRemoveAsCost()
-end
+function fqinglanMon(c)local t=c:GetCode()return t>11200079 and t<11200083 end
+function fqinglan(c)local t=c:GetCode()return t>11200079 and t<11200087 and t~=11200083 end
+function fcoRemoveQinglan(c)return fqinglan(c)and c:IsAbleToRemoveAsCost()end
+function fremoveQinglan(c)return fqinglan(c)and c:IsAbleToRemove()end
+function fupQinglan(c)return fqinglan(c)and c:IsFaceup()end
 function c11200082.initial_effect(c)
 	aux.AddFusionProcFun2(c,fqinglan,fqinglan,true)
 	c:EnableReviveLimit()
@@ -47,11 +40,11 @@ function c11200082.initial_effect(c)
 	c:RegisterEffect(d)
 end
 function c11200082.filter1(c,e)
-	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+	return c:IsCanBeFusionMaterial()and not c:IsImmuneToEffect(e)
 end
 function c11200082.filter2(c,e,tp,m,f,chkf)
-	return c:IsType(TYPE_FUSION) and (not f or f(c))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false) and c:CheckFusionMaterial(m,nil,chkf)
+	return c:IsType(TYPE_FUSION)and(not f or f(c))
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_FUSION,tp,false,false)and c:CheckFusionMaterial(m,nil,chkf)
 end
 function c11200082.tgb(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -85,12 +78,12 @@ function c11200082.opb(e,tp,eg,ep,ev,re,r,rp)
 		local mf=ce:GetValue()
 		sg2=Group.FromCards(c11200082.filter2(e:GetHandler(),e,tp,mg2,mf,chkf)and e:GetHandler()or nil)
 	end
-	if sg1:GetCount()>0 or (sg2~=nil and sg2:GetCount()>0) then
+	if sg1:GetCount()>0 or(sg2~=nil and sg2:GetCount()>0)then
 		local sg=sg1:Clone()
-		if sg2 then sg:Merge(sg2) end
+		if sg2 then sg:Merge(sg2)end
 		local tg=Group.FromCards(e:GetHandler())
 		local tc=tg:GetFirst()
-		if sg1:IsContains(tc) and (sg2==nil or not sg2:IsContains(tc) or not Duel.SelectYesNo(tp,ce:GetDescription())) then
+		if sg1:IsContains(tc)and(sg2==nil or not sg2:IsContains(tc)or not Duel.SelectYesNo(tp,ce:GetDescription()))then
 			local mat1=Duel.SelectFusionMaterial(tp,tc,mg1,nil,chkf)
 			tc:SetMaterial(mat1)
 			Duel.SendtoGrave(mat1,REASON_EFFECT+REASON_MATERIAL+REASON_FUSION)
@@ -105,7 +98,7 @@ function c11200082.opb(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c11200082.tga(e,tp,eg,ep,ev,re,r,rp,chk)
-	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
+	return Duel.GetAttacker()==e:GetHandler()or Duel.GetAttackTarget()==e:GetHandler()
 end
 function c11200082.opa(e,tp)
 	Duel.NegateAttack()
@@ -114,17 +107,17 @@ end
 function c11200082.cod(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if not e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)then return end
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())end
-		return Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())and Duel.IsExistingMatchingCard(c11200082.fremoveQinglan,tp,LOCATION_MZONE,0,2,e:GetHandler())
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())end
+		return Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())and Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_MZONE,0,2,e:GetHandler())
 	end
 	local c,g
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1
-	then g=Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	then g=Duel.SelectMatchingCard(tp,fremoveQinglan,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 		c=1
 	else g=Group.CreateGroup()
 		c=2
 	end
-	g:Merge(Duel.SelectMatchingCard(tp,c11200082.fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()))
+	g:Merge(Duel.SelectMatchingCard(tp,fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()))
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_GRAVE)
 end

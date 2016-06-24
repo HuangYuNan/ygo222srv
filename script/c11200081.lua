@@ -5,7 +5,6 @@ function c11200081.initial_effect(c)
 	a:SetRange(LOCATION_REMOVED)
 	a:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	a:SetCountLimit(1)
-	a:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	a:SetTarget(c11200081.tga)
 	a:SetOperation(c11200081.opa)
 	a:SetDescription(1118)
@@ -46,7 +45,7 @@ function c11200081.opb(e,tp)
 	local a=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,nil)
 	local b=Duel.GetMatchingGroup(Card.IsFacedown,0,LOCATION_MZONE,LOCATION_MZONE,nil)
 	if a:GetCount()>0 and(
-		b:GetCount()<1 or 
+		b:GetCount()<1 or
 		Duel.SelectYesNo(tp,514))then
 		Duel.ChangePosition(a:Select(tp,1,1,nil),POS_FACEDOWN_DEFENSE)
 	elseif b:GetCount()>0 then
