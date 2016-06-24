@@ -27,7 +27,7 @@ function c66619907.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c66619907.cfilter(c)
-	return c:IsFaceup() and c:IsCode(66619916) and c:IsAbleToGraveAsCost()
+	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
 end
 function c66619907.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66619907.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
