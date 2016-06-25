@@ -1,10 +1,13 @@
-function fqinglanMon(c)local t=c:GetCode()return t>11200079 and t<11200083 end
-function fqinglan(c)local t=c:GetCode()return t>11200079 and t<11200087 and t~=11200083 end
-function fcoRemoveQinglan(c)return fqinglan(c)and c:IsAbleToRemoveAsCost()end
-function fremoveQinglan(c)return fqinglan(c)and c:IsAbleToRemove()end
-function fupQinglan(c)return fqinglan(c)and c:IsFaceup()end
+function qinglanMon(c)local t=c:GetCode()return t>11200079 and t<11200083 end
+function qinglanSp(c)local t=c:GetCode()return t>11200083 and t<11200087 end
+function qinglan(c)local t=c:GetCode()return qinglanMon(c)or qinglanSp(c)end
+function qinglanCorm(c)return qinglan(c)and c:IsAbleToRemoveAsCost()end
+function qinglanRm(c)return qinglan(c)and c:IsAbleToRemove()end
+function qinglanUp(c)return qinglan(c)and c:IsFaceup()end
+function qinglanMonRm(c)return qinglanMon(c)and c:IsAbleToRemove()end
+function qinglanSpRm(c)return qinglanSp(c)and c:IsAbleToRemove()end
 function c11200082.initial_effect(c)
-	aux.AddFusionProcFun2(c,fqinglan,fqinglan,true)
+	aux.AddFusionProcFun2(c,qinglan,qinglan,true)
 	c:EnableReviveLimit()
 	local b=Effect.CreateEffect(c)
 	b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_QUICK_O)
@@ -107,17 +110,17 @@ end
 function c11200082.cod(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if not e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)then return end
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())end
-		return Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())and Duel.IsExistingMatchingCard(fremoveQinglan,tp,LOCATION_MZONE,0,2,e:GetHandler())
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return Duel.IsExistingMatchingCard(qinglanRm,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())end
+		return Duel.IsExistingMatchingCard(qinglanRm,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,2,e:GetHandler())and Duel.IsExistingMatchingCard(qinglanRm,tp,LOCATION_MZONE,0,2,e:GetHandler())
 	end
 	local c,g
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1
-	then g=Duel.SelectMatchingCard(tp,fremoveQinglan,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
+	then g=Duel.SelectMatchingCard(tp,qinglanRm,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
 		c=1
 	else g=Group.CreateGroup()
 		c=2
 	end
-	g:Merge(Duel.SelectMatchingCard(tp,fremoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()))
+	g:Merge(Duel.SelectMatchingCard(tp,qinglanRm,tp,LOCATION_HAND+LOCATION_ONFIELD+LOCATION_GRAVE,0,c,c,e:GetHandler()))
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_GRAVE)
 end

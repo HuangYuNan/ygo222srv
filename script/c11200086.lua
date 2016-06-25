@@ -1,7 +1,11 @@
-function fqinglan(c)local t=c:GetCode()return t>11200079 and t<11200087 and t~=11200083 end
-function fcoRemoveQinglan(c)return fqinglan(c)and c:IsAbleToRemoveAsCost()end
-function fremoveQinglan(c)return fqinglan(c)and c:IsAbleToRemove()end
-function fupQinglan(c)return fqinglan(c)and c:IsFaceup()end
+function qinglanMon(c)local t=c:GetCode()return t>11200079 and t<11200083 end
+function qinglanSp(c)local t=c:GetCode()return t>11200083 and t<11200087 end
+function qinglan(c)local t=c:GetCode()return qinglanMon(c)or qinglanSp(c)end
+function qinglanCorm(c)return qinglan(c)and c:IsAbleToRemoveAsCost()end
+function qinglanRm(c)return qinglan(c)and c:IsAbleToRemove()end
+function qinglanUp(c)return qinglan(c)and c:IsFaceup()end
+function qinglanMonRm(c)return qinglanMon(c)and c:IsAbleToRemove()end
+function qinglanSpRm(c)return qinglanSp(c)and c:IsAbleToRemove()end
 function c11200086.initial_effect(c)
 	local a=Effect.CreateEffect(c)
 	a:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -24,10 +28,10 @@ end
 function c11200086.coa(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return
 		e:GetHandler():IsAbleToRemoveAsCost()and
-		Duel.IsExistingMatchingCard(fcoRemoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD,0,2,e:GetHandler())and
+		Duel.IsExistingMatchingCard(qinglanCorm,tp,LOCATION_HAND+LOCATION_ONFIELD,0,2,e:GetHandler())and
 		(e:GetHandler():IsLocation(LOCATION_HAND)or e:GetHandler():GetTurnID()<Duel.GetTurnCount())
 	end
-	local g=Duel.SelectMatchingCard(tp,fcoRemoveQinglan,tp,LOCATION_HAND+LOCATION_ONFIELD,0,2,2,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,qinglanCorm,tp,LOCATION_HAND+LOCATION_ONFIELD,0,2,2,e:GetHandler())
 	g:AddCard(e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,550)
@@ -39,7 +43,7 @@ function c11200086.opa(e,tp)
 	end
 end
 function c11200086.opb(e,tp,eg,ep,ev,re,r,rp)
-	for p=0,1 do if eg:Filter(fqinglan,nil):IsExists(Card.IsControler,1,nil,p)then
+	for p=0,1 do if eg:Filter(qinglan,nil):IsExists(Card.IsControler,1,nil,p)then
 		if c11200086.t[p]<Duel.GetTurnCount()then
 			c11200086.t[p]=Duel.GetTurnCount()
 			c11200086.v[p]=0
