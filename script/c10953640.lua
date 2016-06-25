@@ -32,7 +32,7 @@ function c10953640.initial_effect(c)
 	c:RegisterEffect(e5)   
 end
 function c10953640.cfilter(c)
-	return c:IsSetCard(0x18) and c:IsRace(RACE_THUNDER) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x350) and c:IsRace(RACE_THUNDER) and c:IsAbleToRemoveAsCost()
 end
 function c10953640.spcon(e,c)
 	if c==nil then return true end
