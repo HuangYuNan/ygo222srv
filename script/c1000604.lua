@@ -30,7 +30,6 @@ function c1000604.initial_effect(c)
 	e7:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e7:SetType(EFFECT_TYPE_QUICK_O)
 	e7:SetRange(LOCATION_MZONE)
-	e7:SetCondition(c1000604.con2)
 	e7:SetCountLimit(1,1000604)
 	e7:SetCode(EVENT_CHAINING)
 	e7:SetCondition(c1000604.discon)
@@ -76,14 +75,10 @@ function c1000604.con1(e,tp,eg,ep,ev,re,r,rp)
 	local ct=g:GetClassCount(Card.GetCode)
    return  ct>=3
 end
-function c1000604.con2(e,tp,eg,ep,ev,re,r,rp)
-   local g=Duel.GetMatchingGroup(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0xc204)
-	local ct=g:GetClassCount(Card.GetCode)
-   return  ct>=9
-end
 function c1000604.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
+	local g=Duel.GetMatchingGroup(Card.IsSetCard,e:GetHandlerPlayer(),LOCATION_GRAVE,0,nil,0xc204)
+	local ct=g:GetClassCount(Card.GetCode)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ct>=9 and ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
 end
 function c1000604.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
