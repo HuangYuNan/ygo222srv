@@ -84,25 +84,27 @@ function c66619903.dcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() and e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
-function c66619903.thfilter(c)
-	return c:IsCode(66619916) and c:IsAbleToHand()
+function c66619903.thfilter(c,e,tp)
+	return c:IsCode(66619916) and c:IsAbleToHand() and Duel.IsExistingMatchingCard(c66619903.thfilter2,tp,LOCATION_DECK,0,1,nil,c:GetCode())
+end
+function c66619903.thfilter2(c,code)
+	return c:IsCode(code) and c:IsAbleToHand()
 end
 function c66619903.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingTarget(c66619903.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619903.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_GRAVE)
 end
 function c66619903.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c66619903.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil)
+	local g=Duel.SelectTarget(tp,c66619903.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-		Duel.BreakEffect()
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c66619903.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-		Duel.BreakEffect()
-		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_DISCARD)
+		if Duel.SendtoHand(g,nil,REASON_EFFECT) and Duel.IsExistingMatchingCard(c66619903.thfilter2,tp,LOCATION_DECK,0,1,nil,g:GetFirst():GetCode()) then
+		local g1=Duel.SelectMatchingCard(tp,c66619903.thfilter2,tp,LOCATION_DECK,0,1,1,nil,g:GetFirst():GetCode())
+		if g1:GetCount()>0 then
+			Duel.SendtoHand(g1,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,g1)
+			Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_DISCARD)
+			end
+		end
 	end
 end
