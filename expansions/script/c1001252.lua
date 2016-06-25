@@ -40,6 +40,7 @@ function colle.sum2(c,lv)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(function(e,c)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
 		if c==nil then return true end
 		local tp=c:GetControler()
 		local g=Duel.GetMatchingGroup(colle.sumfilter,tp,LOCATION_GRAVE,0,nil)
