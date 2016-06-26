@@ -3,13 +3,13 @@ os=require('os')
 --7CG universal scripts
 --test parts
 if not Card.GetDefense then
-	Card.GetDefense=Card.GetDefense
-	Card.GetBaseDefense=Card.GetBaseDefense
-	Card.GetTextDefense=Card.GetTextDEFENSE
-	Card.GetPreviousDefenseOnField=Card.GetPreviousDefenseOnField
-	Card.IsDefensePos=Card.IsDefensePos
-	Card.IsDefenseBelow=Card.IsDefenseBelow
-	Card.IsDefenseAbove=Card.IsDefenseAbove
+	Card.GetDefense=Card.GetDefence
+	Card.GetBaseDefense=Card.GetBaseDefence
+	Card.GetTextDefense=Card.GetTextDefence
+	Card.GetPreviousDefenseOnField=Card.GetPreviousDefenceOnField
+	Card.IsDefensePos=Card.IsDefencePos
+	Card.IsDefenseBelow=Card.IsDefenceBelow
+	Card.IsDefenseAbove=Card.IsDefenceAbove
 end
 --xyz summon of prim
 function senya.rxyz1(c,rk,f)
@@ -217,7 +217,7 @@ end
 function senya.discost(ct)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,ct,e:GetHandler()) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_COST+REASON_DISCARD)
+	Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_COST+REASON_DISCARD,e:GetHandler())
 end
 end
 

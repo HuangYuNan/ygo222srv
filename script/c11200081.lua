@@ -43,7 +43,7 @@ function c11200081.cob(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11200081.opb(e,tp)
 	local a=Duel.GetMatchingGroup(Card.IsFaceup,0,LOCATION_MZONE,LOCATION_MZONE,nil)
-	local b=Duel.GetMatchingGroup(Card.IsFacedown,0,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local b=Duel.GetMatchingGroup(Card.IsFacedown,tp,0,LOCATION_ONFIELD,nil)
 	if a:GetCount()>0 and(
 		b:GetCount()<1 or
 		Duel.SelectYesNo(tp,514))then
