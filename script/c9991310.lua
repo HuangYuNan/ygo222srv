@@ -25,7 +25,7 @@ function c9991310.initial_effect(c)
 		end
 		e:SetLabel(1)
 		local g=nil
-		if v1 and (not v2 or Duel.SelectYesNo(aux.Stringid(9991310,0))) then
+		if v1 and (not v2 or Duel.SelectYesNo(tp,aux.Stringid(9991310,0))) then
 			g=Duel.SelectReleaseGroup(tp,c9991310.rlsfilter,1,1,nil)
 		else
 			g=Duel.SelectReleaseGroup(tp,nil,2,2,nil)

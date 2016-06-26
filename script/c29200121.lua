@@ -22,7 +22,7 @@ function c29200121.afilter1(c)
 	return c:IsSetCard(0x53e0) and c:IsType(TYPE_MONSTER) and c:IsType(TYPE_FUSION) 
 end
 function c29200121.filter1(c,e,tp,lv)
-    local clv=c:GetLevel()
+	local clv=c:GetLevel()
 	return clv>0 and c:IsSetCard(0x53e0) and c:IsAbleToGrave()
 		and Duel.IsExistingMatchingCard(c29200121.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,clv+2)
 end
@@ -34,9 +34,9 @@ end
 function c29200121.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_HAND) and c29200121.filter1(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and e:GetHandler():IsAbleToGrave()
-		and Duel.IsExistingTarget(c29200121.filter1,tp,LOCATION_HAND,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c29200121.filter1,tp,LOCATION_HAND,0,1,e:GetHandler(),e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-	local g=Duel.SelectTarget(tp,c29200121.filter1,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c29200121.filter1,tp,LOCATION_HAND,0,1,1,e:GetHandler(),e,tp)
 	g:AddCard(e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
@@ -51,9 +51,9 @@ function c29200121.spop(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local sg=Duel.SelectMatchingCard(tp,c29200121.filter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,tc:GetLevel()+2)
-        local tc=sg:GetFirst()
-        if tc then
-             Duel.BreakEffect()
+		local tc=sg:GetFirst()
+		if tc then
+			 Duel.BreakEffect()
 			 Duel.SpecialSummon(tc,SUMMON_TYPE_FUSION,tp,tp,false,true,POS_FACEUP)
 			 tc:CompleteProcedure()
 		end
