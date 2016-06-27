@@ -1,7 +1,7 @@
 --虹纹之原龙
 function c1000195.initial_effect(c)
 	--同调召唤
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x200),aux.NonTuner(Card.IsSetCard,0x1200),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x200),aux.NonTuner(c1000195.tfilter),1)
 	c:EnableReviveLimit()
 	--①
 	local e1=Effect.CreateEffect(c)
@@ -40,6 +40,9 @@ function c1000195.initial_effect(c)
 	e4:SetCondition(c1000195.recon)
 	e4:SetOperation(c1000195.regop)
 	c:RegisterEffect(e4)
+end
+function c1000195.tfilter(c)
+	return (c:IsCode(1000197) or c:IsCode(1000076))
 end
 function c1000195.recon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
