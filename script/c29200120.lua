@@ -94,45 +94,45 @@ function c29200120.activate(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetDecktopGroup(tp,2)
 	local rg=g:Filter(c29200120.filter1,nil)
 	local sg=g:Filter(c29200120.filter2,nil)
-	if rg:GetCount()>1 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	if rg:GetCount()==2 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c29200120.sumfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g1=Duel.SelectMatchingCard(tp,c29200120.sumfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
 		local tc=g1:GetFirst()
-		  if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 and c:IsRelateToEffect(e) 
-			  and tc:IsType(TYPE_XYZ) then
-			  Duel.DisableShuffleCheck()
-			  Duel.Overlay(tc,rg)
-		  else
-			  Duel.SortDecktop(tp,tp,2)
-				for i=1,2 do
+		 if tc and Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)~=0 and c:IsRelateToEffect(e) 
+			   and tc:IsType(TYPE_XYZ) then
+		 	   Duel.DisableShuffleCheck()
+			   Duel.Overlay(tc,rg)
+		   else
+			   Duel.SortDecktop(tp,tp,2)
+			   for i=1,2 do
 				   local mg=Duel.GetDecktopGroup(tp,1)
 				   Duel.MoveSequence(mg:GetFirst(),1)
 				   Duel.RaiseSingleEvent(mg:GetFirst(),29200100,e,0,0,0,0)
-				end
+			   end
 		 end
-		local e3=Effect.CreateEffect(e:GetHandler())
-		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetCode(EFFECT_UPDATE_ATTACK)
-		e3:SetValue(500)
-		e3:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e3,true)
-		local e4=Effect.CreateEffect(e:GetHandler())
-		e4:SetType(EFFECT_TYPE_SINGLE)
-		e4:SetCode(EFFECT_UPDATE_DEFENSE)
-		e4:SetValue(500)
-		e4:SetReset(RESET_EVENT+0x1fe0000)
-		tc:RegisterEffect(e4,true)
+		 local e3=Effect.CreateEffect(e:GetHandler())
+		 e3:SetType(EFFECT_TYPE_SINGLE)
+		 e3:SetCode(EFFECT_UPDATE_ATTACK)
+		 e3:SetValue(500)
+	 	 e3:SetReset(RESET_EVENT+0x1fe0000)
+		 tc:RegisterEffect(e3,true)
+		 local e4=Effect.CreateEffect(e:GetHandler())
+		 e4:SetType(EFFECT_TYPE_SINGLE)
+		 e4:SetCode(EFFECT_UPDATE_DEFENSE)
+		 e4:SetValue(500)
+		 e4:SetReset(RESET_EVENT+0x1fe0000)
+		 tc:RegisterEffect(e4,true)
 	elseif sg:GetCount()>0 then
-			Duel.Damage(1-tp,800,REASON_EFFECT)
-			Duel.Recover(tp,500,REASON_EFFECT)
+		Duel.Damage(1-tp,800,REASON_EFFECT)
+		Duel.Recover(tp,500,REASON_EFFECT)
 		Duel.SortDecktop(tp,tp,2)
 		for i=1,2 do
 			local mg=Duel.GetDecktopGroup(tp,1)
 			Duel.MoveSequence(mg:GetFirst(),1)
 			Duel.RaiseSingleEvent(mg:GetFirst(),29200100,e,0,0,0,0)
 		end
-	elseif sg:GetCount()<0 and rg:GetCount()<0 then
+	elseif rg:GetCount()<2 and sg:GetCount()==0 then
 		Duel.SortDecktop(tp,tp,2)
 		for i=1,2 do
 			local mg=Duel.GetDecktopGroup(tp,1)

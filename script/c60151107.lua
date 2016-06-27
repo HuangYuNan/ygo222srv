@@ -91,7 +91,7 @@ function c60151107.chlimit(e,ep,tp)
     return tp==ep
 end
 function c60151107.filter(c,atk,def)
-	return c:IsFaceup() and (c:IsAttackBelow(atk) or c:IsDefenseBelow(def))
+	return c:IsFaceup() and (c:IsAttackBelow(atk) or c:IsDefenseBelow(atk))
 		and c:IsDestructable()
 end
 function c60151107.filter2(c)
