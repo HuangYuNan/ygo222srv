@@ -25,16 +25,16 @@ function c10953639.initial_effect(c)
 	e3:SetOperation(c10953639.thop)
 	c:RegisterEffect(e3)
 end
-function c10953639.filter(c)
+function c10953639.dfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_ZOMBIE) and c:IsDestructable()
 end
 function c10953639.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c10953639.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c10953639.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	local sg=Duel.GetMatchingGroup(c10953639.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,sg,sg:GetCount(),0,0)
 end
 function c10953639.activate(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(c10953639.filter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+	local sg=Duel.GetMatchingGroup(c10953639.dfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
 	Duel.Destroy(sg,REASON_EFFECT)
 end
 function c10953639.filter(c)

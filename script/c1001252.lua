@@ -40,6 +40,7 @@ function colle.sum2(c,lv)
 	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(function(e,c)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
 		if c==nil then return true end
 		local tp=c:GetControler()
 		local g=Duel.GetMatchingGroup(colle.sumfilter,tp,LOCATION_GRAVE,0,nil)
@@ -54,7 +55,37 @@ function colle.sum2(c,lv)
 	c:RegisterEffect(e2)
 end
 function colle.sumfilter(c)
-	return c:IsSetCard(0x203) and c:IsAbleToRemoveAsCost()
+	return c:IsSetCard(0x203) and c:IsAbleToRemoveAsCost() and c:GetLevel()~=8
+end
+function colle.sum3(c,lv)
+	c:EnableReviveLimit()
+	local e1=Effect.CreateEffect(c)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
+	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetCondition(function(e,c)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		if c==nil then return true end
+		local tp=c:GetControler()
+		local g=Duel.GetMatchingGroup(colle.sumfilter1,tp,LOCATION_GRAVE,0,nil)
+		return g:CheckWithSumEqual(Card.GetLevel,lv,1,99)
+	end)
+	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp,c)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local g=Duel.GetMatchingGroup(colle.sumfilter1,tp,LOCATION_GRAVE,0,nil)
+		local sg=g:SelectWithSumEqual(tp,Card.GetLevel,lv,1,99)
+		Duel.Remove(sg,POS_FACEUP,REASON_COST)
+	end)
+	c:RegisterEffect(e2)
+end
+function colle.sumfilter1(c)
+	return c:IsSetCard(0x203) and c:IsAbleToRemoveAsCost() and c:GetLevel()~=10
 end
 
 function colle.atkup(c,atk)

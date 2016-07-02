@@ -19,8 +19,8 @@ function c66619906.initial_effect(c)
 	e4:SetDescription(aux.Stringid(66619904,0))
 	e4:SetCategory(CATEGORY_DRAW)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e4:SetCode(EVENT_BE_MATERIAL)
-	e4:SetCondition(c66619906.con)
+	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
+	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetTarget(c66619906.thtg)
 	e4:SetOperation(c66619906.thop)
 	c:RegisterEffect(e4)
@@ -58,9 +58,6 @@ function c66619906.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-end
-function c66619906.con(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsLocation(LOCATION_GRAVE) and r==REASON_SYNCHRO
 end
 function c66619906.spfilter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

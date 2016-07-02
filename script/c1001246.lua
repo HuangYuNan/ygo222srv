@@ -2,7 +2,7 @@
 require("/expansions/script/c1001252")
 function c1001246.initial_effect(c)
 	c:SetUniqueOnField(1,0,1001246)
-	colle.sum2(c,10)
+	colle.sum3(c,10)
 	--th
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(1001246,0))
@@ -64,7 +64,7 @@ function c1001246.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c1001246.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
-		Duel.Remove(g,POS_FACEDOWN,REASON_EFFECT)
+		Duel.Destroy(g,REASON_EFFECT)
 	end
 end
 function c1001246.spfilter(c,sca)
