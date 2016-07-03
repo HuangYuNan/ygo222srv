@@ -1,79 +1,48 @@
 --战场女武神 尤利娅娜 人造瓦尔基里
 function c11113022.initial_effect(c)
+	c:SetUniqueOnField(1,0,11113022)
+	--fusion material
 	c:EnableReviveLimit()
-	--cannot special summon
+	aux.AddFusionProcCodeFun(c,11113020,c11113022.ffilter,1,true,false)
+	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(aux.ritlimit)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetValue(c11113022.splimit)
 	c:RegisterEffect(e1)
-	--special summon
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(11113022,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,11113022)
-	e2:SetCost(c11113022.spcost)
-	e2:SetTarget(c11113022.sptg)
-	e2:SetOperation(c11113022.spop)
-	c:RegisterEffect(e2)
 	--destroy
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(11113022,1))
+	e2:SetCategory(CATEGORY_DESTROY)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetCountLimit(1,11113022)
+	e2:SetCost(c11113022.descost)
+	e2:SetTarget(c11113022.destg)
+	e2:SetOperation(c11113022.desop)
+	c:RegisterEffect(e2)
+	--index
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(11113022,1))
-	e3:SetCategory(CATEGORY_DESTROY)
+	e3:SetDescription(aux.Stringid(11113022,2))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,111130220)
-	e3:SetCost(c11113022.descost)
-	e3:SetTarget(c11113022.destg)
-	e3:SetOperation(c11113022.desop)
+	e3:SetCost(c11113022.indcost)
+	e3:SetTarget(c11113022.indtg)
+	e3:SetOperation(c11113022.indop)
 	c:RegisterEffect(e3)
-	--index
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(11113022,2))
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCountLimit(1,1111302200)
-	e4:SetCost(c11113022.indcost)
-	e4:SetTarget(c11113022.indtg)
-	e4:SetOperation(c11113022.indop)
-	c:RegisterEffect(e4)
 end
-function c11113022.mat_filter(c)
-	return c:GetLevel()~=7
+function c11113022.ffilter(c)
+	return c:IsFusionSetCard(0x15c) and c:IsLevelBelow(4) 
 end
-function c11113022.spfilter1(c,tp)
-	return c:IsFaceup() and c:IsCode(11113020) and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c11113022.spfilter2,tp,LOCATION_MZONE,0,1,c)
-end
-function c11113022.spfilter2(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and c:GetLevel()==4 and c:IsAbleToRemoveAsCost()
-end
-function c11113022.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11113022.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c11113022.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c11113022.spfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst())
-	g1:Merge(g2)
-	Duel.Remove(g1,POS_FACEUP,REASON_COST)
-end
-function c11113022.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-end
-function c11113022.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)
-	end
+function c11113022.splimit(e,se,sp,st)
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function c11113022.dfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsAbleToDeckAsCost()
@@ -107,7 +76,7 @@ function c11113022.indcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c11113022.infilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and bit.band(c:GetType(),0x81)==0x81
+	return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsType(TYPE_FUSION)
 end
 function c11113022.indtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c11113022.infilter(chkc) end

@@ -30,7 +30,7 @@ function prim.se(c,at)
 	e3:SetCost(prim.secost(at))
 	e3:SetOperation(prim.seop(at))
 	c:RegisterEffect(e3)
-	 local e4=Effect.CreateEffect(c)
+	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(78651105,0))
 	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetType(EFFECT_TYPE_SINGLE)
@@ -195,4 +195,65 @@ function prim.ntop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.SelectMatchingCard(tp,prim.ntfilter,tp,LOCATION_REMOVED,0,ct,ct,nil)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 	Duel.RegisterFlagEffect(tp,66677750,RESET_PHASE+PHASE_END,0,1)
+end
+function prim.szfilter(c)
+	return (c:IsHasEffect(66623300) or c:IsHasEffect(66623399)) and c:IsAbleToGraveAsCost() and c:IsFaceup()
+end
+function prim.szcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(prim.szfilter,tp,LOCATION_SZONE,0,1,e:GetHandler()) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,prim.szfilter,tp,LOCATION_SZONE,0,1,1,e:GetHandler())
+	Duel.SendtoGrave(g,REASON_COST)
+end
+function prim.szrcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(prim.szfilter,tp,LOCATION_SZONE,0,1,e:GetHandler()) and e:GetHandler():IsAbleToDeckOrExtraAsCost() end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,prim.szfilter,tp,LOCATION_SZONE,0,1,1,e:GetHandler())
+	Duel.SendtoGrave(g,REASON_COST)
+	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
+end
+function prim.nn(c,tg,op,istg,ctg)
+	ctg=ctg or 0
+	local e2=Effect.CreateEffect(c)
+	e2:SetCategory(ctg)
+	if istg then e2:SetProperty(EFFECT_FLAG_CARD_TARGET) end
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(prim.szrcost)
+	if tg then e2:SetTarget(tg) end
+	e2:SetOperation(op)
+	c:RegisterEffect(e2)
+end
+function prim.nnr(c,excon,exop,desc,ctg)
+	local e3=Effect.CreateEffect(c)
+	ctg=ctg or 0
+	e3:SetDescription(aux.Stringid(66623306,0))
+	e3:SetCategory(ctg)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetTarget(prim.nnreptg)
+	e3:SetOperation(prim.nnrepop(excon,exop,desc))
+	c:RegisterEffect(e3)
+end
+function prim.nnreptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+end
+function prim.nnrepop(excon,exop,desc)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then 
+	Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+	local e1=Effect.CreateEffect(c)
+	e1:SetCode(EFFECT_CHANGE_TYPE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fc0000)
+	e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+	c:RegisterEffect(e1)
+	if exop and (not excon or excon(e,tp,eg,ep,ev,re,r,rp)) and Duel.SelectYesNo(tp,desc) then
+		exop(e,tp,eg,ep,ev,re,r,rp)
+	end
+	end
+end
 end

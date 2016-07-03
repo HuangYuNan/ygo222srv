@@ -11,6 +11,27 @@ if not Card.GetDefense then
 	Card.IsDefenseBelow=Card.IsDefenceBelow
 	Card.IsDefenseAbove=Card.IsDefenceAbove
 end
+--effect setcode tech
+senya.setchk=senya.setchk or {}
+function senya.setreg(c,cd,setcd)	
+	if not senya.setchk[cd] then
+		senya.setchk[cd]=true
+		local ex=Effect.GlobalEffect()
+		ex:SetType(EFFECT_TYPE_FIELD)
+		ex:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
+		ex:SetCode(setcd)
+		ex:SetTargetRange(0xff,0xff)
+		ex:SetTarget(aux.TargetBoolFunction(Card.IsCode,cd))
+		Duel.RegisterEffect(ex,0)
+	end
+end
+function senya.sgreg(c,setcd)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
+	e1:SetCode(setcd)
+	c:RegisterEffect(e1)
+end
 --xyz summon of prim
 function senya.rxyz1(c,rk,f)
 	c:EnableReviveLimit()
@@ -213,14 +234,111 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,ct,ct,REASON_COST)
 end
 end
-
+--discard hand cost
 function senya.discost(ct)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,ct,e:GetHandler()) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_COST+REASON_DISCARD,e:GetHandler())
 end
 end
-
+--release cost
+function senya.serlcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsReleasable()end
+	Duel.Release(e:GetHandler(),REASON_COST)
+end
+--for ss effects
+function senya.spfilter(c,e,tp,f,ig,stype)
+	return c:IsCanBeSpecialSummoned(e,stype,tp,ig,ig) and (not f or f(c,e,tp)) and c:IsType(TYPE_MONSTER)
+end
+function senya.tgsptg(loc,f,opp,ig,stype)
+return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	stype=stype or 0
+	if not ig then ig=false end
+	local oploc=0
+	if opp then oploc=loc end
+	if chkc then return chkc:IsLocation(loc) and senya.spfilter(chkc,e,tp,f,ig,stype) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingTarget(senya.spfilter,tp,loc,oploc,1,nil,e,tp,f,ig,stype) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectTarget(tp,senya.spfilter,tp,loc,oploc,1,1,nil,e,tp,f,ig,stype)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+end
+end
+function senya.tgspop(ig,stype,exop)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	ig=ig or false
+	stype=stype or 0
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,stype,tp,tp,ig,ig,POS_FACEUP) then
+		if exop then exop(e,tp,tc,e:GetHandler()) end
+		Duel.SpecialSummonComplete()
+	end
+end
+end
+function senya.sesptg(loc,f,ig,stype)
+return function(e,tp,eg,ep,ev,re,r,rp,chk)
+	stype=stype or 0
+	ig=ig or false
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(senya.spfilter,tp,loc,0,1,nil,e,tp,f,ig,stype) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+end
+end
+function senya.sespop(loc,f,ig,stype,exop)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	stype=stype or 0
+	ig=ig or false
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,senya.spfilter,tp,loc,0,1,1,nil,e,tp,f,ig,stype)
+	local tc=g:GetFirst()
+	if tc and Duel.SpecialSummonStep(tc,stype,tp,tp,ig,ig,POS_FACEUP) then
+		if exop then exop(e,tp,tc,e:GetHandler()) end
+		Duel.SpecialSummonComplete()
+	end
+end
+end
+--for search effects
+function senya.srfilter(c,f)
+	return c:IsAbleToHand() and (not f or f(c))
+end
+function senya.sesrtg(loc,f)
+return function(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(senya.srfilter,tp,loc,0,1,nil,f) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,loc)
+end
+end
+function senya.sesrop(loc,f)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,senya.srfilter,tp,loc,0,1,1,nil,f)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
+end
+function senya.tgsrtg(loc,f)
+return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==loc and senya.srfilter(chkc,f) end
+	if chk==0 then return Duel.IsExistingTarget(senya.srfilter,tp,loc,0,1,nil,f) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,senya.srfilter,tp,loc,0,1,1,nil,f)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+end
+end
+function senya.tgsrop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
+	end
+end
+--arrival condition
+function senya.arcon(e,tp,eg,ep,ev,re,r,rp)
+	return not Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil)
+end
 ---check date dt="Mon" "Tue" etc
 function senya.dtcon(dt,excon)
 	return function(e,tp,eg,ep,ev,re,r,rp)
@@ -298,6 +416,7 @@ function senya.sww(c,ct,ctxm,ctsm,ls)
 end
 function senya.swwsscost(ct,ls)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
+			   if e:GetHandler():IsLocation(LOCATION_HAND) and Duel.IsPlayerAffectedByEffect(tp,37564218) then return true end
 			   if chk==0 then return Duel.IsExistingMatchingCard(senya.swwssfilter,tp,LOCATION_HAND,0,ct,e:GetHandler(),e,ls) end
 			   Duel.DiscardHand(tp,senya.swwssfilter,ct,ct,REASON_COST,e:GetHandler(),e,ls)
 		   end
@@ -422,11 +541,11 @@ if c:IsRelateToEffect(e) and c:IsFaceup() then
 		local t2=ag:FilterCount(Card.IsCode,nil,37564452)
 		local t3=ag:FilterCount(Card.IsCode,nil,37564453)
 		local t4=ag:FilterCount(Card.IsCode,nil,37564454)
-		if t1>0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,bc) then
+		if t1>0 and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,c) then
 			Duel.Hint(HINT_CARD,0,37564451)
 			if Duel.SelectYesNo(tp,aux.Stringid(37564765,1)) then
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-				local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,t1,bc)
+				local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,t1,c)
 				if g:GetCount()>0 then
 					Duel.HintSelection(g)
 					Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
@@ -448,7 +567,7 @@ if c:IsRelateToEffect(e) and c:IsFaceup() then
 			Duel.ShuffleDeck(tp)
 			Duel.Draw(tp,t4*2,REASON_EFFECT)
 		end
-		if val>0 then
+		if val>0 and c:IsRelateToBattle() then
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -671,9 +790,72 @@ function senya.nnhr(c)
 	senya.nntr(c)
 end
 function senya.nntr(c)
+	senya.sgreg(c)
+end
+--for infinity negate effect
+function senya.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
+	local e3=Effect.CreateEffect(c)
+	loc=loc or LOCATION_MZONE
+	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
+	if force then
+		e3:SetType(EFFECT_TYPE_QUICK_F)
+	else
+		e3:SetType(EFFECT_TYPE_QUICK_O)
+	end
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetCountLimit(lmct,lmcd)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e3:SetRange(loc)
+	e3:SetCondition(senya.negcon(excon))
+	if cost then e3:SetCost(cost) end
+	e3:SetTarget(senya.negtg)
+	e3:SetOperation(senya.negop(exop))
+	c:RegisterEffect(e3)
+end
+function senya.negcon(excon)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
+end
+end
+function senya.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
+	end
+end
+function senya.negop(exop)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	local chk=Duel.NegateActivation(ev)
+	if re:GetHandler():IsRelateToEffect(re) then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
+	if chk and exop then
+		exop(e,tp,eg,ep,ev,re,r,rp)
+	end
+end
+end
+function senya.negtrap(c,lmct,lmcd,cost,excon,exop)
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
-	e1:SetCode(37564765)
+	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_CHAINING)
+	e1:SetCountLimit(lmct,lmcd)
+	e1:SetCondition(senya.negcon(excon))
+	if cost then e1:SetCost(cost) end
+	e1:SetTarget(senya.negtg)
+	e1:SetOperation(senya.negop(exop))
 	c:RegisterEffect(e1)
+end
+function senya.drawtg(ct)
+return function(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,ct) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(ct)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
+end
+end
+function senya.drawop(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	Duel.Draw(p,d,REASON_EFFECT)
 end

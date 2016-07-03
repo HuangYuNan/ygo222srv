@@ -1,5 +1,5 @@
 --Sawawa-Seventh Doll
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() require "expansions/script/c37564765" else require "script/c37564765" end end
+require "expansions/script/c37564765"
 function c37564214.initial_effect(c)
 senya.sww(c,2,true,false,false)
 	--move
@@ -71,15 +71,15 @@ function c37564214.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)==0
 end
 function c37564214.filter(c,seq)
-	return c:GetSequence()==seq and c:IsAbleToHand()
+	return c:GetSequence()==seq and c:IsAbleToDeck()
 end
 function c37564214.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(c37564214.filter,tp,0,LOCATION_ONFIELD,1,nil,4-e:GetHandler():GetSequence()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RHAND)
 	local g=Duel.GetMatchingGroup(c37564214.filter,tp,0,LOCATION_ONFIELD,nil,4-e:GetHandler():GetSequence())
-	Duel.SetOperationInfo(0,CATEGORY_RHAND,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
 end
 function c37564214.op(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c37564214.filter,tp,0,LOCATION_ONFIELD,nil,4-e:GetHandler():GetSequence())
-	Duel.SendtoHand(g,nil,REASON_EFFECT)
+	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 end

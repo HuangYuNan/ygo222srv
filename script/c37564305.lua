@@ -1,111 +1,150 @@
---帕拉诺尼亚 240
+--utakat sp
+require "expansions/script/c37564765"
 function c37564305.initial_effect(c)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),5,4,c37564305.ovfilter,aux.Stringid(37564305,0))
-	c:EnableReviveLimit()
+	--summon with 2 tribute
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_TRIBUTE_LIMIT)
+	e0:SetValue(function(e,c)
+		return c:GetSummonLocation()~=LOCATION_EXTRA
+	end)
+	c:RegisterEffect(e0)
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(37564305,1))
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
-	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCondition(c37564305.condition)
-	e1:SetTarget(c37564305.target)
-	e1:SetOperation(c37564305.operation)
+	e1:SetDescription(aux.Stringid(37564305,0))
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_LIMIT_SUMMON_PROC)
+	e1:SetCondition(c37564305.ttcon1)
+	e1:SetOperation(c37564305.ttop1)
+	e1:SetValue(SUMMON_TYPE_ADVANCE)
 	c:RegisterEffect(e1)
-	--spsummon
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(37564305,2))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCost(c37564305.spcost)
-	e2:SetTarget(c37564305.sptg)
-	e2:SetOperation(c37564305.spop)
-	e2:SetHintTiming(0,TIMING_END_PHASE)
-	c:RegisterEffect(e1)
-
---publics
+	e2:SetDescription(aux.Stringid(37564305,1))
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_LIMIT_SUMMON_PROC)
+	e2:SetTargetRange(POS_FACEUP_ATTACK,1)
+	e2:SetCondition(c37564305.ttcon2)
+	e2:SetOperation(c37564305.ttop2)
+	e2:SetValue(SUMMON_TYPE_ADVANCE)
+	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_LIMIT_SET_PROC)
+	e3:SetCondition(c37564305.setcon)
+	c:RegisterEffect(e3)
+	--cannot special summon
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_SPSUMMON_CONDITION)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e4)
+	--control return
 	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetCode(EFFECT_IMMUNE_EFFECT)
-	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCondition(c37564305.immcon)
-	e5:SetValue(c37564305.immfilter)
+	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e5:SetCode(EVENT_SUMMON_SUCCESS)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetOperation(c37564305.retreg)
 	c:RegisterEffect(e5)
+	--cannot be target
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE)
+	e7:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e7:SetCode(EFFECT_CANNOT_BE_BATTLE_TARGET)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetValue(aux.imval1)
+	c:RegisterEffect(e7)
+	local e8=e7:Clone()
+	e8:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e8:SetValue(aux.tgoval)
+	c:RegisterEffect(e8)
+	local e88=e7:Clone()
+	e88:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
+	e88:SetValue(0)
+	c:RegisterEffect(e88)
+	--spsummon
+	local e9=Effect.CreateEffect(c)
+	e9:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e9:SetCode(EVENT_TO_GRAVE)
+	e9:SetCondition(senya.mkcon(false))
+	e9:SetTarget(c37564305.target)
+	e9:SetOperation(c37564305.activate)
+	c:RegisterEffect(e9)
 end
-function c37564305.immcon(e)
-	return e:GetHandler():GetOverlayCount()>0
+function c37564305.ttcon1(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>-2 and Duel.GetTributeCount(c)>=2
 end
---changes
-function c37564305.ovfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x776) and c:GetAttack()==0 and c:GetDefense()==2000
+function c37564305.ttop1(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=Duel.SelectTribute(tp,c,2,2)
+	c:SetMaterial(g)
+	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
-function c37564305.immfilter(e,te)
-	return te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner() and te:GetHandler():GetAttack()>2400
+function c37564305.ttcon2(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	local mg=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
+	return Duel.GetLocationCount(1-tp,LOCATION_MZONE)>-2 and Duel.GetTributeCount(c,mg,true)>=2
 end
---effects
-function c37564305.cfilter(c,e,tp)
-	return c:IsFaceup() and c:GetSummonType()==SUMMON_TYPE_XYZ and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:GetAttack()>e:GetHandler():GetAttack() and c:GetOwner()==1-tp
+function c37564305.ttop2(e,tp,eg,ep,ev,re,r,rp,c)
+	local mg=Duel.GetFieldGroup(tp,0,LOCATION_MZONE)
+	local g=Duel.SelectTribute(tp,c,2,2,mg,true)
+	c:SetMaterial(g)
+	Duel.Release(g,REASON_SUMMON+REASON_MATERIAL)
 end
-function c37564305.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c37564305.cfilter,1,nil,e,tp) and not eg:IsContains(e:GetHandler()) and e:GetHandler():IsType(TYPE_XYZ)
+function c37564305.setcon(e,c)
+	if not c then return true end
+	return false
 end
-function c37564305.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	local g=eg:Filter(c37564305.cfilter,nil,e,tp)
-	Duel.SetTargetCard(eg)
+function c37564305.retreg(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	c:RegisterFlagEffect(37564305,RESET_EVENT+0x1fc0000+RESET_PHASE+PHASE_END,0,2)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_PHASE+PHASE_END)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetLabel(Duel.GetTurnCount()+1)
+	e1:SetCountLimit(1)
+	e1:SetCondition(c37564305.retcon)
+	e1:SetOperation(c37564305.retop)
+	e1:SetReset(RESET_PHASE+PHASE_END,2)
+	Duel.RegisterEffect(e1,tp)
+end
+function c37564305.retcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnCount()==e:GetLabel() and e:GetOwner():GetFlagEffect(37564305)~=0
+end
+function c37564305.retop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetOwner()
+	c:ResetEffect(EFFECT_SET_CONTROL,RESET_CODE)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_SET_CONTROL)
+	e1:SetValue(c:GetOwner())
+	e1:SetReset(RESET_EVENT+0xec0000)
+	c:RegisterEffect(e1)
+end
+function c37564305.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsReleasable() end
+	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c37564305.filter(c,e,tp)
-	return c:IsFaceup() and c:GetSummonType()==SUMMON_TYPE_XYZ and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>0 and c:GetAttack()>e:GetHandler():GetAttack() and c:IsRelateToEffect(e) and c:GetOwner()==1-tp
+	return (c:IsCode(37564303) or c:IsCode(37564201)) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
-function c37564305.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local g=eg:Filter(c37564305.filter,nil,e,tp)
-	local tc=g:GetFirst()
-	local ov=Group.CreateGroup()
-	while tc do
-		if tc:GetOverlayCount()>0 then
-			ov:Merge(tc:GetOverlayGroup())
-		end
-		local tc=g:GetNext()
-	end
-	if ov:GetCount()>0 then
-		Duel.Overlay(c,ov)
+function c37564305.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(c37564305.filter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA+LOCATION_DECK)
+end
+function c37564305.activate(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c37564305.filter,tp,LOCATION_EXTRA+LOCATION_DECK,0,1,1,nil,e,tp)
+	if g:GetCount()>0 then
+		local tc=g:GetFirst()
+		Duel.SpecialSummon(tc,0,tp,tp,true,true,POS_FACEUP)
+		tc:CompleteProcedure()
 	end
 end
 
-function c37564305.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:CheckRemoveOverlayCard(tp,3,REASON_COST) and c:GetFlagEffect(37564305)==0 end
-	c:RemoveOverlayCard(tp,3,3,REASON_COST)
-	c:RegisterFlagEffect(37564305,RESET_CHAIN,0,1)
-end
-function c37564305.sfilter(c,e,tp,rk)
-	return c:GetTextAttack()<e:GetHandler():GetAttack() and e:GetHandler():IsCanBeXyzMaterial(c)
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
-end
-function c37564305.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and Duel.IsExistingMatchingCard(c37564305.sfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,e:GetHandler():GetRank()) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-end
-function c37564305.spop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
-	local c=e:GetHandler()
-	if c:IsFacedown() or not c:IsRelateToEffect(e) or c:IsControler(1-tp) or c:IsImmuneToEffect(e) then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37564305.sfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,c:GetRank())
-	local sc=g:GetFirst()
-	if sc then
-		local mg=c:GetOverlayGroup()
-		if mg:GetCount()~=0 then
-			Duel.Overlay(sc,mg)
-		end
-		sc:SetMaterial(Group.FromCards(c))
-		Duel.Overlay(sc,Group.FromCards(c))
-		Duel.SpecialSummon(sc,SUMMON_TYPE_XYZ,tp,tp,false,false,POS_FACEUP)
-		sc:CompleteProcedure()
-	end
-end

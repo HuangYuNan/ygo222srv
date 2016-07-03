@@ -1,0 +1,17 @@
+--娜娜的班长
+require("/expansions/script/c37564765")
+require("/expansions/script/c37564777")
+function c66623305.initial_effect(c)
+	senya.setreg(c,66623305,66623300)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return Duel.IsExistingMatchingCard(Card.IsHasEffect,tp,LOCATION_SZONE,0,1,nil,66623300)
+	end)
+	e2:SetValue(1000)
+	c:RegisterEffect(e2)
+	prim.nn(c,senya.drawtg(1),senya.drawop,false,CATEGORY_DRAW)
+end

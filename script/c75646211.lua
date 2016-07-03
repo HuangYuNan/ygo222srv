@@ -3,14 +3,6 @@ function c75646211.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,6,2)
 	c:EnableReviveLimit()
-	--imune
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e1:SetRange(LOCATION_MZONE)
-	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetValue(c75646211.efilter)
-	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(75646211,0))
 	e2:SetType(EFFECT_TYPE_QUICK_O)
@@ -41,13 +33,8 @@ function c75646211.initial_effect(c)
 	e4:SetValue(c75646211.atkval)
 	c:RegisterEffect(e4)
 end
-
-function c75646211.efilter(e,te)
-	return te:IsActiveType(TYPE_TRAP)
-end
 function c75646211.ovcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)==	LOCATION_GRAVE 
-		and re:GetHandler():IsSetCard(0x2c2) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+	return re:GetHandler():IsSetCard(0x2c2) and not re:GetHandler():IsCode(75646211) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
 function c75646211.ovtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -66,7 +53,7 @@ end
 function c75646211.condition(e,tp,eg,ep,ev,re,r,rp)
 	for i=1,ev do
 		local te,tgp=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER)
-		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(i) and Duel.GetCurrentChain()>4 then
+		if tgp~=tp and (te:IsActiveType(TYPE_MONSTER) or te:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(i) and Duel.GetCurrentChain()>3 then
 			return true
 		end
 	end

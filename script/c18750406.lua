@@ -13,7 +13,7 @@ function c18750406.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_PZONE)
-	e1:SetCountLimit(1)
+	e1:SetCountLimit(1,18750406)
 	e1:SetTarget(c18750406.target)
 	e1:SetOperation(c18750406.operation)
 	c:RegisterEffect(e1)
@@ -100,19 +100,17 @@ function c18750406.condition3(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
 end
 function c18750406.filter(c,e,tp,lv)
-	return c:IsSetCard(0xab3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()<lv
+	return c:IsSetCard(0xab3) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
 end
 function c18750406.target3(e,tp,eg,ep,ev,re,r,rp,chk)
-	local lv=e:GetHandler():GetLevel()
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c18750406.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,nil,e,tp,lv) end
+		and Duel.IsExistingMatchingCard(c18750406.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,2,nil,e,tp,lv) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA+LOCATION_HAND)
 end
 function c18750406.operation3(e,tp,eg,ep,ev,re,r,rp)
-	local lv=e:GetHandler():GetLevel()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c18750406.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,1,2,nil,e,tp,lv)
+	local g=Duel.SelectMatchingCard(tp,c18750406.filter,tp,LOCATION_EXTRA+LOCATION_HAND,0,2,2,nil,e,tp,lv)
 	if g:GetCount()>0 then
 	 Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

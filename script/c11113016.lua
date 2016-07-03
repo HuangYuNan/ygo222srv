@@ -1,84 +1,51 @@
 --战场女武神 艾利西亚 瓦尔基里
 function c11113016.initial_effect(c)
+	c:SetUniqueOnField(1,0,11113016)
+	--fusion material
 	c:EnableReviveLimit()
-	--cannot special summon
+	aux.AddFusionProcCodeFun(c,11113018,c11113016.ffilter,2,false,false)
+	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(aux.ritlimit)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetValue(c11113016.splimit)
 	c:RegisterEffect(e1)
-	--special summon
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(11113016,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,11113016)
-	e2:SetCost(c11113016.spcost)
-	e2:SetTarget(c11113016.sptg)
-	e2:SetOperation(c11113016.spop)
-	c:RegisterEffect(e2)
 	--to deck
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(11113016,1))
-	e3:SetCategory(CATEGORY_TODECK)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e3:SetCountLimit(1,111130160)
-	e3:SetCondition(c11113016.thcon)
-	e3:SetCost(c11113016.thcost)
-	e3:SetTarget(c11113016.thtg)
-	e3:SetOperation(c11113016.thop)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(11113016,1))
+	e2:SetCategory(CATEGORY_TODECK)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetCountLimit(1,11113016)
+	e2:SetCondition(c11113016.thcon)
+	e2:SetCost(c11113016.thcost)
+	e2:SetTarget(c11113016.thtg)
+	e2:SetOperation(c11113016.thop)
+	c:RegisterEffect(e2)
 	--index
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(11113016,2))
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCountLimit(1,1111301600)
-	e4:SetCost(c11113016.indcost)
-	e4:SetTarget(c11113016.indtg)
-	e4:SetOperation(c11113016.indop)
-	c:RegisterEffect(e4)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(11113016,2))
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,111130160)
+	e3:SetCost(c11113016.indcost)
+	e3:SetTarget(c11113016.indtg)
+	e3:SetOperation(c11113016.indop)
+	c:RegisterEffect(e3)
 end
-function c11113016.mat_filter(c)
-	return c:GetLevel()~=9
+function c11113016.ffilter(c)
+	return c:IsFusionSetCard(0x15c) and c:IsLevelBelow(4) 
 end
-function c11113016.spfilter(c,lv)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and c:GetLevel()==lv and c:IsAbleToRemoveAsCost()
-end
-function c11113016.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11113016.spfilter,tp,LOCATION_MZONE,0,1,nil,2) 
-	    and Duel.IsExistingMatchingCard(c11113016.spfilter,tp,LOCATION_MZONE,0,1,nil,3)  
-		and Duel.IsExistingMatchingCard(c11113016.spfilter,tp,LOCATION_MZONE,0,1,nil,4) 
-	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c11113016.spfilter,tp,LOCATION_MZONE,0,1,1,nil,2)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectMatchingCard(tp,c11113016.spfilter,tp,LOCATION_MZONE,0,1,1,nil,3)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectMatchingCard(tp,c11113016.spfilter,tp,LOCATION_MZONE,0,1,1,nil,4)
-	g:Merge(g1)
-	g:Merge(g2)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function c11113016.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-3
-		and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-end
-function c11113016.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)
-	end
+function c11113016.splimit(e,se,sp,st)
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function c11113016.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_RITUAL
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
 end
 function c11113016.dfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsAbleToDeckAsCost()
@@ -106,7 +73,7 @@ function c11113016.indcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c11113016.infilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and bit.band(c:GetType(),0x81)==0x81
+	return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsType(TYPE_FUSION)
 end
 function c11113016.indtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c11113016.infilter(chkc) end

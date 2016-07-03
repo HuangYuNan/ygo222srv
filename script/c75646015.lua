@@ -14,8 +14,8 @@ function c75646015.initial_effect(c)
 	--atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetCode(EFFECT_UPDATE_ATTACK)
+	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetValue(c75646015.atkval)
 	c:RegisterEffect(e2)
@@ -33,7 +33,7 @@ function c75646015.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_FIELD)
 	e4:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e4:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e4:SetRange(LOCATION_ONFIELD)
+	e4:SetRange(LOCATION_SZONE)
 	e4:SetTargetRange(0,1)
 	e4:SetCondition(c75646015.condition)
 	e4:SetValue(c75646015.aclimit)
@@ -130,7 +130,7 @@ function c75646015.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	Duel.Overlay(c,g)
 end
 function c75646015.atkval(e,c)
-	return Duel.GetOverlayCount(c:GetControler(),LOCATION_MZONE,1)*500
+	return c:GetOverlayCount()*200
 end
 function c75646015.condition(e)
 	local ph=Duel.GetCurrentPhase()

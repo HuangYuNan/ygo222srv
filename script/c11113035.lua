@@ -1,4 +1,4 @@
---战场女武神 吉格
+--战场女武神 莉蒂亚
 function c11113035.initial_effect(c)
     c:SetUniqueOnField(1,0,11113035)
 	--synchro summon
@@ -14,72 +14,91 @@ function c11113035.initial_effect(c)
 	e1:SetTarget(c11113035.rmtg)
 	e1:SetOperation(c11113035.rmop)
 	c:RegisterEffect(e1)
-	--target
+	--negate attack
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetDescription(aux.Stringid(11113035,1))
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_BE_BATTLE_TARGET)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetTargetRange(0,LOCATION_MZONE)
-	e2:SetCode(EFFECT_CANNOT_SELECT_BATTLE_TARGET)
-	e2:SetValue(c11113035.atlimit)
+	e2:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e2:SetCost(c11113035.atktg)
+	e2:SetOperation(c11113035.atkop)
 	c:RegisterEffect(e2)
-	local e3=e2:Clone()
-	e3:SetCode(EFFECT_CANNOT_SELECT_EFFECT_TARGET)
-	e3:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
-	e3:SetTargetRange(0,0xff)
-	e3:SetValue(c11113035.tglimit)
+	--negate effect
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(11113035,1))
+	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_REMOVE)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+	e3:SetCondition(c11113035.negcon)
+	e3:SetTarget(c11113035.negtg)
+	e3:SetOperation(c11113035.negop)
 	c:RegisterEffect(e3)
 end
 function c11113035.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
-function c11113035.filter(c)
-	return c:IsSetCard(0x15c) and c:IsAbleToRemove()
-end
 function c11113035.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c11113035.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
+	if chk==0 then 
+		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 then return false end
+		local g=Duel.GetDecktopGroup(tp,3)
+		return g:FilterCount(Card.IsAbleToRemove,nil)>0
+	end
+end
+function c11113035.rmfilter(c)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15c)
 end
 function c11113035.rmop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c11113035.filter,tp,LOCATION_DECK,0,1,1,nil)
-	local tc=g:GetFirst()
-	if tc and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)~=0 then
+	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 
+	    or not Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_DECK,0,1,nil) then return end
+	Duel.ConfirmDecktop(tp,3)
+	local g=Duel.GetDecktopGroup(tp,3)
+	local sg=g:Filter(c11113035.rmfilter,nil)
+	Duel.DisableShuffleCheck()
+	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+REASON_REVEAL)~=0 
+	   and c:IsFaceup() and c:IsRelateToEffect(e) then
 		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetRange(LOCATION_REMOVED)
-		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-		e1:SetCountLimit(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
-		e1:SetCondition(c11113035.thcon)
-		e1:SetOperation(c11113035.thop)
-		e1:SetLabel(0)
-		tc:RegisterEffect(e1)
-		if tc:IsType(TYPE_MONSTER) and c:IsRelateToEffect(e) and c:IsFaceup() then
-		    local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE)
-			e2:SetCode(EFFECT_UPDATE_ATTACK)
-			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			e2:SetValue(tc:GetLevel()*100)
-			c:RegisterEffect(e2)
-		end	
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetValue(sg:GetCount()*200)
+		e1:SetReset(RESET_EVENT+0x1ff0000)
+		c:RegisterEffect(e1)
 	end
+	Duel.ShuffleDeck(tp)
 end
-function c11113035.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp
+function c11113035.dfilter(c)
+    return c:IsSetCard(0x15c) and c:IsAbleToRemove()
 end
-function c11113035.thop(e,tp,eg,ep,ev,re,r,rp)
-	local ct=e:GetLabel()
-	e:GetHandler():SetTurnCounter(ct+1)
-	if ct==1 then
-		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,e:GetHandler())
-	else e:SetLabel(1) end
+function c11113035.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c11113035.dfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,tp,1)
 end
-function c11113035.atlimit(e,c)
-	return c~=e:GetHandler()
+function c11113035.atkop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c11113035.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	Duel.NegateAttack()
 end
-function c11113035.tglimit(e,re,c)
-	return c:IsControler(e:GetHandlerPlayer()) and c:IsLocation(LOCATION_MZONE) and c~=e:GetHandler()
+function c11113035.negcon(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then return false end
+	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end
+	local tg=Duel.GetChainInfo(ev,CHAININFO_TARGET_CARDS)
+	return tg and tg:IsContains(e:GetHandler()) and ep~=tp and Duel.IsChainNegatable(ev)
+end
+function c11113035.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c11113035.dfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,tp,1)
+end
+function c11113035.negop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c11113035.dfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+	Duel.NegateActivation(ev)
 end

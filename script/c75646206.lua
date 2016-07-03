@@ -19,6 +19,7 @@ function c75646206.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,7564626)
 	e2:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 		Duel.SendtoGrave(e:GetHandler(),REASON_COST)
@@ -37,17 +38,17 @@ function c75646206.initial_effect(c)
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end)
 	c:RegisterEffect(e2)
-	--tograve
+	--atk
 	local e3=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(75646206,1))
-	e3:SetCategory(CATEGORY_TOGRAVE)
+	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetCountLimit(1,7564626)
-	e3:SetCondition(c75646206.tgcon)
-	e3:SetTarget(c75646206.tgtg)
-	e3:SetOperation(c75646206.tgop)
+	e3:SetCondition(c75646206.atcon)
+	e3:SetTarget(c75646206.attg)
+	e3:SetOperation(c75646206.atop)
 	c:RegisterEffect(e3)
 	--tohand
 	local e4=Effect.CreateEffect(c)
@@ -79,28 +80,32 @@ function c75646206.penop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		local g=Duel.SelectMatchingCard(tp,c75646206.penfilter,tp,LOCATION_GRAVE,0,1,2,nil)
+		local g=Duel.SelectMatchingCard(tp,c75646206.penfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 		if g:GetCount()>0 then
 			Duel.SendtoHand(g,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,g)
 		end
 	end
 end
-function c75646206.tgcon(e,tp,eg,ep,ev,re,r,rp)
+function c75646206.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DESTROY)
 end
-function c75646206.tfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2c2) and c:IsAbleToGrave()
+function c75646206.attg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
 end
-function c75646206.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c75646206.tfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-end
-function c75646206.tgop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c75646206.tfilter,tp,LOCATION_DECK,0,1,2,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT)
+function c75646206.atop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,0,LOCATION_MZONE,nil)
+		if g:GetCount()>0 then
+		local sc=g:GetFirst()
+		while sc do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			e1:SetValue(-600)
+			sc:RegisterEffect(e1)
+			sc=g:GetNext()
+		end
 	end
 end
 function c75646206.thcon(e,tp,eg,ep,ev,re,r,rp)

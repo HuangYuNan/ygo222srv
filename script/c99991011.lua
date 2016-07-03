@@ -34,7 +34,7 @@ function c99991011.operation(e,tp,eg,ep,ev,re,r,rp)
 		e3:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 		e3:SetValue(c99991011.efilter)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tg:RegisterEffect(e3)
+		tc:RegisterEffect(e3)
 		tc=g1:GetNext()
 		end
 end

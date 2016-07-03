@@ -1,5 +1,5 @@
 --千年幻想郷～千年疾走響～
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() require "expansions/script/c37564765" else require "script/c37564765" end end
+require "expansions/script/c37564765"
 function c37564210.initial_effect(c)
 	c:SetUniqueOnField(1,1,37564210)
 	c:EnableReviveLimit()
@@ -72,18 +72,23 @@ function c37564210.sumlimit(e,c,sump,sumtype,sumpos,targetp)
 	return c:IsLocation(LOCATION_EXTRA)
 end
 function c37564210.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,0x1e,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0x1e)
 end
 function c37564210.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsType,1-tp,LOCATION_MZONE,0,nil,TYPE_MONSTER)
-	if g:GetCount()>0 then
-		local tg=g:GetMaxGroup(Card.GetAttack)
-		if tg:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
-		local sg=g:Select(1-tp,1,1,nil)
-		Duel.HintSelection(sg)
-		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
-		else Duel.Remove(tg,POS_FACEUP,REASON_RULE) end
+	local g1=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
+	local g3=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_HAND,nil)
+	local sg=Group.CreateGroup()
+	if g1:GetCount()>0 and (g3:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(37564210,0))) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local sg1=g1:Select(tp,1,1,nil)
+		Duel.HintSelection(sg1)
+		sg:Merge(sg1)
 	end
+	if g3:GetCount()>0 and (sg:GetCount()==0 or Duel.SelectYesNo(tp,aux.Stringid(37564210,1))) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		local sg3=g3:RandomSelect(tp,1)
+		sg:Merge(sg3)
+	end
+	Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 end

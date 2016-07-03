@@ -38,7 +38,8 @@ function c11113023.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if opt==0 then
 		e:SetProperty(0)
 	else
-        e:SetCategory(CATEGORY_SPECIAL_SUMMON)		
+        e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+        Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)		
     end
 end
 function c11113023.operation(e,tp,eg,ep,ev,re,r,rp)

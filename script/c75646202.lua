@@ -1,44 +1,23 @@
 --天之痕 樱花巫女
 function c75646202.initial_effect(c)
 	--pendulum summon
-	aux.EnablePendulumAttribute(c,false)
-	--Activate
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(1160)
-	e5:SetType(EFFECT_TYPE_ACTIVATE)
-	e5:SetCode(EVENT_FREE_CHAIN)
-	c:RegisterEffect(e5)
-	--splimit
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetTargetRange(1,0)
-	e1:SetCondition(function(e)
-		return not e:GetHandler():IsForbidden()
-	end)
-	e1:SetTarget(function(e,c,tp,sumtp,sumpos)
-		return not c:IsSetCard(0x2c2) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
-	end)
-	c:RegisterEffect(e1)
-	----to grave
+	aux.EnablePendulumAttribute(c)
+	----atk
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(75646202,0))
-	e2:SetCategory(CATEGORY_TOGRAVE)
+	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,75646202)
-	e2:SetCost(c75646202.cost)
-	e2:SetTarget(c75646202.tgtg)
-	e2:SetOperation(c75646202.tgop)
+	e2:SetCountLimit(1)
+	e2:SetCode(EVENT_CHAINING)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetTarget(c75646202.attg)
+	e2:SetOperation(c75646202.atop)
 	c:RegisterEffect(e2)
 	--remove
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(75646202,1))
 	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetRange(LOCATION_GRAVE)
+	e3:SetRange(LOCATION_MZONE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetCountLimit(1,7564622)
@@ -50,7 +29,7 @@ function c75646202.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(75646202,2))
 	e4:SetCategory(CATEGORY_RECOVER)
-	e4:SetRange(LOCATION_GRAVE)
+	e4:SetRange(LOCATION_MZONE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,7564622)
@@ -59,22 +38,29 @@ function c75646202.initial_effect(c)
 	e4:SetOperation(c75646202.recop)
 	c:RegisterEffect(e4)
 end
-function c75646202.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
+function c75646202.rfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) 
 end
-function c75646202.tfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2c2) and c:IsAbleToGrave()
+function c75646202.attg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c75646202.rfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 end
-function c75646202.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c75646202.tfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
-end
-function c75646202.tgop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c75646202.tfilter,tp,LOCATION_DECK,0,1,2,nil)
+function c75646202.atop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
+	local g=Duel.GetMatchingGroup(c75646202.rfilter,tp,LOCATION_MZONE,0,nil)
 	if g:GetCount()>0 then
-		Duel.SendtoGrave(g,REASON_EFFECT)
+		local tc=g:GetFirst()
+		while tc do
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			e1:SetValue(200)
+			tc:RegisterEffect(e1)
+			tc=g:GetNext()
+		end
+	end
 	end
 end
 function c75646202.descon(e,tp,eg,ep,ev,re,r,rp)

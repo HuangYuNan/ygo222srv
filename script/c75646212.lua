@@ -18,14 +18,6 @@ function c75646212.initial_effect(c)
 	e2:SetCondition(c75646212.sprcon)
 	e2:SetOperation(c75646212.sprop)
 	c:RegisterEffect(e2)
-	--imune
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCode(EFFECT_IMMUNE_EFFECT)
-	e3:SetValue(c75646212.efilter)
-	c:RegisterEffect(e3)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_CHAINING)
@@ -44,9 +36,6 @@ function c75646212.initial_effect(c)
 	e5:SetTarget(c75646212.target)
 	e5:SetOperation(c75646212.operation)
 	c:RegisterEffect(e5)
-end
-function c75646212.efilter(e,te)
-	return te:IsActiveType(TYPE_TRAP)
 end
 function c75646212.sprfilter1(c,tp,fc)
 	return c:IsSetCard(0x2c2) and c:IsCanBeFusionMaterial(fc)
@@ -82,8 +71,8 @@ end
 function c75646212.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
-	local dam=Duel.GetCurrentChain()*300
-	e:SetLabel(dam)
+	local atk=Duel.GetCurrentChain()*300
+	e:SetLabel(atk)
 end
 function c75646212.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

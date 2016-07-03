@@ -6,7 +6,7 @@ function c75646207.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_FZONE)
+	e1:SetRange(LOCATION_PZONE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,75646207)
 	e1:SetTarget(c75646207.destg1)
@@ -19,6 +19,7 @@ function c75646207.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_HAND)
+	e2:SetCountLimit(1,7564627)
 	e2:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
 		Duel.SendtoGrave(e:GetHandler(),REASON_COST)
@@ -62,10 +63,10 @@ function c75646207.initial_effect(c)
 		end
 	end)
 	c:RegisterEffect(e3)
-	--tohand
+	--atk
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(75646207,2))
-	e4:SetCategory(CATEGORY_TOGRAVE)
+	e4:SetCategory(CATEGORY_ATKCHANGE)
 	e4:SetRange(LOCATION_GRAVE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
@@ -74,20 +75,31 @@ function c75646207.initial_effect(c)
 		return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_TOHAND)
 	end)
 	e4:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return Duel.IsExistingMatchingCard(c75646207.tfilter,tp,LOCATION_DECK,0,1,nil) end
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+		if chk==0 then return Duel.IsExistingMatchingCard(c75646207.rfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
 	end)
-	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local g=Duel.SelectMatchingCard(tp,c75646207.tfilter,tp,LOCATION_DECK,0,1,2,nil)
-		if g:GetCount()>0 then
-			Duel.SendtoGrave(g,REASON_EFFECT)
-		end
-	end)
+	e4:SetOperation(c75646207.atop)
 	c:RegisterEffect(e4)
 end
-function c75646207.tfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2c2) and c:IsAbleToGrave()
+function c75646207.rfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x2c2) and IsType(TYPE_MONSTER) 
+end
+function c75646207.atop(e,tp,eg,ep,ev,re,r,rp)
+		if not e:GetHandler():IsRelateToEffect(e) then return end
+		if Duel.Destroy(e:GetHandler(),REASON_EFFECT)~=0 then
+		local g=Duel.GetMatchingGroup(c75646207.rfilter,tp,LOCATION_MZONE,0,nil)
+		if g:GetCount()==0 then return end
+		local tc=g:GetFirst()
+		while tc do
+		local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UPDATE_ATTACK)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			e1:SetValue(600)
+			tc:RegisterEffect(e1)
+			tc=g:GetNext()
+		end
+	end
 end
 function c75646207.desfilter(c)
 	return c:IsFaceup() and c:IsDestructable()

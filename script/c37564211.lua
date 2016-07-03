@@ -1,16 +1,15 @@
 --Sawawa-NyaNya and Wa
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() require "expansions/script/c37564765" else require "script/c37564765" end end
+require "expansions/script/c37564765"
 function c37564211.initial_effect(c)	
-senya.sww(c,2,false,false,false)
+senya.sww(c,1,false,false,false)
    local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564211,1))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,37564211)
 	e1:SetCondition(senya.swwblex)
-	e1:SetCost(senya.swwrmcost(2))
+	e1:SetCost(senya.swwrmcost(1))
 	e1:SetTarget(c37564211.tg)
 	e1:SetOperation(c37564211.op)
 	c:RegisterEffect(e1)

@@ -14,7 +14,6 @@ function c11113036.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCondition(c11113036.discon)
-	e1:SetCost(c11113036.discost)
 	e1:SetTarget(c11113036.distg)
 	e1:SetOperation(c11113036.disop)
 	c:RegisterEffect(e1)
@@ -30,28 +29,26 @@ function c11113036.initial_effect(c)
 	e2:SetOperation(c11113036.rtop)
 	c:RegisterEffect(e2)
 end
-function c11113036.cfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsAbleToDeckAsCost()
-end
 function c11113036.discon(e,tp,eg,ep,ev,re,r,rp)
    return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 		and ep~=tp and re:IsHasType(EFFECT_TYPE_ACTIVATE) and Duel.IsChainNegatable(ev)
 end
-function c11113036.discost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11113036.cfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,c11113036.cfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	Duel.HintSelection(g)
-	Duel.SendtoDeck(g,nil,2,REASON_COST)
+function c11113036.dfilter(c)
+    return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0x15c) and c:IsAbleToRemove()
 end
 function c11113036.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c11113036.dfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,tp,1)
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsAbleToRemove() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_REMOVE,eg,1,0,0)
 	end
 end
 function c11113036.disop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c11113036.dfilter,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil)
+	if g:GetCount()==0 then return end
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	Duel.NegateActivation(ev)
 	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)

@@ -44,31 +44,15 @@ function c11113040.posop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) then
-	    if tc:GetFlagEffect(11113040)==0 then
-			tc:RegisterFlagEffect(11113040,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetValue(1)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e1)
-			local e2=Effect.CreateEffect(c)
-			e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-			e2:SetCode(EVENT_DAMAGE_STEP_END)
-			e2:SetCondition(c11113040.descon)
-			e2:SetOperation(c11113040.desop)
-			e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			tc:RegisterEffect(e2)
-		end
+	    local e1=Effect.CreateEffect(c)
+	    e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetValue(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+		tc:RegisterEffect(e2)
 	end
-end
-function c11113040.descon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler():GetBattleTarget()
-	return tc and tc:IsRelateToBattle() and e:GetOwnerPlayer()==tp
-end
-function c11113040.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetHandler():GetBattleTarget()
-	Duel.Hint(HINT_CARD,0,11113040)
-	Duel.Destroy(tc,REASON_EFFECT)
 end

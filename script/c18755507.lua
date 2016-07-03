@@ -66,10 +66,6 @@ function c18755507.activate(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e2)
 	end
-	if c:IsAbleToHand() then
-		Duel.SendtoHand(c,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,e:GetHandler())
-	end
 end
 function c18755507.desfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsFaceup() and c:IsSetCard(0xabb)

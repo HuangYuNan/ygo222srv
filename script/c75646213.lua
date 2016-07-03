@@ -22,7 +22,7 @@ function c75646213.initial_effect(c)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
 	e3:SetTarget(c75646213.retarget1)
-	e3:SetValue(500)
+	e3:SetValue(300)
 	c:RegisterEffect(e3)
 	--search
 	local e4=Effect.CreateEffect(c)
@@ -40,7 +40,7 @@ function c75646213.cfilter(c)
 	return c:IsSetCard(0x2c2)
 end
 function c75646213.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c75646213.cfilter,tp,LOCATION_GRAVE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c75646213.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
 end
 function c75646213.aclimit(e,re,tp)
 	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_COUNTER) and not re:GetHandler():IsImmuneToEffect(e)

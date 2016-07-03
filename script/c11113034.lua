@@ -2,21 +2,12 @@
 function c11113034.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--splimit
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c11113034.splimit)
-	c:RegisterEffect(e1)
 	--pendulum
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(11113034,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1,11113034)
 	e2:SetCondition(c11113034.condition)
@@ -44,9 +35,6 @@ function c11113034.initial_effect(c)
 	e5:SetTarget(c11113034.destg)
 	e5:SetOperation(c11113034.desop)
 	c:RegisterEffect(e5)
-end
-function c11113034.splimit(e,c)
-	return not (c:IsSetCard(0x15c) or c:IsType(TYPE_SYNCHRO))
 end
 function c11113034.cfilter(c,tp)
 	return c:IsFaceup() and c:GetSummonPlayer()==tp and c:IsSetCard(0x15c) and not c:IsCode(11113034)
@@ -102,17 +90,4 @@ function c11113034.desop(e,tp,eg,ep,ev,re,r,rp)
 	    Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
-end
-function c11113034.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_SYNCHRO and not re:GetHandler():IsSetCard(0x15c)
-end
-function c11113034.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local rc=c:GetReasonCard()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e1:SetValue(rc:GetAttack()/2)
-	rc:RegisterEffect(e1)
 end

@@ -1,70 +1,46 @@
 --战场女武神 谜之瓦尔基里
 function c11113029.initial_effect(c)
+	c:SetUniqueOnField(1,0,11113029)
+	--fusion material
 	c:EnableReviveLimit()
-	--cannot special summon
+	aux.AddFusionProcCodeFun(c,11113009,c11113029.ffilter,1,true,false)
+	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(aux.ritlimit)
+	e1:SetRange(LOCATION_EXTRA)
+	e1:SetValue(c11113029.splimit)
 	c:RegisterEffect(e1)
-	--special summon
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(11113029,0))
-	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e2:SetType(EFFECT_TYPE_IGNITION)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,11113029)
-	e2:SetCost(c11113029.spcost)
-	e2:SetTarget(c11113029.sptg)
-	e2:SetOperation(c11113029.spop)
-	c:RegisterEffect(e2)
 	--destroy & remove
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(11113029,1))
-	e3:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE)
-	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,111130290)
-	e3:SetCost(c11113029.cost)
-	e3:SetTarget(c11113029.target)
-	e3:SetOperation(c11113029.operation)
-	c:RegisterEffect(e3)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(11113029,1))
+	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_REMOVE)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1,11113029)
+	e2:SetCost(c11113029.cost)
+	e2:SetTarget(c11113029.target)
+	e2:SetOperation(c11113029.operation)
+	c:RegisterEffect(e2)
 	--tohand
-	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(11113029,2))
-	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)
-	e4:SetCountLimit(1,1111302900)
-	e4:SetCondition(c11113029.thcon)
-	e4:SetCost(c11113029.thcost)
-	e4:SetTarget(c11113029.thtg)
-	e4:SetOperation(c11113029.thop)
-	c:RegisterEffect(e4)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(11113029,2))
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCountLimit(1,111130290)
+	e3:SetCondition(c11113029.thcon)
+	e3:SetCost(c11113029.thcost)
+	e3:SetTarget(c11113029.thtg)
+	e3:SetOperation(c11113029.thop)
+	c:RegisterEffect(e3)
 end
-function c11113029.mat_filter(c)
-	return c:GetLevel()~=8
+function c11113029.ffilter(c)
+	return c:IsFusionSetCard(0x15c) and c:IsType(TYPE_TUNER)
 end
-function c11113029.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and c:GetLevel()==4 and c:IsAbleToRemoveAsCost()
-end
-function c11113029.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11113029.spfilter,tp,LOCATION_MZONE,0,2,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c11113029.spfilter,tp,LOCATION_MZONE,0,2,2,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function c11113029.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and e:GetHandler():IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-end
-function c11113029.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)
-	end
+function c11113029.splimit(e,se,sp,st)
+	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
 end
 function c11113029.dfilter(c)
     return c:IsFaceup() and c:IsSetCard(0x15c) and c:IsAbleToDeckAsCost()

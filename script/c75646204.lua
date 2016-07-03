@@ -2,30 +2,14 @@
 function c75646204.initial_effect(c)
 	--pendulum summon
 	aux.EnablePendulumAttribute(c)
-	--splimit
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetRange(LOCATION_PZONE)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-	e1:SetTargetRange(1,0)
-	e1:SetCondition(function(e)
-		return not e:GetHandler():IsForbidden()
-	end)
-	e1:SetTarget(function(e,c,tp,sumtp,sumpos)
-		return not c:IsSetCard(0x2c2) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
-	end)
-	c:RegisterEffect(e1)
 	--destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(75646204,1))
 	e2:SetCategory(CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetRange(LOCATION_HAND)
-	e2:SetCountLimit(1,75646204)
-	e2:SetCondition(c75646204.descon)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCountLimit(1)
 	e2:SetCost(c75646204.cost)
 	e2:SetTarget(c75646204.destg)
 	e2:SetOperation(c75646204.desop)
@@ -34,7 +18,7 @@ function c75646204.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(75646204,2))
 	e3:SetCategory(CATEGORY_RECOVER)
-	e3:SetRange(LOCATION_GRAVE)
+	e3:SetRange(LOCATION_PZONE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetCountLimit(1,7564624)
@@ -47,49 +31,22 @@ function c75646204.initial_effect(c)
 	e4:SetDescription(aux.Stringid(75646204,3))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetRange(LOCATION_GRAVE)
+	e4:SetRange(LOCATION_PZONE)
+	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,7564624)
 	e4:SetCondition(c75646204.sumcon)
 	e4:SetTarget(c75646204.sumtg)
 	e4:SetOperation(c75646204.sumop)
 	c:RegisterEffect(e4)
 end
-function c75646204.filter2(c)
-	return c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
-end
-function c75646204.drtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c75646204.filter2(chkc) end
-	if chk==0 then return Duel.IsPlayerCanDraw(tp,1)
-		and Duel.IsExistingTarget(c75646204.filter2,tp,LOCATION_GRAVE,0,4,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectTarget(tp,c75646204.filter2,tp,LOCATION_GRAVE,0,4,4,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,4,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-end
-function c75646204.drop(e,tp,eg,ep,ev,re,r,rp)
-	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	if not tg or tg:FilterCount(Card.IsRelateToEffect,nil,e)~=4 then return end
-	Duel.SendtoDeck(tg,nil,0,REASON_EFFECT)
-	local g=Duel.GetOperatedGroup()
-	local ct=g:FilterCount(Card.IsLocation,nil,LOCATION_DECK+LOCATION_EXTRA)
-	if ct==5 then
-		Duel.ShuffleDeck(tp)		
-	end
-	Duel.Draw(tp,2,REASON_EFFECT)
-end
 function c75646204.cfilter(c,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x2c2) and c:IsAbleToGraveAsCost()
 end
 function c75646204.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() 
-		and Duel.IsExistingMatchingCard(c75646204.cfilter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c75646204.cfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c75646204.cfilter,tp,LOCATION_DECK,0,1,1,nil)
-	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
+	local g=Duel.SelectMatchingCard(tp,c75646204.cfilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
-end
-function c75646204.descon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()>2
 end
 function c75646204.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsDestructable() end
@@ -118,7 +75,7 @@ function c75646204.reop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Recover(p,d,REASON_EFFECT)
 end
 function c75646204.sumcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_TOGRAVE)
+	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_ATKCHANGE)
 end
 function c75646204.nfilter(c,e,sp)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,sp,false,false)
