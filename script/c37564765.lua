@@ -13,7 +13,7 @@ if not Card.GetDefense then
 end
 --effect setcode tech
 senya.setchk=senya.setchk or {}
-function senya.setreg(c,cd,setcd)	
+function senya.setreg(c,cd,setcd)   
 	if not senya.setchk[cd] then
 		senya.setchk[cd]=true
 		local ex=Effect.GlobalEffect()
@@ -243,8 +243,12 @@ end
 end
 --release cost
 function senya.serlcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable()end
+	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
+end
+function senya.sermcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
+	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 --for ss effects
 function senya.spfilter(c,e,tp,f,ig,stype)
@@ -790,7 +794,7 @@ function senya.nnhr(c)
 	senya.nntr(c)
 end
 function senya.nntr(c)
-	senya.sgreg(c)
+	senya.sgreg(c,37564765)
 end
 --for infinity negate effect
 function senya.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
