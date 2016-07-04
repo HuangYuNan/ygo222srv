@@ -59,7 +59,7 @@ function c10953640.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c10953640.filter2(c)
-	return (c:IsSetCard(0x350) and c:IsRace(RACE_THUNDER) and not c:IsCode(10953640)) or c:IsCode(10953640) and c:IsAbleToHand()
+	return (c:IsSetCard(0x350) and c:IsRace(RACE_THUNDER) and not c:IsCode(10953640)) or c:IsCode(5012603) and c:IsAbleToHand()
 end
 function c10953640.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c10953640.filter2,tp,LOCATION_DECK,0,1,nil) end
