@@ -2,6 +2,8 @@ senya=senya or {}
 os=require('os')
 --7CG universal scripts
 --test parts
+senya.delay=0x14000
+senya.fix=0x40400
 if not Card.GetDefense then
 	Card.GetDefense=Card.GetDefence
 	Card.GetBaseDefense=Card.GetBaseDefence
@@ -862,4 +864,12 @@ end
 function senya.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+function senya.prsyfilter(c)
+	return c:IsHasEffect(37564600) and c:IsType(TYPE_SYNCHRO)
+end
+function senya.prl4(c,cd)
+	senya.setreg(c,cd,37564600)
+	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsHasEffect,37564600),1)
+	c:EnableReviveLimit()
 end

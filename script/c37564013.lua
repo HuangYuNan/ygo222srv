@@ -1,6 +1,7 @@
 --元素的使者·Prim
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() require "expansions/script/c37564765" else require "script/c37564765" end end
+require "expansions/script/c37564765"
 function c37564013.initial_effect(c)
+	senya.setreg(c,37564013,37564600)
 	senya.rxyz1(c,4)
 	--攻击上升
 	local e2=Effect.CreateEffect(c)
