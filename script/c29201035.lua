@@ -18,7 +18,7 @@ function c29201035.initial_effect(c)
     e2:SetDescription(aux.Stringid(29201035,1))
     e2:SetCategory(CATEGORY_TOGRAVE)
     e2:SetType(EFFECT_TYPE_IGNITION)
-    e2:SetCountLimit(1,29201033)
+    e2:SetCountLimit(1,29201034)
     e2:SetRange(LOCATION_SZONE)
     e2:SetTarget(c29201035.sgtg)
     e2:SetOperation(c29201035.sgop)
@@ -62,8 +62,7 @@ end
 function c29201035.filter(c)
     return c:IsSetCard(0x63e0) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
-function c29201035.sgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    local c=e:GetHandler()
+function c29201035.sgtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(c29201035.filter,tp,LOCATION_DECK,0,1,nil) end
     Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
@@ -80,7 +79,7 @@ end
 function c29201035.matfilter(c)
     return c:IsLevelBelow(4) and c:IsSetCard(0x63e0) and c:IsType(TYPE_MONSTER)
 end
-function c29201035.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c29201035.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
     if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c29201035.matfilter(chkc) end
     if chk==0 then return Duel.IsExistingMatchingCard(c29201035.matfilter,tp,LOCATION_GRAVE,0,1,nil)
         and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
