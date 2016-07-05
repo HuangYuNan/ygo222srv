@@ -1,14 +1,15 @@
 --扑克魔术 薄荷茶
 function c66612302.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetRange(LOCATION_HAND)
+	e1:SetCondition(c66612302.pucon)
 	e1:SetCost(c66612302.cost)
-	e1:SetTarget(c66612302.target)
 	e1:SetOperation(c66612302.operation)
 	c:RegisterEffect(e1)
-	if not c66612302.global_check then
+	--[[if not c66612302.global_check then
 		c66612302.global_check=true
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -20,43 +21,28 @@ function c66612302.initial_effect(c)
 		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
 		ge2:SetOperation(c66612302.clear)
 		Duel.RegisterEffect(ge2,0)
-	end
+	end--]]
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_UPDATE_ATTACK)
-	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e2:SetDescription(aux.Stringid(66612302,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCondition(c66612302.lvcon)
-	e2:SetValue(600)
+	e2:SetCode(EVENT_TO_GRAVE)
+	e2:SetCondition(c66612302.spcon)
+	e2:SetTarget(c66612302.sptg)
+	e2:SetOperation(c66612302.spop)
+	e2:SetCountLimit(1)
 	c:RegisterEffect(e2)
+	--search
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetCode(EFFECT_CHANGE_LEVEL)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetCondition(c66612302.lvcon)
-	e3:SetValue(6)
+	e3:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetTarget(c66612302.setg)
+	e3:SetOperation(c66612302.seop)
 	c:RegisterEffect(e3)
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_SINGLE)
-	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
-	e4:SetCountLimit(1)
-	e4:SetCondition(c66612302.lvcon)
-	e4:SetValue(c66612302.valcon)
-	c:RegisterEffect(e4)
-	--tohands
-	local e5=Effect.CreateEffect(c)
-	e5:SetDescription(aux.Stringid(66612302,0))
-	e5:SetCategory(CATEGORY_TODECK)
-	e5:SetType(EFFECT_TYPE_IGNITION)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetCost(c66612302.cost)
-	e5:SetCondition(c66612302.thcon)
-	e5:SetTarget(c66612302.thtarget)
-	e5:SetOperation(c66612302.thoperation)
-	c:RegisterEffect(e5)
 end
 function c66612302.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
@@ -74,54 +60,84 @@ end
 function c66612302.cfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x660)
 end
-function c66612302.lvcon(e)
-	local c=e:GetHandler()
-	return Duel.IsExistingMatchingCard(c66612302.cfilter,c:GetControler(),LOCATION_MZONE,0,3,nil)
+function c66612302.pucon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
 end
 function c66612302.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return c:IsAbleToGraveAsCost() and c:IsDiscardable()  and c66612302[tp] end
-	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
+	if chk==0 then return not e:GetHandler():IsPublic() and  Duel.GetFlagEffect(tp,66612301)==0 end
+	Duel.RegisterFlagEffect(tp,66612301,RESET_PHASE+PHASE_END,0,1)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_PUBLIC)
+	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
+	e:GetHandler():RegisterEffect(e1)
 end
-function c66612302.filter(c)
+function c66612302.operation(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_CARD,0,66612361)
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c66612302.con)
+	e1:SetOperation(c66612302.op)
+	e1:SetReset(RESET_PHASE+PHASE_END+RESET_OPPO_TURN)
+	Duel.RegisterEffect(e1,tp)
+end
+function c66612302.filter(c,tp)
+	return c:IsSetCard(0x660) and c:IsControler(tp) and  bit.band(c:GetSummonType(),SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION 
+end
+function c66612302.con(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c66612302.filter,1,nil,tp)
+end
+function c66612302.gvfilter(c,e,tp)
+	return c:IsSetCard(0x660) and c:IsLevelBelow(4) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENCE)
+end
+function c66612302.op(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsExistingMatchingCard(c66612302.gvfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0	
+	and Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_HAND,0,1,nil)
+	and Duel.SelectYesNo(tp,aux.Stringid(66612302,0)) then
+	Duel.Hint(HINT_CARD,0,66612302)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_HINTMSG_TOGRAVE)
+	local ct=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_HAND,0,1,1,nil)
+	if Duel.SendtoGrave(ct,REASON_EFFECT)>0 then	
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c66612302.gvfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
+	Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP_DEFENCE)
+	end
+end
+end
+function c66612302.tgfilter(c,tp)
+	return c:IsControler(tp) and c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_ONFIELD)
+end
+function c66612302.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c66612302.tgfilter,1,nil,tp)
+end
+function c66612302.spfilter(c,e,tp)
+	return c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+end
+function c66612302.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66612302.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp)
+    and Duel.GetLocationCount(tp,LOCATION_MZONE)>0	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
+end
+function c66612302.spop(e,tp,eg,ep,ev,re,r,rp)
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local tg=Duel.SelectMatchingCard(tp,c66612302.spfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	if tg:GetCount()>0 then
+	Duel.SpecialSummon(tg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	end
+end
+function c66612302.sefilter(c)
 	return c:GetCode()==66612316 and c:IsAbleToHand()
 end
-function c66612302.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66612302.filter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+function c66612302.setg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66612302.sefilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,0)
 end
-function c66612302.operation(e,tp,eg,ep,ev,re,r,rp,chk)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tg=Duel.GetFirstMatchingCard(c66612302.filter,tp,LOCATION_DECK,0,nil)
+function c66612302.seop(e,tp,eg,ep,ev,re,r,rp)
+	local tg=Duel.GetFirstMatchingCard(c66612302.sefilter,tp,LOCATION_DECK,0,nil)
 	if tg then
 		Duel.SendtoHand(tg,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tg)
-	end
-end
-function c66612302.valcon(e,re,r,rp)
-	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
-end
-function c66612302.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x660) and c:IsLevelAbove(5)
-end
-function c66612302.thcon(e)
-	local c=e:GetHandler()
-	return Duel.IsExistingMatchingCard(c66612302.thfilter,c:GetControler(),LOCATION_MZONE,0,1,nil)
-end
-function c66612302.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
-end
-function c66612302.thtarget(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsAbleToHand() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
-end
-function c66612302.thoperation(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 	end
 end

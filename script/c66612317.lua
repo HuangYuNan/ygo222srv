@@ -6,11 +6,10 @@ function c66612317.initial_effect(c)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,66612317)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
-	e1:SetCost(c66612317.cost)
 	e1:SetTarget(c66612317.target)
 	e1:SetOperation(c66612317.activate)
 	c:RegisterEffect(e1)
-	if not c66612317.global_check then
+	--[[if not c66612317.global_check then
 		c66612317.global_check=true
 		local ge1=Effect.CreateEffect(c)
 		ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -22,7 +21,7 @@ function c66612317.initial_effect(c)
 		ge2:SetCode(EVENT_PHASE_START+PHASE_DRAW)
 		ge2:SetOperation(c66612317.clear)
 		Duel.RegisterEffect(ge2,0)
-	end
+	end--]]
 end
 function c66612317.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
@@ -40,9 +39,14 @@ end
 function c66612317.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c66612317[tp] end
 end
+function c66612317.cfilter(c)
+	return c:IsFaceup() and c:IsSetCard(0x660)
+end
 function c66612317.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,66612321,0,0x4011,0,0,1,RACE_SPELLCASTER,ATTRIBUTE_DARK) and Duel.IsPlayerCanSpecialSummonMonster(tp,66612322,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) end
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1  and not Duel.IsPlayerAffectedByEffect(tp,59822133)
+	and Duel.IsPlayerCanSpecialSummonMonster(tp,66612321,0,0x4011,0,0,1,RACE_SPELLCASTER,ATTRIBUTE_DARK)
+	and Duel.IsExistingMatchingCard(c66612317.cfilter,tp,LOCATION_MZONE,0,1,nil) 
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,66612322,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) end
 	local t={}
 	local i=1
 	local p=1
@@ -53,36 +57,59 @@ function c66612317.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	t[p]=nil
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(26082117,1))
 	e:SetLabel(Duel.AnnounceNumber(tp,table.unpack(t)))
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,4,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,4,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c66612317.activate(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.IsPlayerAffectedByEffect(tp,59822133) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>1 
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,66612321,0,0x4011,0,0,1,RACE_SPELLCASTER,ATTRIBUTE_DARK) and Duel.IsPlayerCanSpecialSummonMonster(tp,66612322,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) then
-		for m=4,5 do
-			local token=Duel.CreateToken(tp,66612317+m)
-			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+	    and Duel.IsPlayerCanSpecialSummonMonster(tp,66612321,0,0x4011,0,0,1,RACE_SPELLCASTER,ATTRIBUTE_DARK)
+		and  Duel.IsPlayerCanSpecialSummonMonster(tp,66612322,0,0x4011,0,0,1,RACE_WARRIOR,ATTRIBUTE_LIGHT) then
+			local token1=Duel.CreateToken(tp,66612321)
+			Duel.SpecialSummonStep(token1,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_UNRELEASABLE_SUM)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetValue(1)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
-			token:RegisterEffect(e1,true)
+			token1:RegisterEffect(e1,true)
 			local e2=Effect.CreateEffect(e:GetHandler())
 			e2:SetType(EFFECT_TYPE_SINGLE)
 			e2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e2:SetValue(1)
 			e2:SetReset(RESET_EVENT+0x1fe0000)
-			token:RegisterEffect(e2,true)
+			token1:RegisterEffect(e2,true)
 			local e3=Effect.CreateEffect(e:GetHandler())
 			e3:SetType(EFFECT_TYPE_SINGLE)
 			e3:SetCode(EFFECT_CHANGE_LEVEL)
 			e3:SetValue(e:GetLabel())
 			e3:SetReset(RESET_EVENT+0x1fe0000)
-			token:RegisterEffect(e3,true)
-		end
-		Duel.SpecialSummonComplete()
+			token1:RegisterEffect(e3,true)
+		    Duel.SpecialSummonComplete()
+		    local token2=Duel.CreateToken(tp,66612322)
+			Duel.SpecialSummonStep(token2,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_UNRELEASABLE_SUM)
+			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e1:SetValue(1)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
+			token2:RegisterEffect(e1,true)
+			local e2=Effect.CreateEffect(e:GetHandler())
+			e2:SetType(EFFECT_TYPE_SINGLE)
+			e2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+			e2:SetValue(1)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
+			token2:RegisterEffect(e2,true)
+			local e3=Effect.CreateEffect(e:GetHandler())
+			e3:SetType(EFFECT_TYPE_SINGLE)
+			e3:SetCode(EFFECT_CHANGE_LEVEL)
+			e3:SetValue(e:GetLabel())
+			e3:SetReset(RESET_EVENT+0x1fe0000)
+			token2:RegisterEffect(e3,true)
+		    Duel.SpecialSummonComplete()
 	end
 end
