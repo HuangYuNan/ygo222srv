@@ -35,7 +35,7 @@ end
 function c37564603.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsDestructable() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
@@ -74,7 +74,7 @@ function c37564603.op(e,tp,eg,ep,ev,re,r,rp)
 				e1:SetCountLimit(1)
 				e1:SetOperation(c37564603.retop)
 				Duel.RegisterEffect(e1,tp)
-				local tc=og:GetFirst()		  
+				local tc=og:GetFirst()		
 				while tc do
 					tc:RegisterFlagEffect(37564603,RESET_EVENT+0x1fe0000,0,1)
 					tc=og:GetNext()
