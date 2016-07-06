@@ -20,7 +20,6 @@ function c1001207.initial_effect(c)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1)
 	e3:SetTarget(c1001207.target)
-	e3:SetOperation(c1001207.activate)
 	e3:SetOperation(c1001207.scop)
 	c:RegisterEffect(e3)
 	--spsummon
