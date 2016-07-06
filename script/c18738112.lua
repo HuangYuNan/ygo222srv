@@ -57,7 +57,7 @@ function c18738112.drop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c18738112.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return rp~=tp and Duel.IsChainNegatable(ev) and re:IsActiveType(TYPE_MONSTER) and re:GetActivateLocation()~=LOCATION_MZONE and Duel.IsExistingMatchingCard(c18738112.ccfilter,c:GetControler(),0,LOCATION_MZONE,1,nil)
+	return rp~=tp and Duel.IsChainNegatable(ev) and re:IsActiveType(TYPE_MONSTER) and Duel.IsExistingMatchingCard(c18738112.ccfilter,c:GetControler(),0,LOCATION_MZONE,1,nil)
 end
 function c18738112.netg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
