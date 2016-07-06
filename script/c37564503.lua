@@ -3,7 +3,7 @@ require "expansions/script/c37564765"
 function c37564503.initial_effect(c)
 	senya.nnhr(c)
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeRep(c,89631139,2,true,true)
+	aux.AddFusionProcCodeRep(c,37564765,2,true,true)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetCode(EFFECT_SPSUMMON_PROC)
