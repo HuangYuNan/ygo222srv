@@ -65,7 +65,7 @@ function c29201004.initial_effect(c)
 	e12:SetTarget(c29201004.splimit)
 	c:RegisterEffect(e12)
 end
-c29201004.pendulum_level=6
+c29201004.pendulum_level=5
 function c29201004.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end

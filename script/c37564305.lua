@@ -60,7 +60,7 @@ function c37564305.initial_effect(c)
 	c:RegisterEffect(e8)
 	local e88=e7:Clone()
 	e88:SetCode(EFFECT_AVOID_BATTLE_DAMAGE)
-	e88:SetValue(0)
+	e88:SetValue(1)
 	c:RegisterEffect(e88)
 	--spsummon
 	local e9=Effect.CreateEffect(c)

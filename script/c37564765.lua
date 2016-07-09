@@ -478,9 +478,9 @@ function senya.bm(c,tg,op,istg,ctg)
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e1:SetCode(EVENT_SPSUMMON_SUCCESS)  
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
 		else
-			e1:SetProperty(EFFECT_FLAG_DELAY)
+			e1:SetProperty(senya.delay)
 		end
 		e1:SetCondition(senya.bmsscon)
 		if tg then e1:SetTarget(tg) end
@@ -738,9 +738,9 @@ function senya.pr2(c,des,tg,op,istg,ctg)
 		if ctg then e1:SetCategory(CATEGORY_TOHAND) end
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
 		else
-			e1:SetProperty(EFFECT_FLAG_DELAY)
+			e1:SetProperty(senya.delay)
 		end
 		e1:SetCountLimit(1,c:GetCode())
 		if tg then e1:SetTarget(tg) end
