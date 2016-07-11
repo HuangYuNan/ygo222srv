@@ -27,7 +27,7 @@ function c75000103.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,3)
 end
 function c75000103.filter(c)
-	return c:IsSetCard(0x52f) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(0x52f) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 function c75000103.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)

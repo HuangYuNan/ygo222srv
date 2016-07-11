@@ -178,7 +178,6 @@ end
 
 --mokou reborn
 function senya.mk(c,ct,cd,eff,con,exop,excon)
-	if not cd then cd=c:GetCode() end
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -442,6 +441,7 @@ function senya.swwssfilter(c,e,ls)
 end
 --for judge blank extra
 function senya.swwblex(e,tp)
+	tp=tp or e:GetHandlerPlayer()
 	return Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)==0
 end
 --for sww rm grave

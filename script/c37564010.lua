@@ -19,10 +19,10 @@ end
 function c37564010.filter(c,e,tp)
 	local rk=c:GetRank()
 	return c:IsType(TYPE_XYZ) and c:IsFaceup() and c:IsSetCard(0x770) and c:GetOverlayCount()>0
-		and Duel.IsExistingMatchingCard(c37564010.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk)
+		and Duel.IsExistingMatchingCard(c37564010.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp,rk,c)
 end
-function c37564010.spfilter(c,e,tp,rk)
-	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsSetCard(0x770)
+function c37564010.spfilter(c,e,tp,rk,tc)
+	return c:IsType(TYPE_XYZ) and c:GetRank()==rk+1 and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false) and c:IsSetCard(0x770) and tc:IsCanBeXyzMaterial(c)
 end
 function c37564010.chkfilter(c,tc)
 	local rk=tc:GetRank()
@@ -44,7 +44,7 @@ function c37564010.op(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	local rk=tc:GetRank()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c37564010.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,rk)
+	local g=Duel.SelectMatchingCard(tp,c37564010.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp,rk,tc)
 	local sc=g:GetFirst()
 	if sc then
 		local mg=tc:GetOverlayGroup()

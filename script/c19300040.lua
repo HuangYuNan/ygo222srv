@@ -31,7 +31,7 @@ function c19300040.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c19300040.cffilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.ConfirmCards(1-tp,g)
 	Duel.ShuffleHand(tp)
-	e:GetHandler():RegisterFlagEffect(19300040,RESET_PHASE+RESET_DAMAGE_CAL,0,1)
+	e:GetHandler():RegisterFlagEffect(19300040,RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end
 function c19300040.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler():GetBattleTarget()
