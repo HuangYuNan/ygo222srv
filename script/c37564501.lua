@@ -1,5 +1,5 @@
 --Dokkin
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564501.initial_effect(c)
 	senya.nnhr(c)
 	aux.AddXyzProcedure(c,c37564501.mfilter,7,2)

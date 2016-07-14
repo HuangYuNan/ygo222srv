@@ -1,5 +1,5 @@
 --Sawawa-Lunatic Sprinter
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564205.initial_effect(c)
 local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_ATKCHANGE)

@@ -1,5 +1,5 @@
 --千年的疾走梦   
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564218.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)

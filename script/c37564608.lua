@@ -1,5 +1,5 @@
 --Prim-Affection
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564608.initial_effect(c)
 	senya.setreg(c,37564608,37564600)
 	local e1=Effect.CreateEffect(c)

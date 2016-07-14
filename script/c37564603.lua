@@ -1,5 +1,5 @@
 --Prim-渚之小恶魔Lovely Radio
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564603.initial_effect(c)
 	senya.setreg(c,37564603,37564600)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(senya.prsyfilter),1)

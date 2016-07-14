@@ -1,5 +1,5 @@
 --终焉的物语·物凄
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c57300020.initial_effect(c)
 	senya.rxyz1(c,nil)
 	local e2=Effect.CreateEffect(c)

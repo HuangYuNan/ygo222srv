@@ -1,5 +1,5 @@
 --元素的使者·Prim
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564013.initial_effect(c)
 	senya.setreg(c,37564013,37564600)
 	senya.rxyz1(c,4)

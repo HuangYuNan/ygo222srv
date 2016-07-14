@@ -1,5 +1,5 @@
 --Bijyutsu
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564507.initial_effect(c)
 	senya.nnhr(c)
 	local e1=Effect.CreateEffect(c)

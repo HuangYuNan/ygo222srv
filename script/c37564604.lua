@@ -1,5 +1,5 @@
 --Prim-恋爱的宇宙战争!!
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564604.initial_effect(c)
 	senya.setreg(c,37564604,37564600)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(senya.prsyfilter),1)

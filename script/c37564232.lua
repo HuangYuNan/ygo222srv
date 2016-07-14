@@ -1,5 +1,5 @@
 --Crimson Beat
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564232.initial_effect(c)
 	c:EnableReviveLimit()
 	--special summon condition

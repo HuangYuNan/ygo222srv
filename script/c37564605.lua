@@ -1,5 +1,5 @@
 --Prim-旋律教条 ~Miserables~
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564605.initial_effect(c)
 	senya.prl4(c,37564605)
 	local e1=Effect.CreateEffect(c)

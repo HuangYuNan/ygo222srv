@@ -1,5 +1,5 @@
 --Prim-加油热血啦啦队
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564607.initial_effect(c)
 	senya.prl4(c,37564607)
 	local e1=Effect.CreateEffect(c)

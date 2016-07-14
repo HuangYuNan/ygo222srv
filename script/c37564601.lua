@@ -1,5 +1,5 @@
 --Prim-爱如不死鸟
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564601.initial_effect(c)
 	senya.setreg(c,37564601,37564600)
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),2)

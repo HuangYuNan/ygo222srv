@@ -1,5 +1,5 @@
 --百慕 冷淡的视线·萨拉  
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() require "expansions/script/c37564765" else require "script/c37564765" end end
+if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
 function c37564454.initial_effect(c)
 	senya.bm(c)
 	local e3=Effect.CreateEffect(c)

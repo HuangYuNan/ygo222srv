@@ -1,5 +1,5 @@
 --Nanahira & Senya
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564506.initial_effect(c)
 	senya.nnhr(c)
 	local e3=Effect.CreateEffect(c)

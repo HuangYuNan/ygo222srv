@@ -1,5 +1,5 @@
 
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564615.initial_effect(c)
 	senya.negtrap(c,1,37564615,c37564615.cost)
 end

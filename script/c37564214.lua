@@ -1,5 +1,5 @@
 --Sawawa-Seventh Doll
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564214.initial_effect(c)
 senya.sww(c,2,true,false,false)
 	--move

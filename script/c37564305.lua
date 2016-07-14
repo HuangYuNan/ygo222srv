@@ -1,5 +1,5 @@
 --utakat sp
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564305.initial_effect(c)
 	--summon with 2 tribute
 	local e0=Effect.CreateEffect(c)

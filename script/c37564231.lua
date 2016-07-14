@@ -1,5 +1,5 @@
 --Sawawa-Blinding Destruction
-require "expansions/script/c37564765"
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564231.initial_effect(c)
 	senya.sww(c,2,true,false,false)
 	local e2=Effect.CreateEffect(c)
