@@ -1,5 +1,5 @@
 --古鹰级重巡洋舰1号舰—古鹰
-require("/expansions/script/c1001252")
+if not pcall(function() require("expansions/script/c1001252") end) then require("script/c1001252") end
 function c1001240.initial_effect(c)
 	colle.sum(c,3)
 	colle.atkup(c,100)

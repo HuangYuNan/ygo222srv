@@ -1,5 +1,5 @@
 --初春级驱逐舰1号舰—初春
-require("/expansions/script/c1001252")
+if not pcall(function() require("expansions/script/c1001252") end) then require("script/c1001252") end
 function c1001227.initial_effect(c)
 	colle.sum(c,1)
 	colle.atkup(c,100)

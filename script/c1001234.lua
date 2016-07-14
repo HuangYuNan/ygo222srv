@@ -1,5 +1,5 @@
 --陆军三式潜航输送艇—Maruyu
-require("/expansions/script/c1001252")
+if not pcall(function() require("expansions/script/c1001252") end) then require("script/c1001252") end
 function c1001234.initial_effect(c)
 	colle.sum(c,1)
 	colle.th1(c)

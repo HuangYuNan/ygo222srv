@@ -1,5 +1,5 @@
 --长门级战列舰2号舰—陆奥
-require("/expansions/script/c1001252")
+if not pcall(function() require("expansions/script/c1001252") end) then require("script/c1001252") end
 function c1001247.initial_effect(c)
 	c:SetUniqueOnField(1,0,1001247)
 	colle.sum3(c,10)
