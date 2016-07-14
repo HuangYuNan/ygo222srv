@@ -2,6 +2,8 @@ senya=senya or {}
 os=require('os')
 --7CG universal scripts
 --test parts
+senya.delay=0x14000
+senya.fix=0x40400
 if not Card.GetDefense then
 	Card.GetDefense=Card.GetDefence
 	Card.GetBaseDefense=Card.GetBaseDefence
@@ -176,7 +178,6 @@ end
 
 --mokou reborn
 function senya.mk(c,ct,cd,eff,con,exop,excon)
-	if not cd then cd=c:GetCode() end
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
@@ -440,6 +441,7 @@ function senya.swwssfilter(c,e,ls)
 end
 --for judge blank extra
 function senya.swwblex(e,tp)
+	tp=tp or e:GetHandlerPlayer()
 	return Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)==0
 end
 --for sww rm grave
@@ -476,9 +478,9 @@ function senya.bm(c,tg,op,istg,ctg)
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e1:SetCode(EVENT_SPSUMMON_SUCCESS)  
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
 		else
-			e1:SetProperty(EFFECT_FLAG_DELAY)
+			e1:SetProperty(senya.delay)
 		end
 		e1:SetCondition(senya.bmsscon)
 		if tg then e1:SetTarget(tg) end
@@ -736,9 +738,9 @@ function senya.pr2(c,des,tg,op,istg,ctg)
 		if ctg then e1:SetCategory(CATEGORY_TOHAND) end
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
 		else
-			e1:SetProperty(EFFECT_FLAG_DELAY)
+			e1:SetProperty(senya.delay)
 		end
 		e1:SetCountLimit(1,c:GetCode())
 		if tg then e1:SetTarget(tg) end
@@ -862,4 +864,12 @@ end
 function senya.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+function senya.prsyfilter(c)
+	return c:IsHasEffect(37564600) and c:IsType(TYPE_SYNCHRO)
+end
+function senya.prl4(c,cd)
+	senya.setreg(c,cd,37564600)
+	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsHasEffect,37564600),1)
+	c:EnableReviveLimit()
 end
