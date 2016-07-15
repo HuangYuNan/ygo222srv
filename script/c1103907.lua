@@ -27,7 +27,6 @@ function c1103907.initial_effect(c)
 	e1:SetCategory(CATEGORY_EQUIP)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetTarget(c1103907.eqtg)
 	e1:SetOperation(c1103907.eqop)
 	c:RegisterEffect(e1)
@@ -237,39 +236,38 @@ end
 function c1103907.eqtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_EXTRA) and chkc:IsControler(tp) and c1103907.filter1(chkc) end
 	if chk==0 then return true end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-	local g=Duel.SelectTarget(tp,c1103907.filter1,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
 end
 function c1103907.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if c:IsFaceup() and c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) then
-		local atk=tc:GetTextAttack()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+	local g=Duel.SelectTarget(tp,c1103907.filter1,tp,LOCATION_GRAVE+LOCATION_EXTRA,0,1,1,nil)
+	if g:GetCount()>0 and g:GetFirst():IsFaceup() then
+		local atk=g:GetFirst():GetTextAttack()
 		if atk<0 then atk=0 end
-		if not Duel.Equip(tp,tc,c,false) then return end
+		if not Duel.Equip(tp,g:GetFirst(),c,false) then return end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetProperty(EFFECT_FLAG_OWNER_RELATE)
 		e1:SetCode(EFFECT_EQUIP_LIMIT)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		e1:SetValue(c1103907.eqlimit)
-		tc:RegisterEffect(e1)
+		g:GetFirst():RegisterEffect(e1)
 		local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_EQUIP)
 		e2:SetProperty(EFFECT_FLAG_OWNER_RELATE+EFFECT_FLAG_IGNORE_IMMUNE)
 		e2:SetCode(EFFECT_UPDATE_ATTACK)
 		e2:SetReset(RESET_EVENT+0x1fe0000)
 		e2:SetValue(atk)
-		tc:RegisterEffect(e2)
+		g:GetFirst():RegisterEffect(e2)
 		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_EQUIP)
 		e3:SetCode(EFFECT_DESTROY_SUBSTITUTE)
 		e3:SetReset(RESET_EVENT+0x1fe0000)
 		e3:SetValue(c1103907.repval)
-		tc:RegisterEffect(e3)
+		g:GetFirst():RegisterEffect(e3)
 	end
 end
 function c1103907.eqlimit(e,c)

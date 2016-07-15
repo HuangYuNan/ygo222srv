@@ -101,7 +101,7 @@ function c1103911.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1103911.filter1(c)
-	return  c:IsAbleToHand()
+	return c:IsFaceup() and c:IsSetCard(0x1240) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1103911.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1103911.filter1,tp,0,LOCATION_ONFIELD,1,nil) end
