@@ -37,6 +37,15 @@ function c11113035.initial_effect(c)
 	e3:SetTarget(c11113035.negtg)
 	e3:SetOperation(c11113035.negop)
 	c:RegisterEffect(e3)
+	--effect indes
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_COUNT)
+	e4:SetCountLimit(1)
+	e4:SetValue(c11113035.valcon)
+	c:RegisterEffect(e4)
 end
 function c11113035.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
@@ -101,4 +110,7 @@ function c11113035.negop(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()==0 then return end
 	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	Duel.NegateActivation(ev)
+end
+function c11113035.valcon(e,re,r,rp)
+	return bit.band(r,REASON_EFFECT)~=0
 end

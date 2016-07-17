@@ -1,4 +1,4 @@
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564407.initial_effect(c)
 	senya.bm(c,c37564407.target,c37564407.operation,true,CATEGORY_TOHAND)
 end

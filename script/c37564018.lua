@@ -57,7 +57,7 @@ function c37564018.filter1(c)
 	return c:IsSetCard(0x771) 
 end
 function c37564018.filter2(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x770) and c:GetRank()==4
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0x770)
 end
 function c37564018.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingTarget(c37564018.filter2,tp,LOCATION_MZONE,0,1,nil) 

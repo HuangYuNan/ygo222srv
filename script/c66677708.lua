@@ -61,7 +61,7 @@ function c66677708.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c66677708.cfilter(c,tp)
-	return c:IsSetCard(0x777) and c:IsControler(tp)
+	return c:IsSetCard(0x777) and c:IsControler(tp) and c:IsFaceup()
 end
 function c66677708.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c66677708.cfilter,1,nil,tp)

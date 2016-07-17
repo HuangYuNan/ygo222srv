@@ -7,6 +7,7 @@ function c75646202.initial_effect(c)
 	e2:SetDescription(aux.Stringid(75646202,0))
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 	e2:SetCountLimit(1)
 	e2:SetCode(EVENT_CHAINING)
 	e2:SetRange(LOCATION_PZONE)
@@ -20,7 +21,7 @@ function c75646202.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
-	e3:SetCountLimit(1,7564622)
+	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e3:SetCondition(c75646202.descon)
 	e3:SetTarget(c75646202.destg)
 	e3:SetOperation(c75646202.desop)
@@ -32,7 +33,7 @@ function c75646202.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetCode(EVENT_CHAINING)
-	e4:SetCountLimit(1,7564622)
+	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e4:SetCondition(c75646202.reccon)
 	e4:SetTarget(c75646202.rectg)
 	e4:SetOperation(c75646202.recop)
@@ -64,7 +65,8 @@ function c75646202.atop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c75646202.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DRAW)
+	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DRAW) 
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646202.tgfilter(c)
 	return c:IsAbleToRemove()
@@ -83,7 +85,7 @@ function c75646202.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c75646202.reccon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_SPECIAL_SUMMON)
+	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_SPECIAL_SUMMON) and Duel.GetTurnPlayer()==tp
 end
 function c75646202.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

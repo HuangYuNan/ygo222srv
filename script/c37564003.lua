@@ -1,6 +1,6 @@
 --雨水元素·玛度
 function c37564003.initial_effect(c)
-			--xyz summon
+	--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)

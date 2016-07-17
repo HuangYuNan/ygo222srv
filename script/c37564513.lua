@@ -50,13 +50,14 @@ function c37564513.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564513.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c37564513.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) then return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
-		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+	if g:GetCount()>0 and Duel.Remove(g,POS_FACEUP,REASON_EFFECT) then
+		Duel.Draw(tp,1,REASON_EFFECT)
+	end
 end

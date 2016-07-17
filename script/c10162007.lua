@@ -7,6 +7,12 @@ function c10162007.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	c:RegisterEffect(e1)
+	--spsummon
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetCode(EFFECT_CANNOT_DISABLE_SPSUMMON)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	c:RegisterEffect(e0)
 	--special summon rule
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -15,7 +21,7 @@ function c10162007.initial_effect(c)
 	e2:SetRange(LOCATION_EXTRA)
 	e2:SetCondition(c10162007.spcon)
 	e2:SetOperation(c10162007.spop)
-	c:RegisterEffect(e2)
+	--c:RegisterEffect(e2)
 	--fusion material
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)
@@ -47,8 +53,8 @@ function c10162007.initial_effect(c)
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e6:SetCode(EVENT_CHAINING)
-	e6:SetRange(LOCATION_HAND)
-	e6:SetCountLimit(1)
+	e6:SetRange(LOCATION_MZONE)
+	--e6:SetCountLimit(1)
 	e6:SetOperation(c10162007.disop)
 	c:RegisterEffect(e6)
 	--destroy replace
@@ -75,7 +81,7 @@ function c10162007.antarget(e,c)
 end
 
 function c10162007.retg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
+	if chk==0 then return not c:IsReason(REASON_REPLACE) and c:IsReason(REASON_EFFECT) end
 	if Duel.SelectYesNo(tp,aux.Stringid(10162007,1)) then
 		return true
 	else return false end
@@ -108,7 +114,7 @@ function c10162007.lpop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c10162007.winop(e,tp,eg,ep,ev,re,r,rp)
-	local WIN_REASON_FUCKING_DRAGON=0x56
+	--local WIN_REASON_FUCKING_DRAGON=0x56
 	if Duel.GetLP(tp)==1 then
 		--Duel.Win(tp,WIN_REASON_FUCKING_DRAGON)
 	   Duel.Hint(HINT_CARD,0,10162007)

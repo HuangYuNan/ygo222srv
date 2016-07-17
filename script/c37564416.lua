@@ -1,5 +1,5 @@
 --百慕 甜蜜和声·莫娜
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564416.initial_effect(c)
 	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2,nil,nil,5)
 	c:EnableReviveLimit()
@@ -57,18 +57,14 @@ function c37564416.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564416.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 end
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_MZONE)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
+	local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c37564416.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetMatchingGroup(Card.IsType,1-tp,LOCATION_MZONE,0,nil,TYPE_MONSTER)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	if g:GetCount()>0 then
-		local tg=g:GetMaxGroup(Card.GetAttack)
-		if tg:GetCount()>1 then
-		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
-		local sg=g:Select(1-tp,1,1,nil)
-		Duel.HintSelection(sg)
-		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
-		else Duel.Remove(tg,POS_FACEUP,REASON_RULE) end
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end
 end

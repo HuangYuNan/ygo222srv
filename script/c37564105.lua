@@ -73,7 +73,7 @@ function c37564105.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
 function c37564105.discon(e,tp,eg,ep,ev,re,r,rp)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and re:GetCode()==SUMMON_TYPE_ADVANCE and Duel.IsChainNegatable(ev)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and bit.band(c:GetSummonType(),SUMMON_TYPE_NORMAL)==SUMMON_TYPE_NORMAL and Duel.IsChainNegatable(ev)
 end
 function c37564105.filter(c,e,tp)
 	return c:IsSetCard(0x772) and c:IsAbleToDeck() and c:IsType(TYPE_MONSTER)

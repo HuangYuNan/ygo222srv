@@ -1,13 +1,16 @@
 --Sawawa-Koishi Circulation
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564207.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564207,1))
 	e1:SetCategory(CATEGORY_TODECK)
-	e1:SetType(EFFECT_TYPE_IGNITION)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,37564207)
-	e1:SetCondition(senya.swwblex)
+	e1:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return senya.swwblex(e,tp) and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) and Duel.GetTurnPlayer()~=tp
+	end)
 	e1:SetCost(senya.swwrmcost(1))
 	e1:SetTarget(c37564207.tg)
 	e1:SetOperation(c37564207.op)

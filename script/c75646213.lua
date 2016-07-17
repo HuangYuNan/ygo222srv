@@ -52,7 +52,7 @@ function c75646213.filter(c)
 	return c:IsSetCard(0x2c2) and c:IsAbleToHand()
 end
 function c75646213.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.CheckChainUniqueness()
+	return Duel.GetCurrentChain()>1
 end
 function c75646213.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c75646213.filter,tp,LOCATION_DECK,0,1,nil) end

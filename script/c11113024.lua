@@ -26,6 +26,12 @@ function c11113024.initial_effect(c)
 	e2:SetTarget(c11113024.destg)
 	e2:SetOperation(c11113024.desop)
 	c:RegisterEffect(e2)
+	--battle indestructable
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e3:SetValue(1)
+	c:RegisterEffect(e3)
 end
 function c11113024.discon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO

@@ -6,7 +6,7 @@ function c75646201.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(75646201,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetRange(LOCATION_PZONE)
 	e2:SetCountLimit(1,75646201)
@@ -21,7 +21,7 @@ function c75646201.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
-	e3:SetCountLimit(1,7564621)
+	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e3:SetCondition(c75646201.thcon)
 	e3:SetTarget(c75646201.thtg)
 	e3:SetOperation(c75646201.thop)
@@ -34,7 +34,7 @@ function c75646201.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EVENT_CHAINING)
-	e4:SetCountLimit(1,7564621)
+	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e4:SetCondition(c75646201.descon)
 	e4:SetTarget(c75646201.destg)
 	e4:SetOperation(c75646201.desop)
@@ -65,7 +65,8 @@ function c75646201.sumop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c75646201.thcon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_ATKCHANGE)
+	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_ATKCHANGE) 
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646201.thfilter(c)
 	return c:IsSetCard(0x2c2) and c:IsAbleToHand()
@@ -83,7 +84,8 @@ function c75646201.thop(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 end
 function c75646201.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DAMAGE)
+	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DAMAGE) 
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646201.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsDestructable() end

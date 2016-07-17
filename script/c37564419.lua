@@ -1,5 +1,5 @@
 --Fantasia
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564419.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)

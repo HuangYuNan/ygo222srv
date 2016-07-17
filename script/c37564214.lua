@@ -74,7 +74,7 @@ function c37564214.filter(c,seq)
 	return c:GetSequence()==seq and c:IsAbleToDeck()
 end
 function c37564214.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c37564214.filter,tp,0,LOCATION_ONFIELD,1,nil,4-e:GetHandler():GetSequence()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c37564214.filter,tp,0,LOCATION_ONFIELD,1,nil,4-e:GetHandler():GetSequence()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RHAND)
 	local g=Duel.GetMatchingGroup(c37564214.filter,tp,0,LOCATION_ONFIELD,nil,4-e:GetHandler():GetSequence())
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)

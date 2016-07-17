@@ -1,5 +1,5 @@
 --百慕 神秘微笑·亚拉璐  
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564405.initial_effect(c)
 	senya.bm(c,c37564405.sptg,c37564405.spop,false,CATEGORY_SPECIAL_SUMMON)
 	Duel.AddCustomActivityCounter(37564405,ACTIVITY_SPSUMMON,c37564405.counterfilter)

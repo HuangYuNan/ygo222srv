@@ -89,6 +89,7 @@ function c75646206.penop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c75646206.atcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DESTROY)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646206.attg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsFaceup,tp,0,LOCATION_MZONE,1,nil) end
@@ -110,6 +111,7 @@ function c75646206.atop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c75646206.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DAMAGE)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646206.filter(c)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

@@ -1,5 +1,5 @@
 --幽玄之乱
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 os=require('os')
 function c37564038.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,5)

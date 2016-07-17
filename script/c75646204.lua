@@ -21,7 +21,7 @@ function c75646204.initial_effect(c)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_CHAINING)
-	e3:SetCountLimit(1,7564624)
+	e3:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e3:SetCondition(c75646204.recon)
 	e3:SetTarget(c75646204.retg)
 	e3:SetOperation(c75646204.reop)
@@ -33,7 +33,7 @@ function c75646204.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetRange(LOCATION_PZONE)
 	e4:SetCode(EVENT_CHAINING)
-	e4:SetCountLimit(1,7564624)
+	e4:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e4:SetCondition(c75646204.sumcon)
 	e4:SetTarget(c75646204.sumtg)
 	e4:SetOperation(c75646204.sumop)
@@ -63,6 +63,7 @@ function c75646204.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c75646204.recon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_NEGATE)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646204.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -76,6 +77,7 @@ function c75646204.reop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c75646204.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_ATKCHANGE)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646204.nfilter(c,e,sp)
 	return c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,sp,false,false)

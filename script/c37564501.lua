@@ -5,7 +5,6 @@ function c37564501.initial_effect(c)
 	aux.AddXyzProcedure(c,c37564501.mfilter,7,2)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(83986578,0))
 	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCountLimit(1,37560501)
@@ -44,10 +43,20 @@ function c37564501.filter(c,e)
 end
 function c37564501.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not e:GetHandler():IsRelateToEffect(e) then return end
+	if not c:IsRelateToEffect(e) then return end
 	local g=eg:Filter(c37564501.filter,nil,e)
-	if g:GetFirst():GetOverlayCount()>0 then Duel.SendtoGrave(g:GetFirst():GetOverlayGroup(),REASON_RULE) end
 	if g:GetCount()>0 then
+		local tc=g:GetFirst()
+		local og=Group.CreateGroup()
+		while tc do
+			if tc:GetOverlayCount()>0 then
+				og:Merge(tc:GetOverlayGroup())
+			end
+			tc=g:GetNext()
+		end
+		if og:GetCount()>0 then
+			Duel.SendtoGrave(og,REASON_RULE)
+		end
 		Duel.Overlay(c,g)
 	end
 end

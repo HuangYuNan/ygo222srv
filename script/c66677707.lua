@@ -99,8 +99,7 @@ end
 function c66677707.chk(c,xm)
 	if xm<=0 then return false end
 	if xm==1 then return c:IsDestructable() end
-	if xm==2 then return c:IsAbleToRemove() end
-	if xm>2 then return true end
+	if xm>=2 then return c:IsAbleToRemove() end
 end
 function c66677707.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -117,13 +116,13 @@ function c66677707.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
 	if xm>=2 then
-		local res=REASON_EFFECT
+		local pos=POS_FACEUP
 		if xm>2 then
 			for i=2,9 do
 				Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(66677707,i))
 			end
-			res=REASON_RULE
+			pos=POS_FACEDOWN
 		end
-		Duel.Remove(g,POS_FACEUP,res)
+		Duel.Remove(g,pos,REASON_EFFECT)
 	end
 end

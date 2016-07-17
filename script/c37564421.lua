@@ -1,5 +1,5 @@
 --百慕 宣战布告·布莱
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564421.initial_effect(c)
 	c:EnableReviveLimit()
 	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsFusionSetCard,0x770),aux.FilterBoolFunction(Card.IsFusionSetCard,0x775),true)
@@ -21,7 +21,7 @@ function c37564421.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_REMOVE)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e2:SetCountLimit(1,37564421)
+	e2:SetCountLimit(1,37564421+EFFECT_COUNT_CODE_DUEL)
 	e2:SetTarget(c37564421.drtg1)
 	e2:SetOperation(c37564421.drop1)
 	c:RegisterEffect(e2)

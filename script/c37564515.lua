@@ -1,12 +1,12 @@
 --Nanahira & Firce777
 if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-require "expansions/script/c37564777"
+if not pcall(function() require("expansions/script/c37564777") end) then require("script/c37564777") end
 function c37564515.initial_effect(c)
 	senya.nnhr(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e5:SetRange(LOCATION_ONFIELD+LOCATION_GRAVE)
 	e5:SetCode(EFFECT_ADD_SETCODE)
 	e5:SetValue(0x777)
 	c:RegisterEffect(e5)
@@ -66,8 +66,8 @@ end
 function c37564515.sefilter(c,e,tp)
 	if not (c:IsAbleToGraveAsCost() and c:IsType(TYPE_MONSTER)) then return false end
 	if c:IsSetCard(0x777) and Duel.IsExistingMatchingCard(prim.sefilter2,tp,LOCATION_DECK,0,1,nil) then return true end
-	if c:GetOriginalCode()==37564765 then return true end
-	return c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
+	if c:IsRace(RACE_FAIRY) and c:IsAttribute(ATTRIBUTE_LIGHT) then return true end
+	return c:GetOriginalCode()==37564765 and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0
 end
 function c37564515.secost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564515.sefilter,tp,LOCATION_HAND,0,1,e:GetHandler(),e,tp) end
@@ -86,11 +86,11 @@ function c37564515.seop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 	if dc:IsRace(RACE_FAIRY) and dc:IsAttribute(ATTRIBUTE_LIGHT) and Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 then
-		local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
-		local sg=g:RandomSelect(tp,1)
-		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)
+		Duel.Damage(1-tp,1400,REASON_EFFECT)
 	end
 	if dc:GetOriginalCode()==37564765 then
-		Duel.Damage(1-tp,1400,REASON_EFFECT)
+		local g=Duel.GetFieldGroup(tp,0,LOCATION_HAND)
+		local sg=g:RandomSelect(tp,1)
+		Duel.SendtoGrave(sg,REASON_EFFECT+REASON_DISCARD)	 
 	end
 end

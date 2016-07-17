@@ -1,5 +1,7 @@
 --元素精灵·坡库鲁
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564008.initial_effect(c)
+	senya.sgreg(c,37564008)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -15,7 +17,7 @@ function c37564008.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c37564008.filter(c,e,tp)
-	return c:GetRank()==4 and c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x770) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c37564008.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c17412721.filter(chkc,e,tp) end
@@ -46,13 +48,13 @@ function c37564008.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(c37564008.xyzlv)
 		e1:SetReset(0)
 		tc:RegisterEffect(e1)
-		end	
+		end 
 end
 function c37564008.xyzlv(e,c,rc)
 	return c:GetRank()
 end
 function c37564008.cfilter(c)
-	return c:IsFaceup() and c:IsCode(37564008)
+	return c:IsFaceup() and c:IsHasEffect(37564008)
 end
 function c37564008.discon(e)
 	if Duel.IsExistingMatchingCard(c37564008.cfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) then

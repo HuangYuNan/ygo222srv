@@ -1,5 +1,5 @@
 --quesar
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564032.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,6,4,c37564032.ovfilter,aux.Stringid(37564032,0),5)
 	c:EnableReviveLimit()
@@ -14,15 +14,18 @@ end
 function c37564032.ovfilter(c)
 	return c:IsFaceup() and c:GetOriginalCode()==37564022 and Duel.GetCurrentPhase()==PHASE_MAIN2
 end
+function c37564032.filter(c)
+	return c:IsAbleToRemove() and c:IsType(TYPE_MONSTER)
+end
 function c37564032.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsType,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,e:GetHandler(),TYPE_MONSTER)
+	return Duel.IsExistingMatchingCard(c37564032.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,e:GetHandler())
 end
 function c37564032.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not Duel.IsExistingMatchingCard(Card.IsType,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,e:GetHandler(),TYPE_MONSTER) then return end
+	if not Duel.IsExistingMatchingCard(c37564032.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,e:GetHandler()) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=Duel.SelectMatchingCard(tp,Card.IsType,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,e:GetHandler(),TYPE_MONSTER)
-		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
+		local sg=Duel.SelectMatchingCard(tp,c37564032.filter,tp,0,LOCATION_MZONE+LOCATION_GRAVE,1,1,e:GetHandler())
+		Duel.Remove(sg,POS_FACEUP,REASON_EFFECT)
 		local tc=sg:GetFirst()
 		senya.copy(e,nil,tc,true)
 end

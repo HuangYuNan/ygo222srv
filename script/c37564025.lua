@@ -13,7 +13,7 @@ function c37564025.filter1(c,e,tp)
 	return c:IsSetCard(0x770) and c:GetOverlayCount()==0 and c:IsFaceup() and c:IsType(TYPE_XYZ)
 end
 function c37564025.filter3(c)
-	return c:IsAbleToChangeControler() and c:GetSummonLocation()==LOCATION_EXTRA
+	return c:IsAbleToChangeControler() and bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
 end
 function c37564025.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and c37564025.filter1(chkc,e,tp) end

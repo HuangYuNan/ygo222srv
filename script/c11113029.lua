@@ -3,7 +3,7 @@ function c11113029.initial_effect(c)
 	c:SetUniqueOnField(1,0,11113029)
 	--fusion material
 	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,11113009,c11113029.ffilter,1,true,false)
+	aux.AddFusionProcFun2(c,c11113029.ffilter1,c11113029.ffilter2,true)
 	--spsummon condition
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -36,8 +36,11 @@ function c11113029.initial_effect(c)
 	e3:SetOperation(c11113029.thop)
 	c:RegisterEffect(e3)
 end
-function c11113029.ffilter(c)
+function c11113029.ffilter1(c)
 	return c:IsFusionSetCard(0x15c) and c:IsType(TYPE_TUNER)
+end
+function c11113029.ffilter2(c)
+	return c:IsFusionSetCard(0x15c) and c:IsLevelBelow(4)
 end
 function c11113029.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION

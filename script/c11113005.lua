@@ -17,7 +17,7 @@ function c11113005.initial_effect(c)
 	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_REMOVE)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,11113005)
 	e2:SetTarget(c11113005.thtg)
 	e2:SetOperation(c11113005.thop)
@@ -61,42 +61,25 @@ function c11113005.setop(e,tp,eg,ep,ev,re,r,rp)
 		    Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		    local tg=sg:Select(tp,1,1,nil)
+			Duel.HintSelection(tg)
 			Duel.Remove(tg,POS_FACEUP,REASON_EFFECT)
 		end	
 	end
 end	
 function c11113005.thfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x15c) and (c:GetType()==TYPE_SPELL or c:IsType(TYPE_QUICKPLAY)) and c:IsAbleToHand()
+	return (c:IsFaceup() or c:IsLocation(LOCATION_GRAVE)) and c:IsSetCard(0x15c) and (c:GetType()==TYPE_SPELL or c:IsType(TYPE_QUICKPLAY)) and c:IsAbleToHand()
 end
 function c11113005.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c11113005.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+    if chkc then return chkc:IsLocation(LOCATION_REMOVED+LOCATION_GRAVE) and chkc:IsControler(tp) and c11113005.thfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c11113005.thfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectTarget(tp,c11113005.thfilter,tp,LOCATION_REMOVED+LOCATION_GRAVE,0,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c11113005.thop(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e1:SetCountLimit(1)
-	e1:SetLabel(Duel.GetTurnCount())
-	e1:SetCondition(c11113005.rtcon)
-	e1:SetOperation(c11113005.rtop)
-	if Duel.GetTurnPlayer()==tp then
-		e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
-	else
-		e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,1)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,tc)
 	end
-	Duel.RegisterEffect(e1,tp)
-end
-function c11113005.rtcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnCount()~=e:GetLabel() and Duel.GetTurnPlayer()==tp 
-	    and Duel.IsExistingMatchingCard(c11113005.thfilter,tp,LOCATION_REMOVED,0,1,nil)
-end
-function c11113005.rtop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,11113005)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c11113005.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
-	if g:GetCount()>0 then
-        Duel.HintSelection(g)	
-	    Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end	
 end

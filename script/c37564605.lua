@@ -3,11 +3,10 @@ if not pcall(function() require("expansions/script/c37564765") end) then require
 function c37564605.initial_effect(c)
 	senya.prl4(c,37564605)
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_RECOVER)
+	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-	e1:SetCost(c37564605.cost)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e1:SetCondition(c37564605.thcon)
 	e1:SetTarget(c37564605.distg)
 	e1:SetOperation(c37564605.disop)
@@ -32,24 +31,22 @@ end
 function c37564605.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
 end
-function c37564605.cfilter(c)
-	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost()
+function c37564605.filter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove()
 end
-function c37564605.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c37564605.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+function c37564605.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and c37564605.filter(chkc) and chkc~=e:GetHandler() end
+	if chk==0 then return Duel.IsExistingTarget(c37564605.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c37564605.cfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.Remove(g,POS_FACEUP,REASON_COST)
-end
-function c37564605.distg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(800)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,800)
+	local g=Duel.SelectTarget(tp,c37564605.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+	Duel.SetChainLimit(aux.FALSE)
 end
 function c37564605.disop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Recover(p,d,REASON_EFFECT)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+	end
 end
 function c37564605.filter2(c,e,tp)
 	return c:IsRelateToEffect(e) and c:IsAbleToDeck() and c:GetSummonPlayer()==1-tp

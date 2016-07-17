@@ -1,5 +1,5 @@
 --百慕 窈窕名流·夏洛特
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564423.initial_effect(c)
 	senya.bmdamchk(c,false)
 	aux.AddXyzProcedure(c,senya.bmchkfilter,3,2)

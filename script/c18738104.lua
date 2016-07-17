@@ -2,12 +2,13 @@
 function c18738104.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_SPSUM_PARAM)
-	e1:SetTargetRange(POS_FACEDOWN_DEFENSE,0)
+	e1:SetDescription(aux.Stringid(86585274,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_REMOVE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c18738104.spcon)
+	e1:SetCountLimit(1,18738104)
+	e1:SetTarget(c18738104.sptg)
 	e1:SetOperation(c18738104.spop)
 	c:RegisterEffect(e1)
 	--destroy
@@ -30,17 +31,27 @@ end
 function c18738104.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0xab0)
 end
-function c18738104.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c18738104.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.GetCustomActivityCount(18738104,c:GetControler(),ACTIVITY_SPSUMMON)==0
+function c18738104.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return  end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c18738104.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chkc then return chkc:IsOnField() and c18738104.rmfilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c18738104.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and  Duel.GetCustomActivityCount(c18738104,tp,ACTIVITY_SPSUMMON)==0 end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,c18738104.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
 end
 function c18738104.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
-	Duel.ConfirmCards(1-tp,c)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c18738104.rmfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.Remove(g,POS_FACEDOWN,REASON_COST)
+	if not c:IsRelateToEffect(e) then return end
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		Duel.Remove(tc,POS_FACEDOWN,REASON_EFFECT)
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEDOWN_DEFENSE)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
+		Duel.SendtoGrave(c,REASON_RULE)
+	end
 	end
 	--oath effects
 	local e1=Effect.CreateEffect(e:GetHandler())

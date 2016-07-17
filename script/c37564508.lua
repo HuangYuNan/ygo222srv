@@ -15,7 +15,7 @@ function c37564508.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCountLimit(1,37564508)
-	e1:SetCost(c37564508.cost)
+	e1:SetCost(senya.serlcost)
 	e1:SetTarget(c37564508.target)
 	e1:SetOperation(c37564508.operation)
 	c:RegisterEffect(e1)
@@ -23,10 +23,6 @@ end
 function c37564508.spcon(e,c)
 	if c==nil then return true end
 	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-end
-function c37564508.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function c37564508.filter(c,e,tp)
 	return c:IsCode(37564765) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

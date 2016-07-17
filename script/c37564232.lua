@@ -27,17 +27,13 @@ function c37564232.initial_effect(c)
 		return c:GetSummonLocation()==LOCATION_EXTRA
 	end)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EFFECT_SET_ATTACK_FINAL)
-	e4:SetValue(0)
-	c:RegisterEffect(e4)
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(37564232,1))
 	e3:SetCategory(CATEGORY_TOGRAVE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_CAL+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(2)
+	e3:SetCountLimit(1)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetHintTiming(0,0x1e0)
 	e3:SetTarget(c37564232.tg)
@@ -67,13 +63,13 @@ function c37564232.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	else
 		if chk==0 then return Duel.IsExistingMatchingCard(c37564232.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 		local g=Duel.GetMatchingGroup(c37564232.filter,tp,0,LOCATION_ONFIELD,nil)
-		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,0,0,0)
 		Duel.SetChainLimit(aux.FALSE)
 	end
 end
 function c37564232.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c37564232.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c37564232.filter,tp,0,LOCATION_ONFIELD,1,2,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		if e:GetHandler():GetFlagEffect(60151298)>0 then

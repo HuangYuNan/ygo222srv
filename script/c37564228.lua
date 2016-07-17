@@ -1,5 +1,5 @@
 --Sawawa-永远的三日天下
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564228.initial_effect(c)
 	senya.sww(c,2,true,false,false)
 	senya.bmdamchk(c,true)

@@ -1,5 +1,5 @@
 --百慕 舞台风暴·约理
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564401.initial_effect(c)
 	senya.bm(c,c37564401.target,c37564401.activate,false,CATEGORY_TOHAND+CATEGORY_SEARCH)
 end

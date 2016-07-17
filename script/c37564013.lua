@@ -24,7 +24,7 @@ function c37564013.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(aux.tgval)
+	e3:SetValue(aux.tgoval)
 	e3:SetCondition(c37564013.xmcon(3))
 	c:RegisterEffect(e3)
 	local e1=Effect.CreateEffect(c)
@@ -73,21 +73,54 @@ function c37564013.initial_effect(c)
 	e7:SetTarget(c37564013.spptg)
 	e7:SetOperation(c37564013.sppop)
 	c:RegisterEffect(e7)
+	local e0=Effect.CreateEffect(c)
+		e0:SetDescription(aux.Stringid(37564013,14))
+		e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+		e0:SetCode(EVENT_PHASE+PHASE_END)
+		e0:SetRange(LOCATION_MZONE)
+		e0:SetCountLimit(1)
+		e0:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+			return Duel.GetTurnPlayer()==tp and e:GetHandler():GetOverlayGroup():IsExists(c37564013.mtfilter,1,nil)
+		end)
+		e0:SetTarget(c37564013.mttg)
+		e0:SetOperation(c37564013.mtop)
+		c:RegisterEffect(e0)
+end
+function c37564013.mtfilter(c)
+	return c:IsSetCard(0x770)
+end
+function c37564013.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c37564013.mtfilter,tp,LOCATION_EXTRA,0,1,nil) end
+end
+function c37564013.mtop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+	local g=Duel.SelectMatchingCard(tp,c37564013.mtfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.Overlay(c,g)
+	end
 end
 function c37564013.atkval(e,c)
 	return c:GetOverlayCount()*1000
 end
 function c37564013.xmcon(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp)
-		return e:GetHandler():GetOverlayGroup():GetClassCount(Card.GetAttribute)>=ct
+		local g=e:GetHandler():GetOverlayGroup()
+		local dct=g:FilterCount(Card.IsCode,nil,37564050)
+		local xct=ct-dct
+		local fg=g:Filter(c37564013.nfilter,nil)
+		return fg:GetClassCount(Card.GetAttribute)>=xct
 	end
+end
+function c37564013.nfilter(c)
+	return c:IsType(TYPE_MONSTER) and not c:IsCode(37564050)
 end
 function c37564013.destg(c,ec)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
 end
 function c37564013.discon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayGroup():GetClassCount(Card.GetAttribute)>=4
-	and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
+	return c37564013.xmcon(4)(e,tp,eg,ep,ev,re,r,rp) and not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev)
 end
 function c37564013.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -103,14 +136,14 @@ function c37564013.disop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c37564013.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,0)
 end
 function c37564013.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if not Duel.IsExistingMatchingCard(aux.TRUE,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) then return end
+	if not Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,e:GetHandler()) then return end
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local sg=Duel.SelectMatchingCard(tp,aux.TRUE,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
+		local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
 		Duel.Remove(sg,POS_FACEUP,REASON_RULE)
 end
 function c37564013.sppcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -118,7 +151,6 @@ function c37564013.sppcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return c:CheckRemoveOverlayCard(tp,1,REASON_COST) and c:GetFlagEffect(37564013)==0 end
 	local g=e:GetHandler():GetOverlayGroup()
 	Duel.SendtoGrave(g,REASON_COST)
-	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 	c:RegisterFlagEffect(37564013,RESET_CHAIN,0,1)
 end
 function c37564013.fffilter(c,e,tp)

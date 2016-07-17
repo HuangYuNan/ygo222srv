@@ -93,9 +93,11 @@ function c75646208.neop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c75646208.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_TOHAND)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646208.sumcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_DESTROY)
+	and Duel.GetTurnPlayer()==tp
 end
 function c75646208.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

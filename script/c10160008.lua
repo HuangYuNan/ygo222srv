@@ -61,7 +61,7 @@ function c10160008.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c10160008.spfilter(c)
-	return c:IsPreviousLocation(LOCATION_DECK) and not c:IsReason(REASON_DRAW)
+	return c:IsPreviousLocation(LOCATION_DECK+LOCATION_GRAVE) and not c:IsReason(REASON_DRAW)
 end
 
 function c10160008.spcost(e,tp,eg,ep,ev,re,r,rp,chk)

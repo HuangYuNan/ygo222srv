@@ -1,5 +1,5 @@
 --钢铁元素·斯库修
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564034.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,5)
 	 c:EnableReviveLimit()
@@ -19,10 +19,10 @@ function c37564034.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e4:SetValue(aux.tgoval)
 	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return e:GetHandler():GetOverlayCount()>0
 	end)
+	e4:SetValue(aux.tgoval)
 	c:RegisterEffect(e4)
 end
 function c37564034.filter(c)

@@ -46,7 +46,7 @@ function c75646207.initial_effect(c)
 	e3:SetCode(EVENT_CHAINING)
 	e3:SetCountLimit(1,7564627)
 	e3:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_RECOVER)
+		return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_RECOVER) and Duel.GetTurnPlayer()==tp
 	end)
 	e3:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
@@ -72,7 +72,7 @@ function c75646207.initial_effect(c)
 	e4:SetCode(EVENT_CHAINING)
 	e4:SetCountLimit(1,7564627)
 	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-		return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_TOHAND)
+		return re and re:GetHandler():IsSetCard(0x2c2) and not re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsHasCategory(CATEGORY_TOHAND) and Duel.GetTurnPlayer()==tp
 	end)
 	e4:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return Duel.IsExistingMatchingCard(c75646207.rfilter,tp,LOCATION_MZONE,0,1,nil) end
@@ -82,7 +82,7 @@ function c75646207.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c75646207.rfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x2c2) and IsType(TYPE_MONSTER) 
+	return c:IsFaceup() and c:IsSetCard(0x2c2) and c:IsType(TYPE_MONSTER) 
 end
 function c75646207.atop(e,tp,eg,ep,ev,re,r,rp)
 		if not e:GetHandler():IsRelateToEffect(e) then return end

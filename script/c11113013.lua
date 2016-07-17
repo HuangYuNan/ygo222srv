@@ -33,29 +33,29 @@ function c11113013.filter(c)
 end
 function c11113013.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11113013.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c11113013.operation(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e1:SetCode(EVENT_PHASE+PHASE_END)
-	e1:SetCountLimit(1)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	e1:SetCondition(c11113013.setcon)
-	e1:SetOperation(c11113013.setop)
-	Duel.RegisterEffect(e1,tp)
-end
-function c11113013.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c11113013.filter,tp,LOCATION_DECK,0,1,nil)
-end 
-function c11113013.setop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_CARD,0,11113013)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c11113013.filter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 then
 	    Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
-end	
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_CHANGE_DAMAGE)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetTargetRange(0,1)
+	e1:SetValue(c11113013.val)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function c11113013.val(e,re,dam,r,rp,rc)
+	if bit.band(r,REASON_BATTLE)~=0 then
+		return dam/2
+	else return dam end
+end
 function c11113013.thfilter(c)
 	return c:IsSetCard(0x15c) and c:IsType(TYPE_TUNER) and not c:IsType(TYPE_PENDULUM) and not c:IsCode(11113013) and c:IsAbleToHand()
 end

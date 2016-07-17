@@ -1,5 +1,5 @@
 --百慕 午后的茶会·库贝尔
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564409.initial_effect(c)
 	senya.bm(c,c37564409.target,c37564409.activate,true,CATEGORY_DESTROY)
 end

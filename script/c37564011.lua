@@ -75,7 +75,7 @@ function c37564011.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(c37564011.filter7,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 end
 function c37564011.filter7(c,e,tp)
-	return c:IsType(TYPE_XYZ) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsType(TYPE_XYZ) and c:GetRank()==4 and c:IsCanBeSpecialSummoned(e,0,tp,true,true)
 end
 function c37564011.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -87,7 +87,7 @@ function c37564011.operation2(e,tp,eg,ep,ev,re,r,rp)
 	local fid=e:GetHandler():GetFieldID()
 	local tc=mg:GetFirst()
 	while tc do
-		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummonStep(tc,0,tp,tp,true,true,POS_FACEUP)
 		tc:RegisterFlagEffect(37564011,RESET_EVENT+0x1fe0000,0,1,fid)
 		local e2=Effect.CreateEffect(c)
 		  e2:SetType(EFFECT_TYPE_SINGLE)
@@ -96,6 +96,7 @@ function c37564011.operation2(e,tp,eg,ep,ev,re,r,rp)
 		  e2:SetValue(1)
 		  e2:SetReset(RESET_EVENT+0x1fe0000)
 		  tc:RegisterEffect(e2,true)
+			tc:CompleteProcedure()
 		tc=mg:GetNext()
 	end
 	Duel.SpecialSummonComplete()

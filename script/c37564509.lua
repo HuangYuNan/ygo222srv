@@ -12,7 +12,7 @@ function c37564509.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c37564509.filter(c)
-	return (c:IsCode(37564765) or c:IsHasEffect(37564765)) and c:IsAbleToHand() and not c:IsCode(37564509)
+	return (c:IsCode(37564765) or c:IsHasEffect(37564765)) and c:IsAbleToHand() and c:IsType(TYPE_MONSTER)
 end
 function c37564509.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564509.filter,tp,LOCATION_DECK,0,1,nil) end

@@ -1,5 +1,5 @@
 --元素创造者·Senya
-if not senya then local io=require('io') local chk=io.open("expansions/script/c37564765.lua","r") if chk then chk:close() if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end else require "script/c37564765" end end
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564022.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,nil,5,4,nil,nil,5)
