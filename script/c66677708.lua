@@ -43,7 +43,7 @@ function c66677708.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ch1=false
 	local ch2=false
 	if gc1 and not gc2 then ch1=(Duel.SelectYesNo(tp,aux.Stringid(66677708,0))) end
-	if gc2 and not gc1 then ch1=(Duel.SelectYesNo(tp,aux.Stringid(66677708,1))) end
+	if gc2 and not gc1 then ch2=(Duel.SelectYesNo(tp,aux.Stringid(66677708,1))) end
 	if gc1 and gc2 then
 		local sel=Duel.SelectOption(tp,aux.Stringid(37564777,1),aux.Stringid(37564777,0))
 		if sel==0 then ch1=true end
@@ -61,7 +61,7 @@ function c66677708.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c66677708.cfilter(c,tp)
-	return c:IsSetCard(0x777) and c:IsControler(tp) and c:IsFaceup()
+	return c:IsSetCard(0x777) and c:IsControler(tp)
 end
 function c66677708.drcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c66677708.cfilter,1,nil,tp)

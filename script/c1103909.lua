@@ -32,7 +32,7 @@ function c1103909.filter(c)
 	return c:IsSetCard(0x1240) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c1103909.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(c75878039.filter,tp,LOCATION_DECK,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1103909.filter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function c1103909.thop(e,tp,eg,ep,ev,re,r,rp)
