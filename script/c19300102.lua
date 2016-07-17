@@ -45,6 +45,7 @@ function c19300102.matfilter(c,syncard)
 	return c:IsFaceup() and c:IsCanBeSynchroMaterial(syncard)
 end
 function c19300102.synfilter1(c,lv,g)
+	if c== nil then return false end
 	local tlv=c:GetLevel()
 	if lv-tlv<=0 then return false end
 	local t=false
