@@ -88,7 +88,7 @@ function c60159118.immcon(e,tp,eg,ep,ev,re,r,rp)
 	return g:GetClassCount(Card.GetCode)>0
 end
 function c60159118.indval(e,re,tp)
-    return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER) and aux.tgval(e,re,rp)
+    return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_MONSTER) and aux.TRUE(e,re,rp)
 end
 function c60159118.immcon2(e,tp,eg,ep,ev,re,r,rp)
     local g=e:GetHandler():GetOverlayGroup():Filter(c60159118.spfilter2,nil)

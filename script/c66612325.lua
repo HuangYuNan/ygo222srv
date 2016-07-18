@@ -62,7 +62,7 @@ function c66612325.filter(c,e)
 end
 function c66612325.tgval(e,re,rp)
 	local tp=e:GetHandler():GetControler()
-	return tp~=rp and aux.tgval(e,re,rp)
+	return tp~=rp and aux.TRUE(e,re,rp)
 end
 function c66612325.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION

@@ -34,7 +34,7 @@ function c60150714.initial_effect(c)
 	c:RegisterEffect(e5)
 	local e4=e5:Clone()
 	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e4:SetValue(aux.tgval)
+	e4:SetValue(aux.TRUE)
 	c:RegisterEffect(e4)
 	--tohand
 	local e1=Effect.CreateEffect(c)

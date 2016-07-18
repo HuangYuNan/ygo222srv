@@ -8,7 +8,7 @@ function c16300005.initial_effect(c)
 	e1:SetTargetRange(LOCATION_MZONE,0)
 	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x163))
 	e1:SetCondition(c16300005.tgcon)
-	e1:SetValue(aux.tgval)
+	e1:SetValue(aux.TRUE)
 	c:RegisterEffect(e1)
 	--Special Summon
 	local e2=Effect.CreateEffect(c)

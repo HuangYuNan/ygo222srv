@@ -78,7 +78,7 @@ function c60159117.immcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():GetClassCount(c60159117.spfilter2)>0
 end
 function c60159117.indval(e,re,tp)
-    return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and aux.tgval(e,re,rp)
+    return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_SPELL+TYPE_TRAP) and aux.TRUE(e,re,rp)
 end
 function c60159117.immcon2(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():GetOverlayGroup():GetClassCount(c60159117.spfilter2)>1

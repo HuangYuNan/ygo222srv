@@ -36,7 +36,7 @@ function c23308015.initial_effect(c)
 	c:RegisterEffect(e5)
 	local e6=e5:Clone()
 	e6:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e6:SetValue(aux.tgval)
+	e6:SetValue(aux.TRUE)
 	c:RegisterEffect(e6)
 	--destroy
 	local e7=Effect.CreateEffect(c)

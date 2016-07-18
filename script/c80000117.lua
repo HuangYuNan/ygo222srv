@@ -18,7 +18,7 @@ function c80000117.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetValue(aux.tgval)
+	e5:SetValue(aux.TRUE)
 	c:RegisterEffect(e5)
 	--battle indestructable
 	local e4=Effect.CreateEffect(c)

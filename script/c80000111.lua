@@ -58,7 +58,7 @@ function c80000111.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 function c80000111.efilter1(e,re,rp)
-	return re:IsActiveType(TYPE_EFFECT) and aux.tgval(e,re,rp)
+	return re:IsActiveType(TYPE_EFFECT) and aux.TRUE(e,re,rp)
 end
 function c80000111.efilter2(e,re)
 	return re:IsActiveType(TYPE_EFFECT)

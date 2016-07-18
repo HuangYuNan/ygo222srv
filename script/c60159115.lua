@@ -84,7 +84,7 @@ function c60159115.sumsuc(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c60159115.indval(e,re,tp)
-	return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_EFFECT) and aux.tgval(e,re,rp)
+	return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_EFFECT) and aux.TRUE(e,re,rp)
 end
 function c60159115.indval2(e,re,tp)
 	return tp~=e:GetHandlerPlayer() and re:IsActiveType(TYPE_EFFECT)
