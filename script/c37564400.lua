@@ -16,7 +16,7 @@ function c37564400.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(aux.tgval)
+	e3:SetValue(1)
 	e3:SetCondition(c37564400.indcon)
 	c:RegisterEffect(e3)
 --reg

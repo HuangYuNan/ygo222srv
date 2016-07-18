@@ -25,7 +25,7 @@ function c37564210.initial_effect(c)
 	e5:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetValue(aux.tgval)
+	e5:SetValue(1)
 	c:RegisterEffect(e5)
 --ind
 	local e4=Effect.CreateEffect(c)
