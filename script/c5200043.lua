@@ -7,6 +7,7 @@ function c5200043.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,5200043+EFFECT_COUNT_CODE_OATH)
+	e1:SetCondition(c5200043.condition1)
 	e1:SetCost(c5200043.cost)
 	e1:SetTarget(c5200043.target)
 	e1:SetOperation(c5200043.activate)
@@ -14,7 +15,7 @@ function c5200043.initial_effect(c)
 	--draw
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(5200043,1))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetCategory(CATEGORY_DRAW)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetRange(LOCATION_GRAVE)
@@ -26,12 +27,11 @@ function c5200043.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c5200043.filter(c)
-	return c:IsSetCard(0x361) and c:IsLocation(LOCATION_HAND) and c:IsDiscardable()
+	return c:IsSetCard(0x361)  and c:IsDiscardable()
 end
 function c5200043.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c5200043.filter,tp,LOCATION_HAND,0,1,nil) end
-	local g=Duel.SelectMatchingCard(tp,c5200043.filter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+	Duel.DiscardHand(tp,c5200043.filter,1,1,REASON_COST+REASON_DISCARD)
 end
 function c5200043.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,2) end
@@ -72,4 +72,10 @@ function c5200043.activate2(e,tp,eg,ep,ev,re,r,rp)
 		Duel.BreakEffect()
 		Duel.DiscardHand(tp,nil,1,1,REASON_EFFECT+REASON_DISCARD)
 	end
+end
+function c5200043.condition1(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c5200043.tfilter,e:GetHandlerPlayer(),LOCATION_HAND,0,1,e:GetHandler())
+end
+function c5200043.tfilter(c)
+	return c:IsSetCard(0x361)
 end

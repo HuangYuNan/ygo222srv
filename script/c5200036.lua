@@ -27,15 +27,15 @@ function c5200036.initial_effect(c)
 	e3:SetOperation(c5200036.hdop)
 	c:RegisterEffect(e3)
 end
-function c5200036.cfilter(c)
+function c5200036.filter(c)
 	return c:IsType(TYPE_SPELL) and c:IsDiscardable()
 end
 function c5200036.ovfilter(c)
 	return c:IsFaceup() and c:IsCode(5200031) 
 end
 function c5200036.xyzop(e,tp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c5200036.cfilter,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,c5200036.cfilter,1,1,REASON_COST+REASON_DISCARD)
+	if chk==0 then return Duel.IsExistingMatchingCard(c5200036.filter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,c5200036.filter,1,1,REASON_COST+REASON_DISCARD)
 end
 function c5200036.cfilter(c,tp)
 	return c:IsControler(tp) and c:IsPreviousLocation(LOCATION_DECK)

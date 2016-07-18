@@ -19,9 +19,16 @@ function c37564608.initial_effect(c)
 	e3:SetRange(LOCATION_GRAVE)
 	e3:SetCountLimit(1,37564608)
 	e3:SetCost(senya.sermcost)
+	e3:SetCondition(c37564608.thcon)
 	e3:SetTarget(c37564608.target1)
 	e3:SetOperation(c37564608.operation1)
 	c:RegisterEffect(e3)
+end
+function c37564608.lfilter(c)
+	return c:IsFaceup() and senya.prsyfilter(c)
+end
+function c37564608.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(c37564608.lfilter,tp,LOCATION_MZONE,0,1,nil)
 end
 function c37564608.filter(c)
 	return c:IsHasEffect(37564600) and c:IsType(TYPE_MONSTER) and not c:IsCode(37564608) and c:IsAbleToHand()

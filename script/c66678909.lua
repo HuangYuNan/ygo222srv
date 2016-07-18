@@ -51,7 +51,7 @@ function c66678909.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c66678909.grcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayCount()>0 and e:GetHandler():GetPreviousLocation()==LOCATION_MZONE
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c66678909.grfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
