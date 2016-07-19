@@ -56,6 +56,7 @@ function c75646023.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,0x200,nil,1,tp,0x1)
 end
 function c75646023.operation(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,0x4)<=0 then return end
 	Duel.Hint(3,tp,509)
 	local g=Duel.SelectMatchingCard(tp,c75646023.thfilter,tp,0x1,0,1,1,nil,e,tp,e:GetValue())
@@ -83,12 +84,11 @@ function c75646023.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(sg,0,tp,tp,false,false,0x5)
 end
 function c75646023.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetFieldGroupCount(ep,0x2,0)>0 end
-	Duel.SetOperationInfo(0,0x80,nil,0,1-tp,1)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,0x2)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,0,1-tp,1)
 end
 function c75646023.drop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(ep,0,0x2)
-	if g:GetCount()==0 then return end
+	local g=Duel.GetFieldGroup(1-tp,0x2,0,nil)
 	local sg=g:RandomSelect(1-tp,1)
 	Duel.SendtoGrave(sg,0x4040)
 end

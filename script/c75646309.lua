@@ -41,17 +41,16 @@ function c75646309.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(g,0x80)
 end
 function c75646309.spfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x32c3)
+	return c:IsSetCard(0x32c3)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c75646309.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,0x04)<=0 then return end
+	if Duel.GetLocationCount(tp,0x4)<=0 then return end
 	local g=Duel.GetMatchingGroup(c75646309.spfilter,tp,0x21,0,nil,e,tp)
 	if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(75646309,0)) then
 		Duel.Hint(3,tp,509)
 		local sg=g:Select(tp,1,1,nil)
-		Duel.HintSelection(sg)
 		Duel.SpecialSummon(sg,0,tp,tp,false,false,0x5)
 	end
 end

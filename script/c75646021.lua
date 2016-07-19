@@ -61,7 +61,7 @@ function c75646021.drop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c75646021.filter(c)
-	return  c:GetAttack()==1750 and c:GetDefense()==1350 and c:IsType(0x100000) and (c:IsLocation(0x10) or c:IsFaceup()) and c:IsAbleToHand()
+	return  c:GetAttack()==1750 and c:GetDefense()==1350 and c:IsType(0x1000000) and (c:IsLocation(0x10) or c:IsFaceup()) and c:IsAbleToHand()
 end
 function c75646021.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c75646021.filter,tp,0x50,0,1,nil) end

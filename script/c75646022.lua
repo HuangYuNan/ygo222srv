@@ -53,6 +53,7 @@ function c75646022.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,0x1,e:GetHandler(),1,0,0)
 end
 function c75646022.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e) then return end
 	Duel.Hint(3,tp,527)
 	local g=Duel.SelectMatchingCard(tp,c75646022.penfilter,tp,0x1,0,1,1,nil)
 	local tc=g:GetFirst()
