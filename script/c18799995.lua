@@ -32,7 +32,7 @@ function c18799995.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c18799995.filter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e2)) and c:GetLevel()==4 and c:IsRace(RACE_SPELLCASTER)
+	return c:IsFaceup() and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:GetLevel()==4 and c:IsRace(RACE_SPELLCASTER)
 end
 function c18799995.spcon(e,c)
 	if c==nil then return true end 
@@ -41,7 +41,7 @@ function c18799995.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c18799995.filter,tp,LOCATION_MZONE,0,1,e:GetHandler(),tp)
 end
 function c18799995.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return r==REASON_SYNCHRO and re:GetHandler():IsSetCard(0x2e0)
+	return r==REASON_SYNCHRO and (re:GetHandler():IsSetCard(0x2e0) or re:GetHandler():IsSetCard(0x2e1))
 end
 function c18799995.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
