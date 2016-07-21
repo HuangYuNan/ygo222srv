@@ -2,13 +2,7 @@
 function c66612312.initial_effect(c)
     c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,66612312)
-	--spsummon condition
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(c66612312.limit)
-	c:RegisterEffect(e0)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x660),c66612312.ffilter,true)
 	--rule
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -46,37 +40,31 @@ function c66612312.initial_effect(c)
 	e4:SetTarget(c66612312.trtg)
 	c:RegisterEffect(e4)
 end
-function c66612312.limit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
-end
-function c66612312.filter1(c)
-	return c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER) and not c:IsSetCard(0x16ab)
-end
-function c66612312.filter2(c)
-	return (c:IsType(TYPE_XYZ) or c:IsCode(66612306)) and not c:IsSetCard(0x16ab)
+function c66612312.ffilter(c)
+	return (c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER)) or c:IsCode(66612306)
 end
 function c66612312.splimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0xe660)
 end
-function c66612312.spfilter1(c,tp)
-	return c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER) and  c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(nil,true)
-		and Duel.IsExistingMatchingCard(c66612312.spfilter2,tp,LOCATION_MZONE,0,1,c)
+function c66612312.spfilter1(c,tp,fc)
+	return c:IsSetCard(0x660)  and  c:IsAbleToRemoveAsCost() and c:IsCanBeFusionMaterial(fc)
+		and Duel.IsExistingMatchingCard(c66612312.spfilter2,tp,LOCATION_MZONE,0,1,c,fc)
 end
-function c66612312.spfilter2(c)
-	return ((c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER)) or c:IsCode(66612306)) and c:IsCanBeFusionMaterial(nil,true) and c:IsAbleToRemoveAsCost()
+function c66612312.spfilter2(c,fc)
+	return ((c:IsType(TYPE_XYZ) and c:IsType(TYPE_MONSTER)) or c:IsCode(66612306)) and c:IsCanBeFusionMaterial(fc) and c:IsAbleToRemoveAsCost()
 end
 function c66612312.sprcon(e,c)
 	if c==nil then return true end 
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.IsExistingMatchingCard(c66612312.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(c66612312.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp,c)
 end
 function c66612312.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(66612312,0))
 	local g1=Duel.SelectMatchingCard(tp,c66612312.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(66612312,1))
-	local g2=Duel.SelectMatchingCard(tp,c66612312.spfilter2,tp,LOCATION_ONFIELD,0,1,1,g1:GetFirst())
+	local g2=Duel.SelectMatchingCard(tp,c66612312.spfilter2,tp,LOCATION_ONFIELD,0,1,1,g1:GetFirst(),c)
 	g1:Merge(g2)
 	local tc=g1:GetFirst()
 	while tc do

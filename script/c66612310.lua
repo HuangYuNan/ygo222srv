@@ -1,12 +1,7 @@
 --扑克魔术 血色花蕾
 function c66612310.initial_effect(c)
 	c:EnableReviveLimit()
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(c66612310.limit)
-	c:RegisterEffect(e0)
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x660),c66612310.ffilter,true)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
@@ -54,31 +49,31 @@ function c66612310.initial_effect(c)
 	e5:SetOperation(c66612310.puop)
 	c:RegisterEffect(e5)
 end
-function c66612310.limit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+function c66612310.ffilter(c)
+	return c:GetLevel()==4 or c:GetLevel()==8
 end
 function c66612310.splimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0xe660)
 end
-function c66612310.spfilter1(c,tp)
-	return c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial(nil,true) and c:IsAbleToRemoveAsCost()
-		and Duel.IsExistingMatchingCard(c66612310.spfilter2,tp,LOCATION_MZONE,0,1,c)
+function c66612310.spfilter1(c,tp,fc)
+	return c:IsSetCard(0x660)  and c:IsCanBeFusionMaterial(fc) and c:IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(c66612310.spfilter2,tp,LOCATION_MZONE,0,1,c,fc)
 end
-function c66612310.spfilter2(c)
-	return (c:GetLevel()==4 or c:GetLevel()==8) and c:IsType(TYPE_MONSTER) and c:IsCanBeFusionMaterial(nil,true) and c:IsAbleToRemoveAsCost()
+function c66612310.spfilter2(c,fc)
+	return (c:GetLevel()==4 or c:GetLevel()==8)  and c:IsCanBeFusionMaterial(fc) and c:IsAbleToRemoveAsCost()
 end
 function c66612310.sprcon(e,c)
 	if c==nil then return true end 
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.IsExistingMatchingCard(c66612310.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp)
+		and Duel.IsExistingMatchingCard(c66612310.spfilter1,tp,LOCATION_MZONE,0,1,nil,tp,c)
 end
 function c66612310.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(66612310,0))
-	local g1=Duel.SelectMatchingCard(tp,c66612310.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp)
+	local g1=Duel.SelectMatchingCard(tp,c66612310.spfilter1,tp,LOCATION_MZONE,0,1,1,nil,tp,c)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(66612310,1))
-	local g2=Duel.SelectMatchingCard(tp,c66612310.spfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst())
+	local g2=Duel.SelectMatchingCard(tp,c66612310.spfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),c)
 	g1:Merge(g2)
 	local tc=g1:GetFirst()
 	while tc do

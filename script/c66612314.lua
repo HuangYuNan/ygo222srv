@@ -1,6 +1,6 @@
 --命运扑克魔术 幻想坎特雷拉
 function c66612314.initial_effect(c)
-	aux.AddFusionProcFun2(c,c66612314.filter1,c66612314.filter2,false)
+	aux.AddFusionProcFun2(c,c66612314.filter1,c66612314.filter2,true)
 	c:SetUniqueOnField(1,0,66612314)
 	--remove
 	local e1=Effect.CreateEffect(c)

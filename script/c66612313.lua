@@ -1,6 +1,6 @@
 --命运扑克魔术 世界之语
 function c66612313.initial_effect(c)
-	aux.AddFusionProcFun2(c,c66612313.filter1,c66612313.filter2,false)
+	aux.AddFusionProcFun2(c,c66612313.filter1,c66612313.filter2,true)
 	c:SetUniqueOnField(1,0,66612313)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(66612313,0))
