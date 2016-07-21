@@ -12,7 +12,9 @@ function c1100118.initial_effect(c)
 	c:RegisterEffect(e1)
 	--sset
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_DESTROYED)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCondition(c1100118.setcon)
 	e2:SetTarget(c1100118.settg)
@@ -41,9 +43,12 @@ function c1100118.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.ConfirmCards(1-tp,sg)
 	end
 end
+function c1100118.filter1(c,tp)
+	return c:IsSetCard(0xa242) and c:IsReason(REASON_DESTROY) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
+		and c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
+end
 function c1100118.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0xa242)
-		and c:IsReason(REASON_EFFECT+REASON_BATTLE) and e:GetHandler():GetTurnID()~=Duel.GetTurnCount()
+	return eg:IsExists(c1100118.filter1,1,nil,tp) and aux.exccon(e)
 end
 function c1100118.settg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsSSetable(true) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
