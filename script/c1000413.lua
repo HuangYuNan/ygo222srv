@@ -5,14 +5,18 @@ function c1000413.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCondition(c1000413.con)
 	e1:SetCountLimit(1,1000413)
 	c:RegisterEffect(e1)
-	--adjust
+	--cannot activate
 	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_ADJUST)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetRange(LOCATION_SZONE)
-	e2:SetOperation(c1000413.adjustop)
+	e2:SetTargetRange(1,0)
+	e2:SetCondition(c1000413.con1)
+	e2:SetValue(c1000413.aclimit)
 	c:RegisterEffect(e2)
 	--cannot activate
 	local e3=Effect.CreateEffect(c)
@@ -20,11 +24,10 @@ function c1000413.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e3:SetRange(LOCATION_SZONE)
-	e3:SetTargetRange(1,1)
-	e3:SetLabel(0)
-	e3:SetValue(c1000413.actlimit)
+	e3:SetTargetRange(0,1)
+	e3:SetCondition(c1000413.con1)
+	e3:SetValue(c1000413.aclimit)
 	c:RegisterEffect(e3)
-	e2:SetLabelObject(e3)
 	--to hand
 	local e4=Effect.CreateEffect(c)
 	e4:SetCategory(CATEGORY_TOHAND)
@@ -36,21 +39,22 @@ function c1000413.initial_effect(c)
 	e4:SetOperation(c1000413.thop)
 	c:RegisterEffect(e4)
 end
-function c1000413.actlimit(e,te,tp)
-	if not te:IsHasType(EFFECT_TYPE_ACTIVATE) or not te:IsActiveType(TYPE_SPELL) then return false end
-	if tp==e:GetHandlerPlayer() then return e:GetLabel()==1
-	else return e:GetLabel()==2 end
+function c1000413.cfilter(c)
+	return c:IsFaceup() and c:IsCode(1000406)
 end
-function c1000413.filter(c)
+function c1000413.con(e)
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
+	return g:IsExists(c1000413.cfilter,1,nil)
+end
+function c1000413.cfilter1(c)
 	return c:IsFaceup() and c:IsRace(RACE_SPELLCASTER)
 end
-function c1000413.adjustop(e,tp,eg,ep,ev,re,r,rp)
-	local b1=Duel.IsExistingMatchingCard(c1000413.filter,tp,LOCATION_MZONE,0,1,nil)
-	local b2=Duel.IsExistingMatchingCard(c1000413.filter,tp,0,LOCATION_MZONE,1,nil)
-	local te=e:GetLabelObject()
-	if not b1 then te:SetLabel(1)
-	elseif b1 and not b2 then te:SetLabel(2)
-	else te:SetLabel(0) end
+function c1000413.con1(e)
+	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
+	return not g:IsExists(c1000413.cfilter,1,nil)
+end
+function c1000413.aclimit(e,re,tp)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE) and re:IsActiveType(TYPE_SPELL)
 end
 function c1000413.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
