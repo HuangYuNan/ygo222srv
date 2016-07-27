@@ -56,7 +56,7 @@ function c1007015.sccon(e)
 	return not tc or not tc:IsSetCard(0x245)
 end
 function c1007015.spfilter(c,e,tp)
-	return c:IsFaceup() and c:IsSetCard(0x245) and (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(10070152)
+	return c:IsFaceup() and c:IsSetCard(0x245) and (c:GetSequence()==6 or c:GetSequence()==7) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(1007015)
 end
 function c1007015.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_SZONE) and c1007015.spfilter(chkc,e,tp) end

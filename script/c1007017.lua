@@ -60,7 +60,7 @@ function c1007017.ovfilter1(c,tp)
 	return  c:IsSetCard(0x245) and  Duel.IsExistingMatchingCard(c1007017.ovfilter2,tp,LOCATION_MZONE,0,1,c,tp) and c:GetControler(tp)
 end
 function c1007017.ovfilter2(c,tp)
-	return c:IsSetCard(0x245) and c:GetLevel()==7  and c:GetControler(tp)
+	return c:IsSetCard(0x245) and c:GetLevel()==7  and c:GetControler(tp) and not c:IsType(TYPE_TOKEN)
 end
 function c1007017.spcon(e,c)
 	if c==nil then return true end
