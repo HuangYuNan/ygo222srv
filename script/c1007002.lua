@@ -129,7 +129,7 @@ function c1007002.valcon(e,re,r,rp)
 	return bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0
 end
 function c1007002.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1245,2,REASON_COST) end
+	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1245,2,REASON_COST) and Duel.GetFlagEffect(tp,1007002)==0 end
 	e:GetHandler():RemoveCounter(tp,0x1245,3,REASON_COST)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -144,6 +144,7 @@ function c1007002.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	e2:SetOperation(c1007002.oopp)
 	e2:SetReset(RESET_EVENT+0xfe0000+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e2)
+	Duel.RegisterFlagEffect(tp,1007002,RESET_PHASE+PHASE_END,EFFECT_FLAG_OATH,1)
 end
 function c1007002.oopp(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
