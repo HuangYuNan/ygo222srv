@@ -16,7 +16,7 @@ function c10958777.initial_effect(c)
 	e2:SetCode(EFFECT_IMMUNE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_MZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_PLANT))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsRace,RACE_FAIRY))
 	e2:SetValue(c10958777.efilter)
 	c:RegisterEffect(e2)   
 	--destroy
@@ -33,7 +33,7 @@ function c10958777.sfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsType(TYPE_SYNCHRO)
 end
 function c10958777.efilter(e,re)
-	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and not e:GetHandler():IsType(TYPE_SYNCHRO)
+	return e:GetOwnerPlayer()~=re:GetOwnerPlayer() and not re:IsActiveType(TYPE_SYNCHRO)
 end
 function c10958777.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return rp~=tp and bit.band(r,REASON_EFFECT)~=0 and e:GetHandler():GetPreviousControler()==tp

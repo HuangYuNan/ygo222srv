@@ -78,7 +78,7 @@ function c18799993.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c18799993.thfilter(c,e,tp)
-	return   (c:IsSetCard(0x984) or c:IsSetCard(0x985)) and c:GetLevel()==4 and c:IsRace(RACE_DRAGON)
+	return   (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:GetLevel()==4 and c:IsRace(RACE_DRAGON)
 		  and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c18799993.wwtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
