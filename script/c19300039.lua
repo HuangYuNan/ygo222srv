@@ -7,13 +7,13 @@ function c19300039.initial_effect(c)
 	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
-	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CHAIN_UNIQUE+EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_CHAIN_UNIQUE)
 	e2:SetCategory(CATEGORY_DESTROY+CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_SUMMON_SUCCESS)
+	e2:SetCountLimit(2)
 	e2:SetCondition(c19300039.con)
-	e2:SetCost(c19300039.cost)
 	e2:SetTarget(c19300039.target)
 	e2:SetOperation(c19300039.operation)
 	c:RegisterEffect(e2)
@@ -30,15 +30,11 @@ function c19300039.initial_effect(c)
 	e4:SetTarget(c19300039.splimit)
 	c:RegisterEffect(e4)
 end
-function c19300039.con(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c19300039.gfilter,1,nil) and e:GetHandler():GetFlagEffect(19300039)<=1
-end
 function c19300039.gfilter(c,tp)
-	return c:IsSetCard(0x193) and c:IsControler(tp)
+	return c:IsSetCard(0x193) and c:GetSummonPlayer()==tp
 end
-function c19300039.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	e:GetHandler():RegisterFlagEffect(19300039,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+function c19300039.con(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c19300039.gfilter,1,nil,tp)
 end
 function c19300039.filter(c,val)
 	local lv=c:GetLevel()
