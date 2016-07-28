@@ -19,6 +19,7 @@ function c19300039.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e3:SetCountLimit(2)
 	c:RegisterEffect(e3)
 	--
 	local e4=Effect.CreateEffect(c)
