@@ -68,7 +68,7 @@ function c10124002.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
 	local tc=Duel.SelectMatchingCard(tp,c10124002.tdfilter,tp,LOCATION_GRAVE+LOCATION_DECK,0,1,1,nil):GetFirst()
 	if tc then
-	 Duel.PSendtoExtra(tc,nil,REASON_EFFECT) 
+	 Duel.SendtoExtraP(tc,nil,REASON_EFFECT) 
 	end
 end
 
@@ -86,7 +86,7 @@ function c10124002.pstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local pc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq) 
 	if chk==0 then return pc and pc:IsDestructable()
 		and Duel.IsExistingMatchingCard(c10124002.pcfilter,tp,LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,pc,1,0,0)	
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,pc,1,0,0)  
 end
 
 function c10124002.psop(e,tp,eg,ep,ev,re,r,rp)
