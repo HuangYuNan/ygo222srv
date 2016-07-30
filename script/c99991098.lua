@@ -43,7 +43,7 @@ function c99991098.initial_effect(c)
 	c:RegisterEffect(e7)
 	--send to grave
 	local e8=Effect.CreateEffect(c)
-	e8:SetDescription(aux.Stringid(9999110,0))
+	e8:SetDescription(aux.Stringid(99991096,0))
 	e8:SetCategory(CATEGORY_TOGRAVE+CATEGORY_HANDES)
 	e8:SetType(EFFECT_TYPE_IGNITION)
 	e8:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -68,7 +68,6 @@ function c99991098.initial_effect(c)
 	c:RegisterEffect(e9)
 	--token
 	local e10=Effect.CreateEffect(c)
-	e10:SetDescription(aux.Stringid(9999110,2))
 	e10:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOKEN)
 	e10:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e10:SetCode(EVENT_PHASE+PHASE_END)
@@ -111,17 +110,17 @@ function c99991098.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c99991098.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>1
-		and Duel.IsPlayerCanSpecialSummonMonster(tp,9999110,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) end
+		and Duel.IsPlayerCanSpecialSummonMonster(tp,99991096,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) end
 	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,2,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,0,0)
 end
 function c99991098.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) 
 	    or Duel.GetLocationCount(tp,LOCATION_MZONE)<=1
-        or not Duel.IsPlayerCanSpecialSummonMonster(tp,9999110,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) then return end
-	local token1=Duel.CreateToken(tp,9999110)
+        or not Duel.IsPlayerCanSpecialSummonMonster(tp,99991096,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) then return end
+	local token1=Duel.CreateToken(tp,99991096)
     Duel.SpecialSummonStep(token1,0,tp,tp,false,false,POS_FACEUP)
-	local token2=Duel.CreateToken(tp,9999110)
+	local token2=Duel.CreateToken(tp,99991096)
 	Duel.SpecialSummonStep(token2,0,tp,tp,false,false,POS_FACEUP)
 	Duel.SpecialSummonComplete()
 end
@@ -132,14 +131,14 @@ function c99991098.splimit(e,c)
 	return not c:IsType(TYPE_TOKEN)
 end
 function c99991098.sgcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsCode,1,nil,9999110) end
-	local g=Duel.SelectReleaseGroup(tp,Card.IsCode,1,1,nil,9999110)
+	if chk==0 then return Duel.CheckReleaseGroup(tp,Card.IsCode,1,nil,99991096) end
+	local g=Duel.SelectReleaseGroup(tp,Card.IsCode,1,1,nil,99991096)
 	Duel.Release(g,REASON_COST)
 end
 function c99991098.sgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(1-tp) and chkc:IsAbleToGrave() end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(9999110,1))
+	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(99991096,1))
 	local g0=Duel.SelectTarget(tp,Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,1,nil)
 	local tc=g0:GetFirst()
 	local seq=tc:GetSequence()
@@ -214,8 +213,8 @@ end
 function c99991098.tkop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e)
 	    or Duel.GetLocationCount(tp,LOCATION_MZONE)<1
-	    or not Duel.IsPlayerCanSpecialSummonMonster(tp,9999110,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) then return end
-	local token=Duel.CreateToken(tp,9999110)
+	    or not Duel.IsPlayerCanSpecialSummonMonster(tp,99991096,0,0x4011,2000,2000,4,RACE_ZOMBIE,ATTRIBUTE_DARK) then return end
+	local token=Duel.CreateToken(tp,99991096)
 	Duel.SpecialSummon(token,0,tp,tp,false,false,POS_FACEUP)
 end
 function c99991098.sfcon(e)

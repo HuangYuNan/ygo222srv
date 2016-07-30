@@ -42,7 +42,7 @@ function c1000707.tgtg(e,c)
 	return c:IsSetCard(0x5204) and (c:GetSequence()==6 or c:GetSequence()==7)
 end
 function c1000707.desfilter(c)
-	return c:IsFaceup() and c:IsDestructable()
+	return c:IsFaceup() and c:IsSetCard(0x5204) and c:IsDestructable()
 end
 function c1000707.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsControler(tp) and c1000707.desfilter(chkc) and chkc~=e:GetHandler() end

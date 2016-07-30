@@ -2,7 +2,7 @@
 if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564601.initial_effect(c)
 	senya.setreg(c,37564601,37564600)
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(Card.IsType,TYPE_SYNCHRO),2)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsType,TYPE_SYNCHRO),aux.NonTuner(senya.prsyfilter),2)
 	c:EnableReviveLimit()
 	local e0=Effect.CreateEffect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -57,7 +57,7 @@ function c37564601.atkcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c37564601.atkop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	c:RegisterFlagEffect(37564601,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+	c:RegisterFlagEffect(37564601,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 	local bc=c:GetBattleTarget()
 	local val=bc:GetAttack()
 	if val>0 and c:IsRelateToBattle() and c:IsFaceup() then
@@ -95,6 +95,6 @@ function c37564601.operation1(e,tp,eg,ep,ev,re,r,rp)
 		Duel.NegateRelatedChain(tc,RESET_TURN_SET)
 		tc=g:GetNext()
 	end
-	local val=g:GetCount()^2*100
+	local val=g:GetCount()*300
 	Duel.Damage(1-tp,val,REASON_EFFECT)
 end

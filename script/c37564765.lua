@@ -35,7 +35,7 @@ function senya.sgreg(c,setcd)
 	c:RegisterEffect(e1)
 end
 --xyz summon of prim
-function senya.rxyz1(c,rk,f)
+function senya.rxyz1(c,rk,f,xm)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
@@ -43,7 +43,7 @@ function senya.rxyz1(c,rk,f)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetCondition(senya.xyzcon1(rk,f))
-	e1:SetOperation(senya.xyzop1(rk,f))
+	e1:SetOperation(senya.xyzop1(rk,f,xm))
 	e1:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e1)
 end
@@ -77,7 +77,7 @@ return function(e,c,og,min,max)
 	return maxc>=2 and mg:IsExists(senya.xyzfilter1,1,nil,mg,ct)
 end
 end
-function senya.xyzop1(rk,f)
+function senya.xyzop1(rk,f,xm)
 return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	local g=nil
 	if og and not min then
@@ -109,14 +109,18 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 		sg:Merge(tc:GetOverlayGroup())
 		tc=g:GetNext()
 	end
-	Duel.SendtoGrave(sg,REASON_RULE)
+	if xm then
+		Duel.Overlay(c,sg)
+	else
+		Duel.SendtoGrave(sg,REASON_RULE)
+	end
 	c:SetMaterial(g)
 	Duel.Overlay(c,g)
 end
 end
 
-function senya.rxyz2(c,rk,f,ct)
-	if not ct then ct=2 end
+function senya.rxyz2(c,rk,f,ct,xm)
+	ct=ct or 2
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -124,7 +128,7 @@ function senya.rxyz2(c,rk,f,ct)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCondition(senya.xyzcon2(rk,f,ct))
-	e1:SetOperation(senya.xyzop2(rk,f,ct))
+	e1:SetOperation(senya.xyzop2(rk,f,ct,xm))
 	e1:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e1)
 end
@@ -145,7 +149,7 @@ return function(e,c,og)
 		and mg:IsExists(senya.xyzfilter1,lct,nil,mg,lct)
 end
 end
-function senya.xyzop2(rk,f,ct)
+function senya.xyzop2(rk,f,ct,xm)
 return function(e,tp,eg,ep,ev,re,r,rp,c,og)
 	local lct=ct-1
 	local g=nil
@@ -170,7 +174,11 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og)
 			tc=g:GetNext()
 		end
 	end
-	Duel.SendtoGrave(sg,REASON_RULE)
+	if xm then
+		Duel.Overlay(c,sg)
+	else
+		Duel.SendtoGrave(sg,REASON_RULE)
+	end
 	c:SetMaterial(g)
 	Duel.Overlay(c,g)
 end
@@ -250,6 +258,10 @@ end
 function senya.sermcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
+end
+function senya.setdcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToDeckOrExtraAsCost() end
+	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
 end
 --for ss effects
 function senya.spfilter(c,e,tp,f,ig,stype)
@@ -752,13 +764,19 @@ end
 --xyz monster atk drain effect
 --con(usual)=condition tg(battledcard,card)=filter
 --cost=cost
-function senya.atkdr(c,con,tg,cost,ctlm,ctlmid)
+--xm=drain mat
+function senya.atkdr(c,con,tg,cost,ctlm,ctlmid,xm)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_BATTLE_START)
 	if ctlm then e5:SetCountLimit(ctlm,ctlmid) end
 	e5:SetCondition(senya.atkdrcon(con,tg))
 	if cost then e5:SetCost(cost) end
+	if xm then
+		e5:SetLabel(2)
+	else
+		e5:SetLabel(1)
+	end
 	e5:SetTarget(senya.atkdrtg)
 	e5:SetOperation(senya.atkdrop)
 	c:RegisterEffect(e5)
@@ -779,7 +797,11 @@ function senya.atkdrop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToBattle() and not tc:IsImmuneToEffect(e) then
 		local og=tc:GetOverlayGroup()
 		if og:GetCount()>0 then
-			Duel.SendtoGrave(og,REASON_RULE)
+			if e:GetLabel(2) then
+				Duel.Overlay(c,og)
+			else
+				Duel.SendtoGrave(og,REASON_RULE)
+			end
 		end
 		Duel.Overlay(c,Group.FromCards(tc))
 	end
@@ -798,10 +820,21 @@ end
 function senya.nntr(c)
 	senya.sgreg(c,37564765)
 end
+function senya.nncon(og)
+return function(e,tp)
+	tp=tp or e:GetHandlerPlayer()
+	return Duel.IsExistingMatchingCard(senya.nnfilter,tp,LOCATION_MZONE,0,1,nil,og)
+end
+end
+function senya.nnfilter(c,og)
+	if not c:IsFaceup() then return end
+	return c:GetOriginalCode()==37564765 or (c:IsCode(37564765) and not og)
+end
 --for infinity negate effect
 function senya.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
 	local e3=Effect.CreateEffect(c)
 	loc=loc or LOCATION_MZONE
+	e3:SetDescription(aux.Stringid(37564765,5))
 	e3:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	if force then
 		e3:SetType(EFFECT_TYPE_QUICK_F)
@@ -872,4 +905,57 @@ function senya.prl4(c,cd)
 	senya.setreg(c,cd,37564600)
 	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsHasEffect,37564600),1)
 	c:EnableReviveLimit()
+end
+function senya.xmcon(ct,excon)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetOverlayCount()>=ct and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
+end
+end
+--counter summon effect universals
+--n=normal f=flip s=special o=opponent only
+function senya.negs(c,tpcode,ctlm,ctlmid,con,cost)
+	if not tpcode or bit.band(tpcode,7)==0 then return end
+	ctlmid=ctlmid or 1
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(37564765,4))
+	e3:SetCategory(CATEGORY_DISABLE_SUMMON+CATEGORY_DESTROY)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_SPSUMMON)
+	if ctlm then e3:SetCountLimit(ctlm,ctlmid) end
+	if bit.band(tpcode,8)==8 then
+		e3:SetLabel(2)
+	else
+		e3:SetLabel(1)
+	end
+	e3:SetCondition(senya.negsdiscon(con))
+	if cost then e3:SetCost(cost) end
+	e3:SetTarget(senya.negsdistg)
+	e3:SetOperation(senya.negsdisop)
+	local e2=e3:Clone()
+	e2:SetCode(EVENT_FLIP_SUMMON)
+	local e1=e3:Clone()
+	e1:SetCode(EVENT_SUMMON)
+	if bit.band(tpcode,1)==1 then c:RegisterEffect(e1) end
+	if bit.band(tpcode,2)==2 then c:RegisterEffect(e2) end
+	if bit.band(tpcode,4)==4 then c:RegisterEffect(e3) end
+end
+function senya.negsfilter(c,tp,e)
+	return c:GetSummonPlayer()==tp or e:GetLabel()==1
+end
+function senya.negsdiscon(con)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetCurrentChain()==0 and eg:IsExists(senya.negsfilter,1,nil,e,1-tp) and (not con or con(e,tp,eg,ep,ev,re,r,rp))
+end
+end
+function senya.negsdistg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	local g=eg:Filter(senya.filter,nil,e,1-tp)
+	Duel.SetOperationInfo(0,CATEGORY_DISABLE_SUMMON,g,g:GetCount(),0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
+end
+function senya.negsdisop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(senya.negsfilter,nil,e,1-tp)
+	Duel.NegateSummon(g)
+	Duel.Destroy(g,REASON_EFFECT)
 end

@@ -124,7 +124,7 @@ function c99999976.seoperation(e,tp,eg,ep,ev,re,r,rp,chk)
 end--]]
 function c99999976.ntrcon(e,tp,eg,ep,ev,re,r,rp)
    local g=e:GetHandler():GetEquipTarget()
-   return g:GetCode()==999994
+   return g:GetCode()==99991094
 end
 function c99999976.ntrcost(e,tp,eg,ep,ev,re,r,rp,chk)
     local   g=e:GetHandler():GetEquipTarget() 

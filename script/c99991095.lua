@@ -81,7 +81,7 @@ function c99991095.thop(e,tp,eg,ep,ev,re,r,rp)
 	end	
 end
 function c99991095.incon(e)
-	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,9999110)
+	return Duel.IsExistingMatchingCard(Card.IsCode,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil,99991096)
 end
 function c99991095.intg(e,c)
 	return c:IsCode(99991098)

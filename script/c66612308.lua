@@ -52,7 +52,7 @@ function c66612308.initial_effect(c)
 	e5:SetOperation(c66612308.puop)
 	c:RegisterEffect(e5)
 end
-function c66612307.ffilter(c)
+function c66612308.ffilter(c)
 	return c:GetLevel()==2 or c:GetLevel()==6
 end
 function c66612308.splimit(e,c)
