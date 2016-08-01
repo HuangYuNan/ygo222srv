@@ -125,10 +125,10 @@ function c18706024.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c18706024.filterb(c,fc)
-	return c:IsCode(1870609) and c:IsAbleToHand()
+	return c:IsCode(18706009) and c:IsAbleToHand()
 end
 function c18706024.thtarget(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c18706024.filterc,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c18706024.filterb,tp,LOCATION_DECK,0,1,nil,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND+CATEGORY_SEARCH,nil,0,tp,1)
 end
 function c18706024.thoperation(e,tp,eg,ep,ev,re,r,rp)

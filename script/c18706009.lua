@@ -101,7 +101,7 @@ function c18706009.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
 end
 function c18706009.filter3(c,e,tp)
-	return c:IsCode(187060024)  and c:IsAbleToHand()
+	return c:IsCode(18706024)  and c:IsAbleToHand()
 end
 function c18706009.thtarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c18706009.filter3,tp,LOCATION_DECK,0,1,nil,nil) end
