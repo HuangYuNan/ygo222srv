@@ -42,7 +42,7 @@ function c18700312.thop(e,tp,eg,ep,ev,re,r,rp,c)
 	end
 end
 function c18700312.spcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsEnvironment(1870199010,tp)
+	return Duel.IsEnvironment(18799010,tp)
 end
 function c18700312.spfilter(c,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0xabb) and c:GetLevel()==4 and c:IsAttribute(ATTRIBUTE_LIGHT) and not c:IsCode(18700312)

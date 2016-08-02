@@ -46,5 +46,5 @@ function c18700102.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c18700102.mfilter(c)
-	return c:IsCode(1870199010) and c:IsFaceup()
+	return c:IsCode(18799010) and c:IsFaceup()
 end
