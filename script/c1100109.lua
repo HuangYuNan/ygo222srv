@@ -81,7 +81,7 @@ function c1100109.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local ec=eg:GetFirst()
 	local tc=ec:GetBattleTarget()
 	if ec and tc and ec:IsFaceup() and tc:IsFaceup() then
-		local val=math.max(tc:GetAttack(),tc:GetDefense())
+		local val=math.max(tc:GetAttack(),tc:GetDefense(),0)
 	end
 	Duel.SetTargetPlayer(tc)
 	Duel.SetTargetParam(val)
@@ -91,7 +91,7 @@ function c1100109.damop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=eg:GetFirst()
 	local tc=ec:GetBattleTarget()
 	if ec and tc and ec:IsFaceup() and tc:IsFaceup() then
-		local val=math.max(tc:GetAttack(),tc:GetDefense())
+		local val=math.max(tc:GetAttack(),tc:GetDefense(),0)
 		Duel.Damage(1-tp,val,REASON_EFFECT)
 	end
 end
