@@ -39,12 +39,11 @@ function c1100109.initial_effect(c)
 	--damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DAMAGE)
-	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EVENT_BATTLE_DESTROYING)
-	e1:SetCondition(aux.bdocon)
-	e1:SetTargetRange(LOCATION_MZONE,0)
-	e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0xa242))
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCondition(c1100109.condition)
 	e1:SetTarget(c1100109.damtg)
 	e1:SetOperation(c1100109.damop)
 	c:RegisterEffect(e1) 
@@ -72,24 +71,27 @@ function c1100109.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end
-function c1100109.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c1100109.condition(e,tp,eg,ep,ev,re,r,rp)
+	local ec=eg:GetFirst()
+	local tc=ec:GetBattleTarget()
+	return ec and tc and tc:IsFaceup() and ec:IsRelateToBattle() and ec:IsStatus(STATUS_OPPO_BATTLE) and tc:IsControler(1-tp) and ec:IsControler(tp) and ec:IsSetCard(0xa242) and tc:IsReason(REASON_BATTLE)
+end
+function c1100109.damtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return true end
-	local bc=e:GetHandler():GetBattleTarget()
-	Duel.SetTargetCard(bc)
-	local dam=bc:GetAttack()
-	if bc:GetAttack() < bc:GetDefense() then dam=bc:GetDefense() end
-	if dam<0 then dam=0 end
-	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(dam)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,dam)
+	local ec=eg:GetFirst()
+	local tc=ec:GetBattleTarget()
+	if ec and tc and ec:IsFaceup() and tc:IsFaceup() then
+		local val=math.max(tc:GetAttack(),tc:GetDefense())
+	end
+	Duel.SetTargetPlayer(tc)
+	Duel.SetTargetParam(val)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,val)
 end
 function c1100109.damop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-		local dam=tc:GetAttack()
-		if tc:GetAttack() < tc:GetDefense() then dam=tc:GetDefense() end
-		if dam<0 then dam=0 end
-		Duel.Damage(p,dam,REASON_EFFECT)
+	local ec=eg:GetFirst()
+	local tc=ec:GetBattleTarget()
+	if ec and tc and ec:IsFaceup() and tc:IsFaceup() then
+		local val=math.max(tc:GetAttack(),tc:GetDefense())
+		Duel.Damage(1-tp,val,REASON_EFFECT)
 	end
 end
