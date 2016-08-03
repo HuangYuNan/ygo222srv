@@ -43,7 +43,7 @@ function c10124008.initial_effect(c)
 	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_DESTROYED)
-	e2:SetProperty(EFFECT_FLAG_DELAY)
+	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetCondition(c10124008.pencon)
 	e2:SetTarget(c10124008.pentg)
 	e2:SetOperation(c10124008.penop)
@@ -97,6 +97,7 @@ function c10124008.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,0,0,0)
 end
 function c10124008.filter2(c,e,tp,eg,ep,ev,re,r,rp)
 	if c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost() then
@@ -139,6 +140,7 @@ function c10124008.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	end
 	te:SetLabelObject(e:GetLabelObject())
 	e:SetLabelObject(te)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,nil,0,0,0)
 end
 function c10124008.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

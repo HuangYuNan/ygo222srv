@@ -27,7 +27,7 @@ function c10124001.initial_effect(c)
 	e3:SetDescription(aux.Stringid(10124001,2))
 	e3:SetCategory(CATEGORY_TOHAND)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetCode(EVENT_TO_DECK)
 	e3:SetCondition(c10124001.thcon)
 	e3:SetTarget(c10124001.thtg)
@@ -51,7 +51,7 @@ end
 function c10124001.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,c10124001.thfilter,tp,LOCATION_EXTRA,0,1,1,nil)
-	if g:GetCount()>0 then
+	if g:GetCount()>0 and not g:GetFirst():IsHasEffect(EFFECT_NECRO_VALLEY)  then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
