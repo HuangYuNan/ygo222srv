@@ -48,9 +48,9 @@ function c66666607.remfilter(c)
 	return c:IsSetCard(0x661) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c66666607.remcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66666607.remfilter,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66666607.remfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c66666607.remfilter,tp,LOCATION_HAND,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c66666607.remfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,e:GetHandler())
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c66666607.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

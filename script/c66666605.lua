@@ -29,9 +29,6 @@ function c66666605.initial_effect(c)
 	e3:SetTarget(c66666605.remtg)
 	e3:SetOperation(c66666605.remop)
 	c:RegisterEffect(e3)
-	local e4=e3:Clone()
-	e4:SetCode(EVENT_SUMMON_SUCCESS)
-	c:RegisterEffect(e4)
 end
 function c66666605.remcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonLocation()==LOCATION_DECK

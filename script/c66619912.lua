@@ -7,9 +7,10 @@ function c66619912.initial_effect(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564004,0))
 	e1:SetCategory(CATEGORY_DISABLE)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCost(c66619912.cost)
 	e1:SetTarget(c66619912.target)
 	e1:SetOperation(c66619912.activate)
@@ -45,8 +46,11 @@ function c66619912.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c66619912.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
+function c66619912.cfilter2(c,tp)
+	return c:GetSummonPlayer()==1-tp
+end
 function c66619912.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return rp~=tp end
+	if chk==0 then return rp~=tp and eg:IsExists(c66619912.cfilter2,1,nil,tp) end
 	Duel.SetTargetCard(eg)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,nil,0,1-tp,0)
 end
