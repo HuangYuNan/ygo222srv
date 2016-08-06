@@ -58,7 +58,7 @@ function c10124003.thop(e,tp,eg,ep,ev,re,r,rp)
 		if g:GetCount()>0 then
 		   Duel.BreakEffect()
 		   local tc=g:Select(tp,1,1,nil):GetFirst()
-				 Duel.PSendtoExtra(tc,nil,REASON_EFFECT) 
+		   Duel.SendtoExtraP(tc,nil,REASON_EFFECT) 
 		end
 	end
 end
