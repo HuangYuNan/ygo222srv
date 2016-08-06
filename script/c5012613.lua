@@ -135,7 +135,8 @@ function c5012613.ifilter(c)
 	return c:IsControler(tp) and c:IsCode(5012604) or c:IsCode(5012631)
 end
 function c5012613.cntgcon(e)
-	return Duel.IsExistingMatchingCard(c5012613.ifilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	return g=Duel.IsExistingMatchingCard(c5012613.ifilter,e:GetHandlerPlayer(),LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)
+	return g and g:IsExists(c5012613.filter,1,nil,tp)
 end
 function c5012613.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
