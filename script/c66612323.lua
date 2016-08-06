@@ -81,7 +81,8 @@ function c66612323.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c66612323.cpop(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
-	if e:GetHandler():IsRelateToEffect(e) and Duel.SendtoDeck(te:GetHandler(),nil,2,REASON_EFFECT)>0 then
+	if e:GetHandler():IsRelateToEffect(e) and Duel.SendtoDeck(te:GetHandler(),nil,0,REASON_EFFECT)>0 then
+    Duel.ShuffleDeck(tp) 
 		--[[local op=te:GetOperation()
 		if op then op(te,tp,eg,ep,ev,re,r,rp) end
 		local cg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)

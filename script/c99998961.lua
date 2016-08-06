@@ -33,6 +33,7 @@ function c99998961.initial_effect(c)
 	--act in hand
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCode(EFFECT_TRAP_ACT_IN_HAND)
 	e4:SetCondition(c99998961.handcon)
 	c:RegisterEffect(e4)
