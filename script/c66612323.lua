@@ -10,6 +10,7 @@ function c66612323.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(66612320,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetCategory(CATEGORY_TODECK)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCountLimit(1)
 	e2:SetCost(c66612323.cpcost)
@@ -30,27 +31,32 @@ function c66612323.initial_effect(c)
 	e3:SetOperation(c66612323.thop)
 	c:RegisterEffect(e3)
 end
-function c66612323.cpfilter(c)
-	return c:IsSetCard(0x660) and c:IsAbleToDeckAsCost() and c:GetType()==TYPE_SPELL and c:CheckActivateEffect(false,false,true)~=nil 
+function c66612323.refilter(c)
+  return c:IsAbleToRemoveAsCost() and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x660)
 end
 function c66612323.cpcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66612323.cpfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,c66612323.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	local rtc=g:GetFirst()
-	Duel.SendtoDeck(rtc,nil,2,REASON_COST)
-	e:SetLabelObject(rtc)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66612323.refilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local tg=Duel.SelectMatchingCard(tp,c66612323.refilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
+	Duel.Remove(tg,POS_FACEUP,REASON_COST)
+end
+function c66612323.cpfilter(c)
+  return c:IsAbleToDeck() and c:GetType()==TYPE_SPELL and  c:CheckActivateEffect(false,true,false)~=nil
 end
 function c66612323.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-	e:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	if chkc then local te=e:GetLabelObject()
+		local tg=te:GetTarget()
+		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66612323.cpfilter,tp,LOCATION_GRAVE,0,1,nil)  end
+    e:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e:SetCategory(0)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local rtc=e:GetLabelObject()
-	local te=rtc:CheckActivateEffect(true,true,false)
-	Duel.ClearTargetCard()
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	local g=Duel.SelectTarget(tp,c66612323.cpfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	local rtc=g:GetFirst()
+    local te=rtc:CheckActivateEffect(false,true,true)
+	--[[Duel.ClearTargetCard()
 	rtc:CreateEffectRelation(e)
-	e:SetLabelObject(te)
+	e:SetLabel(rtc)
 	local tg=te:GetTarget()
 	e:SetCategory(te:GetCategory())
 	e:SetProperty(te:GetProperty())
@@ -61,12 +67,22 @@ function c66612323.cptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	while tc do
 		tc:CreateEffectRelation(te)
 		tc=cg:GetNext()
-	end
+	end--]]
+	Duel.ClearTargetCard()
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	e:SetLabel(te:GetLabel())
+	e:SetLabelObject(te:GetLabelObject())
+	local tg=te:GetTarget()
+	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+	te:SetLabel(e:GetLabel())
+	te:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(te)
 end
 function c66612323.cpop(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
-	if te:GetHandler():IsRelateToEffect(e) and e:GetHandler():IsRelateToEffect(e) then
-		local op=te:GetOperation()
+	if e:GetHandler():IsRelateToEffect(e) and Duel.SendtoDeck(te:GetHandler(),nil,2,REASON_EFFECT)>0 then
+		--[[local op=te:GetOperation()
 		if op then op(te,tp,eg,ep,ev,re,r,rp) end
 		local cg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
 		if not cg then return end
@@ -75,7 +91,14 @@ function c66612323.cpop(e,tp,eg,ep,ev,re,r,rp)
 			tc:ReleaseEffectRelation(te)
 			tc=cg:GetNext()
 		end
-	end
+	end--]]
+	    e:SetLabel(te:GetLabel())
+		e:SetLabelObject(te:GetLabelObject())
+		local op=te:GetOperation()
+		if op then op(e,tp,eg,ep,ev,re,r,rp) end
+		te:SetLabel(e:GetLabel())
+		te:SetLabelObject(e:GetLabelObject())
+		end
 end
 function c66612323.tgfilter2(c,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetControler()==tp and c:IsSetCard(0x666)

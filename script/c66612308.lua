@@ -132,21 +132,19 @@ function c66612308.tdop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoGrave(g,REASON_EFFECT)
 end
 end
-function c66612308.pufilter(c)
-	return not c:IsPublic()
-end
 function c66612308.pucost(e,tp,eg,ep,ev,re,r,rp,chk)
-	 local g=Duel.GetMatchingGroup(c66612308.pufilter,tp,LOCATION_HAND,0,nil)
-	if chk==0 then return g:GetCount()>0   end
-	local tc=g:GetFirst()
+	if chk==0 then return Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)~=0
+		and not Duel.IsExistingMatchingCard(Card.IsPublic,tp,LOCATION_HAND,0,1,nil)  end
+	local tg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
+	local tc=tg:GetFirst()
     while tc do
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_PUBLIC)
 	e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-	e:GetHandler():RegisterEffect(e1)
-    tc=g:GetNext()
-	end
+	tc:RegisterEffect(e1)
+    tc=tg:GetNext()
+end
 end
 function c66612308.puspfilter(c,e,tp)
 	return c:IsSetCard(0x660) and c:IsLevelBelow(4) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)

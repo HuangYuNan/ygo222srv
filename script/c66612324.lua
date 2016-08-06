@@ -23,7 +23,7 @@ function c66612324.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g1=Duel.SelectTarget(tp,c66612324.filter1,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g2=Duel.SelectTarget(tp,c66612324.filter2,tp,LOCATION_GRAVE,0,1,1,nil)
+	local g2=Duel.SelectTarget(tp,c66612324.filter2,tp,LOCATION_GRAVE,0,1,1,g1:GetFirst())
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,tp,LOCATION_GRAVE)
 end
