@@ -13,10 +13,6 @@ if not Card.GetDefense then
 	Card.IsDefenseBelow=Card.IsDefenceBelow
 	Card.IsDefenseAbove=Card.IsDefenceAbove
 end
-if not senya.test then
-	senya.test=true
-	error("test",0)
-end
 --effect setcode tech
 senya.setchk=senya.setchk or {}
 function senya.setreg(c,cd,setcd)   
