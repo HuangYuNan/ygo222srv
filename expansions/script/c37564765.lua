@@ -13,6 +13,10 @@ if not Card.GetDefense then
 	Card.IsDefenseBelow=Card.IsDefenceBelow
 	Card.IsDefenseAbove=Card.IsDefenceAbove
 end
+if not senya.test then
+	senya.test=true
+	error("test",0)
+end
 --effect setcode tech
 senya.setchk=senya.setchk or {}
 function senya.setreg(c,cd,setcd)   
@@ -797,7 +801,7 @@ function senya.atkdrop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToBattle() and not tc:IsImmuneToEffect(e) then
 		local og=tc:GetOverlayGroup()
 		if og:GetCount()>0 then
-			if e:GetLabel(2) then
+			if e:GetLabel()==2 then
 				Duel.Overlay(c,og)
 			else
 				Duel.SendtoGrave(og,REASON_RULE)

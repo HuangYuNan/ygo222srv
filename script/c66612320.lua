@@ -12,7 +12,7 @@ function c66612320.initial_effect(c)
 	c:RegisterEffect(e1)
 end
 function c66612320.cfilter(c)
-	return c:IsAbleToRemoveAsCost() and c:IsSetCard(0x660) 
+	return c:IsAbleToRemoveAsCost() and c:IsSetCard(0x660) and c:IsType(TYPE_MONSTER)
 end
 function c66612320.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66612320.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end

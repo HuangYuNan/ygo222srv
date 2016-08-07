@@ -7,6 +7,7 @@ function c66612314.initial_effect(c)
 	e1:SetDescription(aux.Stringid(66612314,2))
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
@@ -45,7 +46,6 @@ function c66612314.initial_effect(c)
 	e5:SetOperation(c66612314.reop)
 	c:RegisterEffect(e5)
 end
-c66612314[0]=0
 function c66612314.filter1(c)
 	return c:IsSetCard(0x660) and c:IsType(TYPE_FUSION)
 end
@@ -59,7 +59,7 @@ function c66612314.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsControler(1-tp) and c66612314.filter(chkc) end
 	if chk==0 then return Duel.IsExistingMatchingCard(c66612314.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,c66612314.filter,tp,0,LOCATION_ONFIELD,1,nil)
+	local g=Duel.SelectTarget(tp,c66612314.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 end
 function c66612314.op(e,tp,eg,ep,ev,re,r,rp)
@@ -73,12 +73,12 @@ function c66612314.splimit(e,se,sp,st)
 end
 function c66612314.handes(e,tp,eg,ep,ev,re,r,rp)
 	local loc,id=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION,CHAININFO_CHAIN_ID)
-	if ep==tp or loc~=LOCATION_MZONE or id==c66612314[0]  then return end
+	if ep==tp  or id==c66612314[0]  then return end
 	c66612314[0]=id
 	if Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)>0 and Duel.SelectYesNo(1-tp,aux.Stringid(66612314,0)) then
 		Duel.DiscardHand(1-tp,aux.TRUE,1,1,REASON_EFFECT+REASON_DISCARD,nil)
 		Duel.BreakEffect()
-	else Duel.Damage(tp,2000,REASON_EFFECT) end
+	else Duel.Damage(1-tp,2000,REASON_EFFECT) end
 end
 function c66612314.cfilter(c)
 	return c:IsFaceup() and c:IsCode(66612313) and c:IsAbleToRemoveAsCost()
@@ -97,8 +97,8 @@ function c66612314.retg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,sg,sg:GetCount(),0,0)
 	Duel.SetChainLimit(c66612314.climit)
 end
-function c66612314.climit(e,lp,tp)
-	return lp==tp or not e:IsHasType(EFFECT_TYPE_ACTIVATE)
+function c66612314.climit(e,rp,tp)
+		return tp==rp
 end
 function c66612314.reop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,0,66612361)

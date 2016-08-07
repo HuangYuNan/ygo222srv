@@ -15,10 +15,10 @@ function c66612307.initial_effect(c)
 	e2:SetDescription(aux.Stringid(66612307,2))
 	e2:SetCategory(CATEGORY_POSITION)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1)
-	e2:SetCondition(c66612307.condition)
 	e2:SetTarget(c66612307.target)
 	e2:SetOperation(c66612307.activate)
 	c:RegisterEffect(e2)
@@ -84,24 +84,21 @@ function c66612307.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	end
 	Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
-function c66612307.filter(c,tp)
-	return  c:IsCanTurnSet() and c:IsControler(1-tp)
-end
-function c66612307.condition(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(c66612307.filter,1,nil,tp)
+function c66612307.filter(c,tp,e)
+	return  c:IsFaceup() and c:GetSummonPlayer()==1-tp and (not e or c:IsRelateToEffect(e)) and c:IsCanTurnSet()
 end
 function c66612307.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return  end
-	local tg=eg:Filter(c66612307.filter,nil,tp)
-	tg:AddCard(e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_POSITION,tg,tg:GetCount(),0,0)
+	if chk==0 then return eg:IsExists(c66612307.filter,1,nil,tp,nil)  end
+	eg:AddCard(e:GetHandler())
+	Duel.SetTargetCard(eg)
+	Duel.SetOperationInfo(0,CATEGORY_POSITION,eg,eg:GetCount(),0,0)
 end
 function c66612307.activate(e,tp,eg,ep,ev,re,r,rp)
-	local tg=eg:Filter(c66612307.filter,nil,tp)
+	local tg=eg:Filter(c66612307.filter,nil,tp,e)
 	tg:AddCard(e:GetHandler())
-	if tg:GetCount()>1 and e:GetHandler():IsCanTurnSet() then
-	Duel.ChangePosition(tc,POS_FACEDOWN_DEFENSE)
-	end
+	if e:GetHandler():IsFaceup() then
+	Duel.ChangePosition(tg,POS_FACEDOWN_DEFENSE)
+end
 end
 function c66612307.tdcon(e,tp,eg,ep,ev,re,r,rp)
 	return aux.exccon(e) 

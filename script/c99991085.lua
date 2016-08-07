@@ -99,7 +99,7 @@ function c99991085.retg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local cg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
 	if chkc then return chkc:IsOnField() and chkc:IsAbleToRemove() and chkc~=e:GetHandler()  end
 	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) 
-	and   cg:GetCount()>1 end
+	and   cg:IsExists(Card.IsAbleToRemove,1,e:GetHandler())  end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
