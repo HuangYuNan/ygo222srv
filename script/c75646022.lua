@@ -77,7 +77,7 @@ function c75646022.filter(c,e,tp)
 	return c:GetAttack()==1750 and c:GetDefense()==1350 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(75646022)
 end
 function c75646022.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,0x4)>0
+	if chk==0 then return Duel.GetLocationCount(tp,0x4)>-1
 		and Duel.IsExistingMatchingCard(c75646022.filter,tp,0x1,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,0x200,nil,1,tp,0x1)
 end

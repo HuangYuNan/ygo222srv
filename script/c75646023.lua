@@ -47,7 +47,7 @@ function c75646023.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()~=100 then return false end
 		e:SetLabel(0)
-		return Duel.GetLocationCount(tp,0x4)>0 and Duel.CheckReleaseGroup(tp,c75646023.cfilter,1,nil,e,tp)
+		return Duel.GetLocationCount(tp,0x4)>-1 and Duel.CheckReleaseGroup(tp,c75646023.cfilter,1,nil,e,tp)
 	end
 	local g=Duel.SelectReleaseGroup(tp,c75646023.cfilter,1,1,nil,e,tp)
 	local rc=g:GetFirst()
@@ -68,7 +68,8 @@ function c75646023.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c75646023.filter1(c,e,tp)
-	return c:GetAttack()==1750 and c:GetDefense()==1350 and c:IsType(0x1000000) and (c:IsLocation(0x10) or c:IsFaceup()) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:GetAttack()==1750 and c:GetDefense()==1350 and c:IsType(0x1000000) and (c:IsLocation(0x10) or c:IsFaceup()) 
+	and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(75646023) 
 end
 function c75646023.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c75646023.filter1,tp,0x50,0,1,nil,e,tp) and Duel.GetLocationCount(tp,0x4)>0 end
