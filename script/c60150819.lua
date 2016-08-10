@@ -28,6 +28,7 @@ function c60150819.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	
 end
 function c60150819.activate(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c60150819.filter2,tp,LOCATION_DECK,0,1,1,nil)
@@ -37,18 +38,28 @@ function c60150819.activate(e,tp,eg,ep,ev,re,r,rp)
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		local cz=Duel.GetOperatedGroup()
-		if cz:GetCount()>0 then
-			Duel.BreakEffect()
-			local res=0
-			res=Duel.TossCoin(tp,1)
-			if res==0 then
-				local g1=Duel.GetFieldCard(tp,LOCATION_DECK,0)
-				Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-			elseif res==1 then
-				local g1=Duel.GetFieldCard(1-tp,LOCATION_DECK,0)
-				Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
-			end 
+		Duel.BreakEffect()
+		local c=e:GetHandler()
+		local res=0
+		res=Duel.TossCoin(tp,1)
+		if res==0 then
+			local g=Duel.GetFieldCard(tp,LOCATION_DECK,0)
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 		end
+		if res==1 then
+			local g=Duel.GetFieldCard(1-tp,LOCATION_DECK,0)
+			Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		end 
 	end
+    local e2=Effect.CreateEffect(e:GetHandler())
+    e2:SetType(EFFECT_TYPE_FIELD)
+    e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e2:SetTargetRange(1,0)
+    e2:SetTarget(c60150819.splimit)
+    e2:SetReset(RESET_PHASE+PHASE_END)
+    Duel.RegisterEffect(e2,tp)
+end
+function c60150819.splimit(e,c)
+    return not c:IsAttribute(ATTRIBUTE_DARK)
 end
