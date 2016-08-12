@@ -38,7 +38,7 @@ function c1100367.initial_effect(c)
 end
 function c1100367.tg(e,c)
 	local lv=c:GetOriginalLevel()
-	return lv>0 and lv<=4 and c:GetBaseDefence()==0
+	return lv>0 and lv<=4 and c:GetBaseDefense()==0
 end
 function c1100367.desfilter(c)
 	return c:IsSetCard(0x6243) and c:IsType(TYPE_MONSTER) and c:IsDestructable()
