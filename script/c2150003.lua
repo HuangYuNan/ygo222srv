@@ -1,4 +1,4 @@
-if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
+require 'expansions.script.c2150000'
 function c2150003.initial_effect(c)
 	local a=BiDiu(c)
 	a:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)

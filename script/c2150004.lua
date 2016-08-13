@@ -1,4 +1,4 @@
-if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
+require 'expansions.script.c2150000'
 function c2150004.initial_effect(c)
 	local a=BiDiu(c)
 	a:SetType(EFFECT_TYPE_QUICK_O)
@@ -29,6 +29,7 @@ function c2150004.opa(e,tp)
 	a:SetLabelObject(t)
 	a:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 	c:RegisterEffect(a)
+	a=a:Clone()
 	a:SetCode(EFFECT_IMMUNE_EFFECT)
 	c:RegisterEffect(a)
 	a=Effect.CreateEffect(c)

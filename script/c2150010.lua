@@ -1,4 +1,4 @@
-if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
+require 'expansions.script.c2150000'
 function c2150010.initial_effect(c)
 	local a=Effect.CreateEffect(c)
 	a:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
@@ -35,7 +35,6 @@ function c2150010.opb(e,tp,eg,ep,ev,re)
 		if g:GetCount()>0 then
 			if c2150010[i]~=Duel.GetTurnCount()then c2150010[i]=Duel.GetTurnCount()c2150010[i+2]=0 end
 			c2150010[i+2]=c2150010[i+2]+g:GetCount()
-			Debug.Message(c2150010[i]..' + '..c2150010[i+2])
 		end
 	end
 end

@@ -1,4 +1,4 @@
-if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
+require 'expansions.script.c2150000'
 function c2150014.initial_effect(c)
         aux.AddXyzProcedure(c,nil,3,2)
         c:EnableReviveLimit()
@@ -21,10 +21,12 @@ function c2150014.initial_effect(c)
 	a=Effect.CreateEffect(c)
 	a:SetType(EFFECT_TYPE_FIELD)
 	a:SetCode(EFFECT_CANNOT_BP)
+	a:SetRange(LOCATION_MZONE)
 	a:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	a:SetTargetRange(0,1)
 	a:SetCondition(c2150014.cnb)
 	--a:SetValue(function(e)return e:GetHandlerPlayer()~=Duel.GetTurnPlayer()end)
+	a:SetValue(1)
 	c:RegisterEffect(a)
 end	
 function c2150014.coa(e,tp,eg,ep,ev,re,r,rp,chk)

@@ -1,4 +1,4 @@
-if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
+require 'expansions.script.c2150000'
 function c2150009.initial_effect(c)
 	aux.EnablePendulumAttribute(c)	
 	
