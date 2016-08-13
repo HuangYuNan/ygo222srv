@@ -1,4 +1,4 @@
-require 'script.c2150000'
+if not pcall(function() require("expansions/script/c2150000") end) then require("script/c2150000") end
 function c2150012.initial_effect(c)
 	aux.AddXyzProcedure(c,nil,3,2)
 	c:EnableReviveLimit()
