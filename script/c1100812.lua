@@ -13,7 +13,7 @@ function c1100812.initial_effect(c)
 	--defence attack
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
-	e2:SetCode(EFFECT_DEFENCE_ATTACK)
+	e2:SetCode(EFFECT_DEFENSE_ATTACK)
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
 	--untargetable
