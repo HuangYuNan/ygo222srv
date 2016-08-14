@@ -37,8 +37,8 @@ function c73203109.cfilter(c)
 	return c:IsSetCard(0x732) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c73203109.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c3101.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	local g=Duel.SelectTarget(tp,c3101.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(c73203109.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local g=Duel.SelectTarget(tp,c73203109.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c73203109.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
