@@ -1,6 +1,5 @@
-﻿--魔战姬归来
 function c73203102.initial_effect(c)
-    --Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73203102,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -21,7 +20,7 @@ function c73203102.initial_effect(c)
 	e2:SetTarget(c73203102.thtg)
 	e2:SetOperation(c73203102.thop)
 	c:RegisterEffect(e2)
-end	
+end 
 function c73203102.filter(c,e,tp)
 	return c:IsSetCard(0x732) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end

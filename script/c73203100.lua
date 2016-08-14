@@ -1,4 +1,3 @@
-﻿--魔战姬 霞风
 function c73203100.initial_effect(c)
 	c:SetSPSummonOnce(73203100)
 	--spsummon
@@ -21,7 +20,7 @@ function c73203100.initial_effect(c)
 	e2:SetTarget(c73203100.sptg2)
 	e2:SetOperation(c73203100.spop2)
 	c:RegisterEffect(e2)
-end	
+end 
 function c73203100.cfilter(c)
 	return c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_LIGHT)
 end
@@ -37,7 +36,7 @@ end
 function c73203100.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-             Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+			 Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c73203100.cost(e,tp,eg,ep,ev,re,r,rp,chk)

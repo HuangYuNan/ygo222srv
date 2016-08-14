@@ -1,6 +1,5 @@
-﻿--暗影魔战姬 影之蝶
 function c73203108.initial_effect(c)
-    c:SetUniqueOnField(1,0,73203108)
+	c:SetUniqueOnField(1,0,73203108)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x732),5,3,c73203108.ovfilter,aux.Stringid(73203108,0))
 	c:EnableReviveLimit()
@@ -33,12 +32,12 @@ function c73203108.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c73203108.ovfilter(c)
-    local rk=c:GetRank()
+	local rk=c:GetRank()
 	return c:IsFaceup() and c:IsSetCard(0x732) and c:IsType(TYPE_XYZ) and rk==4
-end	
+end 
 function c73203108.discon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and tp~=ep 
-	    and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,73203107)
+		and e:GetHandler():GetOverlayGroup():IsExists(Card.IsCode,1,nil,73203107)
 end
 function c73203108.cfilter(c)
 	return c:IsSetCard(0x732) and c:IsAbleToDeckAsCost()

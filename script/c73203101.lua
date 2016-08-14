@@ -1,6 +1,5 @@
-﻿--魔战姬 娜琪
 function c73203101.initial_effect(c)
-    --draw
+	--draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73203101,0))
 	e1:SetCategory(CATEGORY_DRAW)

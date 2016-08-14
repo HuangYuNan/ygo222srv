@@ -1,6 +1,5 @@
-﻿--魔战姬 金灵
 function c73203095.initial_effect(c)
-    --to hand 
+	--to hand 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73203095,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -56,8 +55,8 @@ function c73203095.filter(c,e,tp)
 end
 function c73203095.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-	    and Duel.IsExistingMatchingCard(c73203095.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)	
+		and Duel.IsExistingMatchingCard(c73203095.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)  
 end
 function c73203095.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end

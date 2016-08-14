@@ -1,4 +1,3 @@
-﻿--魔战姬 暗月
 function c73203097.initial_effect(c)
 	--negate
 	local e1=Effect.CreateEffect(c)
@@ -43,4 +42,4 @@ function c73203097.neop(e,tp,eg,ep,ev,re,r,rp)
 		e4:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e4)
 	end
-end	
+end 

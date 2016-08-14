@@ -1,4 +1,3 @@
-﻿--魔战姬 樱彩
 function c73203098.initial_effect(c)
 	--atk up
 	local e1=Effect.CreateEffect(c)
@@ -29,7 +28,7 @@ function c73203098.tgfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 function c73203098.target(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and chkc:IsFaceup() end
 	if chk==0 then return Duel.IsExistingTarget(c73203098.tgfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	Duel.SelectTarget(tp,c73203098.tgfilter,tp,LOCATION_MZONE,0,1,1,nil)
@@ -44,12 +43,12 @@ function c73203098.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(1000)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-	    local e3=Effect.CreateEffect(c)
+		local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
 		e3:SetCode(EFFECT_NO_BATTLE_DAMAGE)
 		e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e3)
-	end	
+	end 
 end
 function c73203098.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local a=Duel.GetAttacker()
@@ -74,11 +73,11 @@ function c73203098.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_DECK) and chkc:IsControler(tp) and c73203098.spfilter(chkc,e,tp) end 
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingTarget(c73203098.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)		
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)	 
 end
 function c73203098.spop(e,tp,eg,ep,ev,re,r,rp)
-    if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectTarget(tp,c73203098.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc and Duel.SpecialSummonStep(g:GetFirst(),0,tp,tp,false,false,POS_FACEUP) then
@@ -89,7 +88,7 @@ function c73203098.spop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=e1:Clone()
-		e2:SetCode(EFFECT_SET_DEFENSE)
+		e2:SetCode(EFFECT_SET_DEFENCE)
 		tc:RegisterEffect(e2)
 		Duel.SpecialSummonComplete()
 	end
