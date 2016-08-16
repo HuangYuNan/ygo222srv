@@ -169,9 +169,9 @@ function c1007007.desfilter(c)
 end
 function c1007007.regtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c1007007.desfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c1007007.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c1007007.desfilter,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c1007007.desfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
+	Duel.SelectTarget(tp,c1007007.desfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 end
 function c1007007.regop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
