@@ -20,15 +20,15 @@ function c10160011.initial_effect(c)
 	e2:SetTarget(c10160011.sptg)
 	e2:SetOperation(c10160011.spop)
 	c:RegisterEffect(e2)
-	--mustatk
+	--tograve
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(10160011,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e3:SetCode(EVENT_TO_GRAVE)
 	e3:SetCountLimit(1,10160011)
-	e3:SetTarget(c10160011.matg)
-	e3:SetOperation(c10160011.maop)
+	e3:SetTarget(c10160011.tgtg)
+	e3:SetOperation(c10160011.tgop)
 	c:RegisterEffect(e3)  
 	--cannot attack
 	local e4=Effect.CreateEffect(c)
@@ -44,22 +44,23 @@ function c10160011.antarget(e,c)
 	return c~=e:GetHandler()
 end
 
-function c10160011.matg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsFaceup() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-	local g=Duel.SelectTarget(tp,Card.IsFaceup,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
+function c10160011.tgfilter(c)
+	return c:IsSetCard(0x9333) and c:IsAbleToGrave() and c:IsType(TYPE_MONSTER)
 end
 
-function c10160011.maop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) or tc:IsFacedown() then return end
-		local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetCode(EFFECT_MUST_ATTACK)
-		e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e2)
+function c10160011.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)>0 end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,0,LOCATION_EXTRA)
+end
+
+function c10160011.tgop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.GetFieldGroup(tp,0,LOCATION_EXTRA)
+	if g:GetCount()>0 then
+		Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
+		local sg=g:Select(1-tp,1,1,nil)
+		Duel.HintSelection(sg)
+		Duel.SendtoGrave(sg,REASON_RULE)
+	end
 end
 
 function c10160011.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -75,7 +76,9 @@ end
 
 function c10160011.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsLocation(LOCATION_HAND) then
+		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end

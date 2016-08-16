@@ -100,17 +100,15 @@ function c29201045.disop(e,tp,eg,ep,ev,re,r,rp)
 	if re:GetHandler():IsRelateToEffect(re) then
 		Duel.Destroy(eg,REASON_EFFECT)
 		Duel.BreakEffect()
-		if c:IsRelateToEffect(e) then
-			Duel.MoveToField(c,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-			local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetCode(EFFECT_CHANGE_TYPE)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-			e1:SetReset(RESET_EVENT+0x1fc0000)
-			e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
-			c:RegisterEffect(e1)
-			Duel.RaiseEvent(c,EVENT_CUSTOM+29201000,e,0,tp,0,0)
-		end
+		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetCode(EFFECT_CHANGE_TYPE)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetReset(RESET_EVENT+0x1fc0000)
+		e1:SetValue(TYPE_SPELL+TYPE_CONTINUOUS)
+		e:GetHandler():RegisterEffect(e1)
+		Duel.RaiseEvent(e:GetHandler(),EVENT_CUSTOM+29201000,e,0,tp,0,0)
 	end
 end
 function c29201045.pencon(e,tp,eg,ep,ev,re,r,rp)

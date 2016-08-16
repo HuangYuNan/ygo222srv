@@ -75,7 +75,7 @@ function c10143001.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c10143001.indcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c10143001.indfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil)
+	return Duel.IsExistingMatchingCard(c10143001.indfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 
 function c10143001.indfilter(c)

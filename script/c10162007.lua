@@ -21,7 +21,7 @@ function c10162007.initial_effect(c)
 	e2:SetRange(LOCATION_EXTRA)
 	e2:SetCondition(c10162007.spcon)
 	e2:SetOperation(c10162007.spop)
-	--c:RegisterEffect(e2)
+	c:RegisterEffect(e2)
 	--fusion material
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE)

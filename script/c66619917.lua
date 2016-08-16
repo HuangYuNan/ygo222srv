@@ -51,7 +51,7 @@ function c66619917.handcon(e)
 	return g:IsExists(c66619917.cfilter,1,nil)
 end
 function c66619917.tgval(e,c)
-	return c:IsSetCard(0x666)
+	return c:IsSetCard(0x666) and (c:GetLevel()==3 or c:GetLevel()==6)
 end
 function c66619917.discost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end

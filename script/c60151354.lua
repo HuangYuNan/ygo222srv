@@ -23,10 +23,11 @@ function c60151354.initial_effect(c)
     c:RegisterEffect(e2)
 end
 function c60151354.ccfilter(c)
-    return c:GetOverlayCount()>0 and c:GetOverlayGroup():IsExists(c60151354.ccfilter2,1,nil)
+    return c:GetOverlayCount()>0 and c:IsType(TYPE_XYZ) and c:IsSetCard(0xcb23)
+		and c:GetOverlayGroup():IsExists(c60151354.ccfilter2,1,nil)
 end
 function c60151354.ccfilter2(c)
-    return c:IsType(TYPE_XYZ) and c:IsSetCard(0xcb23)
+    return c:IsSetCard(0xcb23)
 end
 function c60151354.condition(e,tp,eg,ep,ev,re,r,rp)
     return Duel.IsExistingMatchingCard(c60151354.ccfilter,tp,LOCATION_MZONE,0,1,nil)

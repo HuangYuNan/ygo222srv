@@ -12,13 +12,10 @@ function c37564026.initial_effect(c)
 	--rm
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(37564026,1))
-	e2:SetCategory(CATEGORY_REMOVE)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_SPSUMMON_PROC_G)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetCost(c37564026.rmcost)
-	e2:SetTarget(c37564026.rmtg)
+	e2:SetCondition(c37564026.rmcon)
 	e2:SetOperation(c37564026.rmop)
 	c:RegisterEffect(e2)
 --ret
@@ -35,22 +32,16 @@ end
 function c37564026.ovfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0x770) and c:IsType(TYPE_XYZ) and c:GetOverlayCount()>=3
 end
-function c37564026.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST) end
-	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)
+function c37564026.rmcon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) and c:GetOverlayCount()>1 and c:IsFaceup() and not c:IsDisabled()
 end
-function c37564026.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and chkc:IsAbleToRemove() end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
+function c37564026.rmop(e,tp,eg,ep,ev,re,r,rp,c,sg,og)  
+	Duel.Hint(HINT_CARD,0,37564026)
+	e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_EFFECT)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
-end
-function c37564026.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
-	end
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
+	Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 end
 function c37564026.adcon(e)
 	return e:GetHandler():GetOverlayCount()==0 and not e:GetHandler():IsDisabled()

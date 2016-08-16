@@ -20,11 +20,19 @@ function c60151323.initial_effect(c)
     e2:SetCategory(CATEGORY_DESTROY)
     e2:SetType(EFFECT_TYPE_IGNITION)
     e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1)
+    e2:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
+    e2:SetCondition(c60151323.setcon)
     e2:SetCost(c60151323.descost)
     e2:SetTarget(c60151323.destg)
     e2:SetOperation(c60151323.desop)
     c:RegisterEffect(e2)
+    local e13=e2:Clone()
+    e13:SetDescription(aux.Stringid(60151323,4))
+    e13:SetType(EFFECT_TYPE_QUICK_O)
+    e13:SetCode(EVENT_FREE_CHAIN)
+    e13:SetHintTiming(0,0x1e0)
+    e13:SetCondition(c60151323.setcon2)
+    c:RegisterEffect(e13)
 	--equip effect
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_EQUIP)
@@ -105,11 +113,13 @@ function c60151323.eqlimit(e,c)
     return c==e:GetLabelObject()
 end
 function c60151323.cfilter(c)
-    return c:IsSetCard(0xcb23) and c:IsType(TYPE_XYZ)
+    return c:IsSetCard(0xcb23)
+end
+function c60151323.setcon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():GetOverlayGroup():IsExists(c60151323.cfilter,1,nil)
 end
 function c60151323.descost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():GetOverlayGroup():IsExists(c60151323.cfilter,1,nil) 
-		and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+    if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
     e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c60151323.dfilter(c)
@@ -158,6 +168,12 @@ function c60151323.desop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c60151323.eqlimit2(e,c)
     return e:GetOwner()==c
+end
+function c60151323.cfilter2(c)
+    return c:IsSetCard(0xcb23) and c:IsType(TYPE_XYZ)
+end
+function c60151323.setcon2(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():GetOverlayGroup():IsExists(c60151323.cfilter2,1,nil)
 end
 function c60151323.con(e,tp,eg,ep,ev,re,r,rp)
 	local tg=e:GetHandler():GetEquipTarget()

@@ -11,20 +11,12 @@ function c37564400.initial_effect(c)
 	e2:SetValue(c37564400.atkval)
 	c:RegisterEffect(e2)
 --tar
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE)
-	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(1)
-	e3:SetCondition(c37564400.indcon)
-	c:RegisterEffect(e3)
 --reg
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(37564400,0))
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e4:SetProperty(EFFECT_FLAG_DELAY)
+	e4:SetProperty(0x14000)
 	e4:SetCost(c37564400.rm)
 	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
@@ -36,15 +28,20 @@ function c37564400.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetDescription(aux.Stringid(37564400,1))
 	e5:SetCategory(CATEGORY_TOHAND)
-	e5:SetType(EFFECT_TYPE_QUICK_O)
-	e5:SetCode(EVENT_FREE_CHAIN)
+	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e5:SetCountLimit(1)
+	e5:SetLabel(1)
+	e5:SetCost(c37564400.rgcost)
 	e5:SetCondition(c37564400.descon)
 	e5:SetTarget(c37564400.destg)
 	e5:SetOperation(c37564400.desop)
 	c:RegisterEffect(e5)
+	local ex=e5:Clone()
+	ex:SetLabel(2)
+	ex:SetType(EFFECT_TYPE_QUICK_O)
+	ex:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(ex)
 	--neg
 	local e6=Effect.CreateEffect(c)
 	e6:SetDescription(aux.Stringid(37564400,2))
@@ -68,9 +65,6 @@ function c37564400.mfilter(c)
 end
 function c37564400.atkval(e,c)
 	return c:GetOverlayCount()*500
-end
-function c37564400.indcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetOverlayCount()>=3 and e:GetHandler():GetFlagEffect(37564400)>0
 end
 function c37564400.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -96,8 +90,14 @@ end
 function c37564400.desfilter(c)
 	return c:IsAttribute(ATTRIBUTE_WATER) and c:IsAbleToHand() and c:IsRace(RACE_SEASERPENT) and c:IsFaceup()
 end
+function c37564400.rgcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():GetFlagEffect(37560400)==0 end
+	e:GetHandler():RegisterFlagEffect(37560400,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
+end
 function c37564400.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetFlagEffect(37564400)>0
+	if not e:GetHandler():GetFlagEffect(37564400)>0 then return end
+	local ct=e:GetHandler():GetOverlayCount()
+	return (e:GetLabel()==2 and ct>2) or (e:GetLabel()==1 and ct<3)
 end
 function c37564400.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c37564400.desfilter(chkc) end

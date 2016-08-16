@@ -3,58 +3,66 @@ function c29200130.initial_effect(c)
     --synchro summon
     aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x53e0),aux.NonTuner(Card.IsSetCard,0x53e0),1)
     c:EnableReviveLimit()
-    --damage
+    --indes
     local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(29200130,0))
-    e1:SetCategory(CATEGORY_DAMAGE)
-    e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-    e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    e1:SetCode(EVENT_BATTLE_DESTROYING)
-    e1:SetCondition(c29200130.damcon)
-    e1:SetTarget(c29200130.damtg)
-    e1:SetOperation(c29200130.damop)
+    e1:SetType(EFFECT_TYPE_FIELD)
+    e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetTargetRange(LOCATION_MZONE,0)
+    e1:SetTarget(c29200130.indtg)
+    e1:SetValue(1)
     c:RegisterEffect(e1)
-    --replace
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-    e2:SetCode(EFFECT_DESTROY_REPLACE)
-    e2:SetRange(LOCATION_MZONE)
-    e2:SetCountLimit(1)
-    e2:SetCondition(c29200130.adcon)
-    e2:SetTarget(c29200130.indtg)
-    e2:SetValue(c29200130.indval)
+    local e2=e1:Clone()
+    e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
     c:RegisterEffect(e2)
+    --search
+    local e8=Effect.CreateEffect(c)
+    e8:SetDescription(aux.Stringid(29200130,0))
+    e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e8:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+    e8:SetCode(EVENT_ATTACK_ANNOUNCE)
+    e8:SetCountLimit(1,29200130)
+    e8:SetTarget(c29200130.target)
+    e8:SetOperation(c29200130.operation)
+    c:RegisterEffect(e8)
+    --discard deck
+    local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(29200130,2))
+    e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+    e3:SetCategory(CATEGORY_DECKDES)
+    e3:SetCode(EVENT_PHASE+PHASE_END)
+    e3:SetRange(LOCATION_MZONE)
+    e3:SetCountLimit(1)
+    e3:SetCondition(c29200130.discon)
+    e3:SetTarget(c29200130.distg)
+    e3:SetOperation(c29200130.disop)
+    c:RegisterEffect(e3)
 end
-function c29200130.adcon(e)
-    local tp=e:GetHandlerPlayer()
-    return Duel.GetLP(tp)>Duel.GetLP(1-tp)
+function c29200130.discon(e,tp,eg,ep,ev,re,r,rp)
+    return tp==Duel.GetTurnPlayer()
 end
-function c29200130.indfilter(c,tp)
-    return c:IsFaceup() and c:IsControler(tp) and c:IsOnField() and c:IsReason(REASON_EFFECT)
-        and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x53e0)
-end
-function c29200130.indtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return eg:IsExists(c29200130.indfilter,1,nil,tp) end
-    return true
-end
-function c29200130.indval(e,c)
-    return c29200130.indfilter(c,e:GetHandlerPlayer())
-end
-function c29200130.damcon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    local bc=c:GetBattleTarget()
-    return c:IsRelateToBattle() and bc:IsLocation(LOCATION_GRAVE) and bc:IsType(TYPE_MONSTER)
-end
-function c29200130.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function c29200130.distg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return true end
-    local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)
-    Duel.SetTargetPlayer(1-tp)
-    Duel.SetTargetParam(ct*100)
-    Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,ct*100)
+    Duel.SetOperationInfo(0,CATEGORY_DECKDES,nil,0,tp,3)
 end
-function c29200130.damop(e,tp,eg,ep,ev,re,r,rp)
-    local ct=Duel.GetFieldGroupCount(tp,0,LOCATION_EXTRA)
-    local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
-    Duel.Damage(p,ct*100,REASON_EFFECT)
+function c29200130.disop(e,tp,eg,ep,ev,re,r,rp)
+    Duel.DiscardDeck(tp,3,REASON_EFFECT)
 end
-
+function c29200130.indtg(e,c)
+    return c:IsSetCard(0x53e0) and not c:IsCode(29200130)
+end
+function c29200130.filter(c)
+    return c:IsSetCard(0x53e0) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function c29200130.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsExistingMatchingCard(c29200130.filter,tp,LOCATION_DECK,0,1,nil) end
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c29200130.operation(e,tp,eg,ep,ev,re,r,rp)
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local tc=Duel.GetFirstMatchingCard(c29200130.filter,tp,LOCATION_DECK,0,nil)
+    if tc then
+        Duel.SendtoHand(tc,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,tc)
+    end
+end

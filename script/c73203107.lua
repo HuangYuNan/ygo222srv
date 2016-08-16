@@ -1,3 +1,4 @@
+--暗魔战姬 天翼
 function c73203107.initial_effect(c)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x732),4,2)

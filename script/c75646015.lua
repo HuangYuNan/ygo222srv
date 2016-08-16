@@ -130,7 +130,7 @@ function c75646015.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	Duel.Overlay(c,g)
 end
 function c75646015.atkval(e,c)
-	return c:GetOverlayCount()*200
+	return c:GetOverlayCount()*500
 end
 function c75646015.condition(e)
 	local ph=Duel.GetCurrentPhase()

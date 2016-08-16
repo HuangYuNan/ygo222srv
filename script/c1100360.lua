@@ -33,7 +33,7 @@ function c1100360.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c1100360.filter(c,e,tp)
-	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetBaseDefence()==0  and not c:IsCode(1100360) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsAttribute(ATTRIBUTE_DARK) and c:GetBaseDefense()==0  and not c:IsCode(1100360) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1100360.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0

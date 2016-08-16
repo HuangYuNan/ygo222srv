@@ -73,7 +73,9 @@ function c37564501.xmop(e,tp,eg,ep,ev,re,r,rp)
 	if not (c:IsRelateToEffect(e) and gg:IsExists(c37564501.ssfilter,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0) then return end
 	local sg=gg:FilterSelect(tp,c37564501.ssfilter,1,1,nil,e,tp):GetFirst()
 	if sg and Duel.SpecialSummonStep(sg,0,tp,tp,true,true,POS_FACEUP) then
-		sg:RegisterFlagEffect(37564501,RESET_EVENT+0x1fe0000,0,1)
+		if Duel.SelectYesNo(tp,aux.Stringid(37564501,0)) then
+			sg:RegisterFlagEffect(37564501,RESET_EVENT+0x1fe0000,0,1)
+		end
 		Duel.SpecialSummonComplete()
 	end
 end

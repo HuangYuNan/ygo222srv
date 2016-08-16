@@ -6,28 +6,9 @@ function c37564016.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,37564016+EFFECT_COUNT_CODE_OATH)
-	e1:SetCost(c37564016.cost)
 	e1:SetTarget(c37564016.target)
 	e1:SetOperation(c37564016.activate)
 	c:RegisterEffect(e1)
-	Duel.AddCustomActivityCounter(37564016,ACTIVITY_SPSUMMON,c37564016.counterfilter)
-end
-function c37564016.counterfilter(c)
-	return c:IsSetCard(0x770) or c:GetSummonLocation()~=LOCATION_EXTRA
-end
-function c37564016.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCustomActivityCount(37564016,tp,ACTIVITY_SPSUMMON)==0 end
-	local e1=Effect.CreateEffect(e:GetHandler())
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-	e1:SetTargetRange(1,0)
-	e1:SetTarget(c37564016.splimit)
-	e1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(e1,tp)
-end
-function c37564016.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0x770) and c:IsLocation(LOCATION_EXTRA)
 end
 function c37564016.filter(c)
 	return c:GetLevel()==4 and c:IsSetCard(0x770) and c:IsAbleToHand()

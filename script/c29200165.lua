@@ -1,185 +1,99 @@
 --凋叶棕-改-Mad Party
 function c29200165.initial_effect(c)
-	--fusion material
-	c:EnableReviveLimit()
-	aux.AddFusionProcCodeFun(c,29200134,aux.FilterBoolFunction(Card.IsFusionSetCard,0x53e0),1,true,false)
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c29200165.splimit)
-	c:RegisterEffect(e1)
-	--special summon rule
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(EFFECT_SPSUMMON_PROC)
-	e7:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e7:SetRange(LOCATION_EXTRA)
-	e7:SetCondition(c29200165.spcon)
-	e7:SetOperation(c29200165.spop)
-	c:RegisterEffect(e7)
-	--negate
-	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetCondition(c29200165.con)
-	e3:SetOperation(c29200165.op)
-	c:RegisterEffect(e3)
-	--destroy replace
-	local e14=Effect.CreateEffect(c)
-	e14:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-	e14:SetCode(EFFECT_DESTROY_REPLACE)
-	e14:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e14:SetRange(LOCATION_MZONE)
-	e14:SetTarget(c29200165.reptg)
-	c:RegisterEffect(e14)
-	--atkup
-	local e12=Effect.CreateEffect(c)
-	e12:SetDescription(aux.Stringid(29200165,0))
-	e12:SetCategory(CATEGORY_DESTROY)
-	e12:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e12:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e12:SetCountLimit(1,29200165)
-	e12:SetCondition(c29200165.con1)
-	e12:SetTarget(c29200165.tg1)
-	e12:SetOperation(c29200165.op1)
-	c:RegisterEffect(e12)
+    --xyz summon
+    aux.AddXyzProcedure(c,c29200165.mfilter,8,2,c29200165.ovfilter,aux.Stringid(29200165,0),2,c29200165.xyzop)
+    c:EnableReviveLimit()
+    --atkup
+    local e1=Effect.CreateEffect(c)
+    e1:SetDescription(aux.Stringid(29200165,0))
+    e1:SetCategory(CATEGORY_ATKCHANGE)
+    e1:SetType(EFFECT_TYPE_IGNITION)
+    e1:SetRange(LOCATION_MZONE)
+    e1:SetCountLimit(1)
+    e1:SetCost(c29200165.atkcost)
+    e1:SetOperation(c29200165.atkop)
+    c:RegisterEffect(e1)
+    --to defense
+    local e2=Effect.CreateEffect(c)
+    e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+    e2:SetCode(EVENT_PHASE+PHASE_BATTLE)
+    e2:SetRange(LOCATION_MZONE)
+    e2:SetCountLimit(1)
+    e2:SetCondition(c29200165.poscon)
+    e2:SetOperation(c29200165.posop)
+    c:RegisterEffect(e2)
+    --to hand
+    local e3=Effect.CreateEffect(c)
+    e3:SetDescription(aux.Stringid(29200165,1))
+    e3:SetCategory(CATEGORY_TOHAND)
+    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+    e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+    e3:SetCode(EVENT_TO_GRAVE)
+    e3:SetTarget(c29200165.thtg)
+    e3:SetOperation(c29200165.thop)
+    c:RegisterEffect(e3)
 end
-c29200165.material_dyz_lv=8
-function c29200165.splimit(e,se,sp,st)
-	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
+function c29200165.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) and e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+    e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+    local ct=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)
+    if ct==1 then 
+        Duel.DiscardDeck(tp,1,REASON_COST)
+        e:SetLabel(1)
+    else
+        local ac=0
+        Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(29200165,2))
+        if ct==2 then ac=Duel.AnnounceNumber(tp,2,1)
+        else ac=Duel.AnnounceNumber(tp,3,2,1) end
+        Duel.DiscardDeck(tp,ac,REASON_COST)
+        e:SetLabel(ac)
+    end
 end
-function c29200165.spfilter1(c,tp,fc)
-	return c.may_party_list and c:IsCanBeFusionMaterial(fc)
-		and Duel.CheckReleaseGroup(tp,c29200165.spfilter2,1,c,fc)
+function c29200165.atkop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:IsFaceup() and c:IsRelateToEffect(e) then
+        local ct=e:GetLabel()
+        local e1=Effect.CreateEffect(c)
+        e1:SetType(EFFECT_TYPE_SINGLE)
+        e1:SetCode(EFFECT_UPDATE_ATTACK)
+        e1:SetReset(RESET_EVENT+0x1ff0000+RESET_PHASE+PHASE_END)
+        e1:SetValue(ct*400)
+        c:RegisterEffect(e1)
+    end
 end
-function c29200165.spfilter2(c,fc)
-	return c:IsFusionSetCard(0x53e0) and c:IsCanBeFusionMaterial(fc)
+function c29200165.poscon(e,tp,eg,ep,ev,re,r,rp)
+    return e:GetHandler():GetAttackedCount()>0
 end
-function c29200165.spcon(e,c)
-	if c==nil then return true end
-	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-2
-		and Duel.CheckReleaseGroup(tp,c29200165.spfilter1,1,nil,tp,c)
+function c29200165.posop(e,tp,eg,ep,ev,re,r,rp)
+    local c=e:GetHandler()
+    if c:IsAttackPos() then
+        Duel.ChangePosition(c,POS_FACEUP_DEFENSE)
+    end
 end
-function c29200165.spop(e,tp,eg,ep,ev,re,r,rp,c)
-	local g1=Duel.SelectReleaseGroup(tp,c29200165.spfilter1,1,1,nil,tp,c)
-	local g2=Duel.SelectReleaseGroup(tp,c29200165.spfilter2,1,1,g1:GetFirst(),c)
-	g1:Merge(g2)
-	c:SetMaterial(g1)
-	Duel.Release(g1,REASON_COST+REASON_FUSION+REASON_MATERIAL)
+function c29200165.filter(c)
+    return c:IsSetCard(0x53e0) and c:IsAbleToHand()
 end
-function c29200165.con(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return c:GetSummonType()==SUMMON_TYPE_FUSION 
+function c29200165.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+    if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c29200165.filter(chkc) end
+    if chk==0 then return Duel.IsExistingTarget(c29200165.filter,tp,LOCATION_GRAVE,0,1,e:GetHandler()) end
+    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+    local g=Duel.SelectTarget(tp,c29200165.filter,tp,LOCATION_GRAVE,0,1,1,e:GetHandler())
+    Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
-function c29200165.op(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	--atk
-	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(29200165,1))
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_BATTLE_START)
-	e2:SetReset(RESET_EVENT+0x1fe0000)
-	e2:SetCondition(c29200165.condition)
-	e2:SetOperation(c29200165.operation)
-	c:RegisterEffect(e2)
-	--search
-	e12=Effect.CreateEffect(c)
-	e12:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-	e12:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e12:SetProperty(EFFECT_FLAG_DELAY)
-	e12:SetCode(EVENT_BATTLE_DESTROYING)
-	e12:SetReset(RESET_EVENT+0x1fe0000)
-	e12:SetCountLimit(1,29200022)
-	e12:SetTarget(c29200165.schtg)
-	e12:SetOperation(c29200165.schop)
-	c:RegisterEffect(e12)
+function c29200165.thop(e,tp,eg,ep,ev,re,r,rp)
+    local tc=Duel.GetFirstTarget()
+    if tc:IsRelateToEffect(e) then
+        Duel.SendtoHand(tc,nil,REASON_EFFECT)
+        Duel.ConfirmCards(1-tp,tc)
+    end
 end
-function c29200165.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return e:GetHandler():IsReason(REASON_EFFECT+REASON_BATTLE) and c:GetDefense()~=0 end
-	if Duel.SelectYesNo(tp,aux.Stringid(29200165,0)) then
-	local preatk=c:GetAttack()
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_COPY_INHERIT)
-	e1:SetReset(RESET_EVENT+0x1ff0000)
-	e1:SetCode(EFFECT_UPDATE_DEFENSE)
-	e1:SetValue(-500)
-	c:RegisterEffect(e1)
-	if predef~=0 and c:GetDefense()==0 then 
-	   Duel.Destroy(e:GetHandler(),REASON_EFFECT)
-	end
-		return true
-	else return false end
+function c29200165.mfilter(c)
+    return c:IsSetCard(0x53e0) 
 end
-function c29200165.con1(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_FUSION
-		and Duel.GetFieldCard(1-tp,LOCATION_MZONE,4-seq)
-		or Duel.GetFieldCard(1-tp,LOCATION_SZONE,4-seq)
+function c29200165.ovfilter(c)
+    return c:IsFaceup() and c:IsCode(29200134)
 end
-function c29200165.filter1(c,seq)
-	return c:GetSequence()==seq  and c:IsDestructable()
-end
-function c29200165.tg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return true end
-	local seq=e:GetHandler():GetSequence()
-	local g=Group.CreateGroup()
-	local dc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,4-seq)
-	if dc then g:AddCard(dc) end
-	dc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,4-seq)
-	if dc then g:AddCard(dc) end
-	Duel.SelectOption(1-tp,aux.Stringid(29200165,2))
-	Duel.SelectOption(tp,aux.Stringid(29200165,2))
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-end
-function c29200165.op1(e,tp,eg,ep,ev,re,r,rp)
-	local seq=e:GetHandler():GetSequence()
-	local g=Group.CreateGroup()
-	local tc=Duel.GetFieldCard(1-tp,LOCATION_MZONE,4-seq)
-	if tc then g:AddCard(tc) end
-	tc=Duel.GetFieldCard(1-tp,LOCATION_SZONE,4-seq)
-	if tc then g:AddCard(tc) end
-	Duel.Destroy(g,REASON_EFFECT)
-end
-function c29200165.filter(c,tc)
-	if not c:IsFaceup() then return false end
-	return tc:GetBaseAttack()~=c:GetAttack() or tc:GetBaseAttack()~=c:GetDefense()
-end
-function c29200165.condition(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local bc=c:GetBattleTarget()
-	return c:IsRelateToBattle() and bc and c29200165.filter(c,bc) and bc:IsFaceup() and bc:IsRelateToBattle()
-end
-function c29200165.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local bc=c:GetBattleTarget()
-	if c:IsFaceup() and c:IsRelateToBattle() and bc:IsFaceup() and bc:IsRelateToBattle() then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
-		e1:SetValue(bc:GetBaseAttack())
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e1)
-	end
-end
-function c29200165.sfilter(c)
-	return c:IsSetCard(0x53e0) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
-function c29200165.schtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c29200165.sfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c29200165.schop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c29200165.sfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+function c29200165.xyzop(e,tp,chk)
+    if chk==0 then return Duel.GetFlagEffect(tp,29200165)==0 end
+    Duel.RegisterFlagEffect(tp,29200165,RESET_PHASE+PHASE_END,0,1)
 end

@@ -1,3 +1,4 @@
+--神灭魔战姬 艾尔特·索菲亚
 function c73203111.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsCode,73203099),aux.FilterBoolFunction(Card.IsCode,73203110))
@@ -141,4 +142,3 @@ end
 function c73203111.rfilter(c)
 	return c:IsCode(73203110) and c:IsAbleToRemove()
 end
-

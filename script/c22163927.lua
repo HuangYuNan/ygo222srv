@@ -1,13 +1,7 @@
 --傲娇三千院凪
---←7【灵摆】7→
---「傲娇三千院凪」在1回合只能发动1张。
---①：作为这张卡的发动时的效果处理，从卡组把1只「傲娇」怪兽加入手卡。
---②：1回合1次，以除外的1只自己的「傲娇」怪兽为对象才能发动。那只怪兽加入手卡。
---【怪兽效果】
---①：这张卡作为同调素材送去额外卡组的场合发动。自己从卡组抽1张。
 function c22163927.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
+	aux.EnablePendulumAttribute(c)
 	--splimit
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
@@ -15,7 +9,6 @@ function c22163927.initial_effect(c)
     e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
     e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
     e2:SetTargetRange(1,0)
-    e2:SetCondition(aux.nfbdncon)
     e2:SetTarget(c22163927.splimit)
     c:RegisterEffect(e2)
 	--Activate

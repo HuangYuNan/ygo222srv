@@ -1,8 +1,8 @@
 --傲娇武侦亚里亚
 function c22163922.initial_effect(c)
    --synchro summon
-	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
-	c:EnableReviveLimit()
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x370),aux.NonTuner(nil),1)
+    c:EnableReviveLimit()
 	--extra attack
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -32,7 +32,7 @@ function c22163922.initial_effect(c)
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
 	e4:SetCode(EVENT_PRE_BATTLE_DAMAGE)
-	c4:SetCondition(c22163922.rdcon)
+	e4:SetCondition(c22163922.rdcon)
 	e4:SetOperation(c22163922.rdop)
 	c:RegisterEffect(e4)
 end
@@ -45,7 +45,7 @@ function c22163922.operation(e,tp,eg,ep,ev,re,r,rp)
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(200)
+		e1:SetValue(400)
 		e1:SetReset(RESET_EVENT+0x1ff0000)
 		c:RegisterEffect(e1)
 	end

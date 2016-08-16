@@ -1,65 +1,71 @@
 --凋叶棕-Un-Demystified Fantasy
 function c29200025.initial_effect(c)
-    --pierce
-    local e1=Effect.CreateEffect(c)
-    e1:SetType(EFFECT_TYPE_FIELD)
-    e1:SetCode(EFFECT_PIERCE)
-    e1:SetRange(LOCATION_GRAVE)
-    e1:SetTargetRange(LOCATION_MZONE,0)
-    e1:SetCondition(c29200025.con)
-    e1:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x53e0))
-    c:RegisterEffect(e1)
-    --tohand
-    local e3=Effect.CreateEffect(c)
-    e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
-    e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e3:SetCode(EVENT_TO_GRAVE)
-    e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
-    e3:SetCountLimit(1,29200025)
-    e3:SetCondition(c29200025.thcon)
-    e3:SetTarget(c29200025.thtg)
-    e3:SetOperation(c29200025.thop)
-    c:RegisterEffect(e3)
-    --splimit
-    local ea=Effect.CreateEffect(c)
-    ea:SetType(EFFECT_TYPE_FIELD)
-    ea:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-    ea:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-    ea:SetRange(LOCATION_GRAVE)
-    ea:SetTargetRange(1,0)
-    ea:SetCondition(c29200025.con)
-    ea:SetTarget(c29200025.splimit)
-    c:RegisterEffect(ea)
-    local eb=ea:Clone()
-    eb:SetCode(EFFECT_CANNOT_SUMMON)
-    c:RegisterEffect(eb)
+	--deck
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(29200025,0))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(0x0081)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCountLimit(1,29200025)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetTarget(c29200025.target)
+	e1:SetOperation(c29200025.operation)
+	c:RegisterEffect(e1)
+	--to hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(29200025,1))
+	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e2:SetType(0x0081)
+	e2:SetCode(29200000)
+	e2:SetProperty(0x14000)
+	e2:SetTarget(c29200025.tdtg)
+	e2:SetOperation(c29200025.tdop)
+	c:RegisterEffect(e2)
 end
-c29200025.dyz_utai_list=true
-function c29200025.splimit(e,c)
-    return not c:IsSetCard(0x53e0)
+function c29200025.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
 end
-function c29200025.con(e,tp,eg,ep,ev,re,r,rp,chk)
-    local tc=Duel.GetFieldCard(tp,LOCATION_GRAVE,Duel.GetFieldGroupCount(tp,LOCATION_GRAVE,0)-1)
-    return e:GetHandler()==tc
+function c29200025.tdop(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,e:GetHandler())
+	end
 end
-function c29200025.thcon(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-    return c:IsReason(REASON_BATTLE)
-        or (rp~=tp and c:IsReason(REASON_DESTROY) and c:GetPreviousControler()==tp)
+function c29200025.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then 
+		if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<2 then return false end
+		local g=Duel.GetDecktopGroup(tp,2)
+		return g:FilterCount(Card.IsAbleToHand,nil)>0
+	end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_DECK)
 end
-function c29200025.thfilter(c)
-    return c:IsSetCard(0x53e0) and c:IsType(TYPE_MONSTER) and not c:IsCode(29200025) and c:IsAbleToHand()
+function c29200025.filter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x53e0)
 end
-function c29200025.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c29200025.thfilter,tp,LOCATION_DECK,0,1,nil) end
-    Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+function c29200025.operation(e,tp,eg,ep,ev,re,r,rp)
+	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
+	Duel.ConfirmDecktop(p,2)
+	local g=Duel.GetDecktopGroup(p,2)
+	if g:GetCount()>0 then
+		local sg=g:Filter(c29200025.filter,nil)
+		if sg:GetCount()>0 then
+			if sg:GetFirst():IsAbleToHand() then
+				Duel.SendtoHand(sg,nil,REASON_EFFECT)
+				Duel.ConfirmCards(1-p,sg)
+				Duel.ShuffleHand(p)
+			else
+				Duel.SendtoGrave(sg,REASON_EFFECT)
+			end
+		end
+		local ac=2-sg:GetCount()
+		Duel.SortDecktop(tp,tp,ac)
+		for i=1,ac do
+			local mg=Duel.GetDecktopGroup(tp,1)
+			Duel.MoveSequence(mg:GetFirst(),1)
+			Duel.RaiseSingleEvent(mg:GetFirst(),29200000,e,0,0,0,0)
+			Duel.RaiseEvent(mg:GetFirst(),EVENT_CUSTOM+29200001,e,0,tp,0,0)
+		end
+	end
 end
-function c29200025.thop(e,tp,eg,ep,ev,re,r,rp)
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-    local g=Duel.SelectMatchingCard(tp,c29200025.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-    if g:GetCount()>0 then
-        Duel.SendtoHand(g,nil,REASON_EFFECT)
-        Duel.ConfirmCards(1-tp,g)
-    end
-end
-

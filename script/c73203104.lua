@@ -1,3 +1,4 @@
+--魔战姬降临
 function c73203104.initial_effect(c)
 	--spsummon
 	local e1=Effect.CreateEffect(c)

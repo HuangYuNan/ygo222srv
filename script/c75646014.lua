@@ -44,7 +44,7 @@ function c75646014.con(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.IsExistingMatchingCard(c75646014.cfilter1,tp,LOCATION_SZONE,0,1,nil)
 end
 function c75646014.rkcon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ 
 end
 function c75646014.filter(c,e,sp)
 	return c:IsFaceup() and c:IsSetCard(0x2c1) and c:IsCanBeSpecialSummoned(e,0,sp,true,false)
@@ -71,15 +71,13 @@ function c75646014.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c75646014.filter(c)
-	return c:IsFaceup() and bit.band(c:GetType(),0x20002)==0x20002
-end
+	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_CONTINUOUS)
 function c75646014.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function c75646014.operation(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	local d=Duel.GetMatchingGroupCount(c75646014.filter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)*400
 	Duel.Damage(p,d,REASON_EFFECT)

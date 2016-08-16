@@ -14,9 +14,10 @@ function c10160010.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e2:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCountLimit(1,10160010)
 	e2:SetCost(c10160010.spcost)
+	e2:SetCondition(c10160010.spcon)
 	e2:SetTarget(c10160010.sptg)
 	e2:SetOperation(c10160010.spop)
 	c:RegisterEffect(e2)
@@ -59,9 +60,17 @@ function c10160010.rmop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function c10160010.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c10160010.spfilter,1,nil)
+end
+
 function c10160010.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
+end
+
+function c10160010.spfilter(c)
+	return not c:IsReason(REASON_EFFECT)
 end
 
 function c10160010.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -72,7 +81,9 @@ end
 
 function c10160010.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsLocation(LOCATION_HAND) then
+		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end

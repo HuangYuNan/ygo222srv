@@ -1,3 +1,4 @@
+--魔战姬的无垠疆场
 function c73203103.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
@@ -15,7 +16,7 @@ function c73203103.initial_effect(c)
 	c:RegisterEffect(e2)
 	--defup
 	local e3=e2:Clone()
-	e3:SetCode(EFFECT_UPDATE_DEFENCE)
+	e3:SetCode(EFFECT_UPDATE_DEFENSE)
 	c:RegisterEffect(e3)
 	--draw
 	local e4=Effect.CreateEffect(c)

@@ -14,9 +14,9 @@ function c99991085.initial_effect(c)
 	e1:SetTarget(c99991085.tg1)
 	e1:SetOperation(c99991085.op1)
 	c:RegisterEffect(e1)
-	--remove
+	--destroy
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_REMOVE)
+	e2:SetCategory(CATEGORY_DESTROY)
 	e2:SetDescription(aux.Stringid(99991085,1))
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetCountLimit(1,99991085+EFFECT_COUNT_CODE_OATH)
@@ -24,8 +24,8 @@ function c99991085.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCost(c99991085.cost)
-	e2:SetTarget(c99991085.retg)
-	e2:SetOperation(c99991085.reop)
+	e2:SetTarget(c99991085.detg)
+	e2:SetOperation(c99991085.deop)
 	c:RegisterEffect(e2)
 	--to grave
 	local e3=Effect.CreateEffect(c)
@@ -95,33 +95,34 @@ function c99991085.lpcost(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,0,99991085)
 	Duel.SetLP(tp,Duel.GetLP(tp)-500)
 end
-function c99991085.retg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local cg=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-	if chkc then return chkc:IsOnField() and chkc:IsAbleToRemove() and chkc~=e:GetHandler()  end
-	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) 
-	and   cg:IsExists(Card.IsAbleToRemove,1,e:GetHandler())  end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+function c99991085.detg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsOnField() and chkc:IsDestructable() and chkc~=e:GetHandler()  end
+	if chk==0 then return Duel.IsExistingTarget(Card.IIsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)  end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
+	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
-function c99991085.reop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetFieldGroup(tp,LOCATION_HAND,0)
-    local tc=Duel.GetFirstTarget()
-	if g:GetCount()==0 then return end
-	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0 then
-	local sg=g:RandomSelect(tp,1)
-	Duel.Remove(sg,POS_FACEDOWN,REASON_EFFECT)
+function c99991085.deop(e,tp,eg,ep,ev,re,r,rp)
+   local tc=Duel.GetFirstTarget()
+	if  tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)>0 then
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_SKIP_DP)
+	e1:SetTargetRange(1,0)
+	e1:SetReset(RESET_PHASE+PHASE_END,3)
+	Duel.RegisterEffect(e1,tp)
 	end
-     	local e1=Effect.CreateEffect(e:GetHandler())
-	    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	    e1:SetCountLimit(1)
-	    e1:SetCode(EVENT_PHASE+PHASE_END)
-	    e1:SetCondition(c99991085.lpcon)
-	    e1:SetOperation(c99991085.lpcost)
-	    Duel.RegisterEffect(e1,tp)
-		local e2=e1:Clone()
-		e2:SetCode(EVENT_PHASE+PHASE_BATTLE)
-	    Duel.RegisterEffect(e2,tp)
+    local e2=Effect.CreateEffect(e:GetHandler())
+	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e2:SetCountLimit(1)
+	e2:SetCode(EVENT_PHASE+PHASE_END)
+	e2:SetCondition(c99991085.lpcon)
+	e2:SetOperation(c99991085.lpcost)
+	Duel.RegisterEffect(e2,tp)
+    local e3=e2:Clone()
+	e3:SetCode(EVENT_PHASE+PHASE_BATTLE)
+	Duel.RegisterEffect(e3,tp)
 end
 function c99991085.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(99991085,tp,ACTIVITY_SPSUMMON)==0 end
@@ -136,7 +137,7 @@ function c99991085.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c99991085.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return c:GetAttribute()~=ATTRIBUTE_DARK and c:GetRace()~=RACE_FAIRY
+	return not (c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY))
 end
 function c99991085.tgfilter(c)
 	return c:IsType(TYPE_MONSTER) and c:IsAttribute(ATTRIBUTE_DARK) and c:IsRace(RACE_FAIRY) and c:IsAbleToGrave()
@@ -146,7 +147,7 @@ function c99991085.tg3(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function c99991085.thfilter(c)
-	return c:IsAbleToHand() and c:IsFacedown()
+	return c:IsAbleToHand() 
 end
 function c99991085.op3(e,tp,eg,ep,ev,re,r,rp)
    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)

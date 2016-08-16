@@ -5,13 +5,13 @@ os=require('os')
 senya.delay=0x14000
 senya.fix=0x40400
 if not Card.GetDefense then
-	Card.GetDefense=Card.GetDefence
-	Card.GetBaseDefense=Card.GetBaseDefence
-	Card.GetTextDefense=Card.GetTextDefence
-	Card.GetPreviousDefenseOnField=Card.GetPreviousDefenceOnField
-	Card.IsDefensePos=Card.IsDefencePos
-	Card.IsDefenseBelow=Card.IsDefenceBelow
-	Card.IsDefenseAbove=Card.IsDefenceAbove
+	Card.GetDefense=Card.GetDefense
+	Card.GetBaseDefense=Card.GetBaseDefense
+	Card.GetTextDefense=Card.GetTextDefense
+	Card.GetPreviousDefenseOnField=Card.GetPreviousDefenseOnField
+	Card.IsDefensePos=Card.IsDefensePos
+	Card.IsDefenseBelow=Card.IsDefenseBelow
+	Card.IsDefenseAbove=Card.IsDefenseAbove
 end
 --effect setcode tech
 senya.setchk=senya.setchk or {}
@@ -231,7 +231,7 @@ function senya.cgfilter(c)
 	return senya.unifilter(c) and c:IsFaceup()
 end
 function senya.unifilter(c)
-	return (c:IsSetCard(0x770) or c:IsSetCard(0x772) or c:IsSetCard(0x773) or c:IsSetCard(0x775) or c:IsSetCard(0x776) or c:IsHasEffect(37564600)) and c:IsType(TYPE_MONSTER)
+	return (c:IsSetCard(0x770) or c:IsSetCard(0x772) or c:IsSetCard(0x773) or c:IsSetCard(0x775) or c:IsHasEffect(37564600) or c:IsCode(37564765)) and c:IsType(TYPE_MONSTER)
 end
 function senya.uniprfilter(c)
 	return ((c:IsSetCard(0x770) and c:IsType(TYPE_XYZ)) or (c:IsSetCard(0x775) and c:IsType(TYPE_XYZ)) or (c:IsSetCard(0x776) and c:IsType(TYPE_XYZ)) or c:IsSetCard(0x772) or c:IsSetCard(0x773)) and c:IsType(TYPE_MONSTER)
@@ -422,7 +422,7 @@ function senya.sww(c,ct,ctxm,ctsm,ls)
 	end
 	--ss
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(c:GetCode(),0))
+	e4:SetDescription(aux.Stringid(c:GetOriginalCode(),0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_HAND+LOCATION_GRAVE)
@@ -480,7 +480,7 @@ function senya.bm(c,tg,op,istg,ctg)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET) 
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_HAND)
-	e4:SetCost(senya.bmssct(c:GetCode()))
+	e4:SetCost(senya.bmssct(c:GetOriginalCode()))
 	e4:SetTarget(senya.bmsstg)
 	e4:SetOperation(senya.bmssop)
 	c:RegisterEffect(e4)
@@ -514,6 +514,7 @@ function senya.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and senya.bmssfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(senya.bmssfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,senya.bmssfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
@@ -746,7 +747,7 @@ function senya.pr2(c,des,tg,op,istg,ctg)
 	c:RegisterEffect(e5)
 	if op then
 		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(aux.Stringid(c:GetCode(),0))
+		e1:SetDescription(aux.Stringid(c:GetOriginalCode(),0))
 		if ctg then e1:SetCategory(CATEGORY_TOHAND) end
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 		if istg then
@@ -754,7 +755,7 @@ function senya.pr2(c,des,tg,op,istg,ctg)
 		else
 			e1:SetProperty(senya.delay)
 		end
-		e1:SetCountLimit(1,c:GetCode())
+		e1:SetCountLimit(1,c:GetOriginalCode())
 		if tg then e1:SetTarget(tg) end
 		e1:SetOperation(op)
 		c:RegisterEffect(e1)
@@ -958,4 +959,80 @@ function senya.negsdisop(e,tp,eg,ep,ev,re,r,rp)
 	local g=eg:Filter(senya.negsfilter,nil,e,1-tp)
 	Duel.NegateSummon(g)
 	Duel.Destroy(g,REASON_EFFECT)
+end
+function senya.rxyz3(c,rf,desc,f,lv,ct)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_PROC)
+	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(LOCATION_EXTRA)
+	e4:SetValue(SUMMON_TYPE_XYZ)
+	e4:SetCondition(senya.xyzcon3(rf,f,lv,ct,mct))
+	e4:SetOperation(senya.xyzop3(rf,desc,f,lv,ct,mct))
+	c:RegisterEffect(e4)
+	c:EnableReviveLimit()
+end
+function senya.xyzfilter3(c,xyzcard,f,lv)
+	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzcard) and c:IsXyzLevel(xyzcard,lv) and (not f or f(c))
+end
+function senya.xyzfilter3_kobato(c,xyzcard,rf,f,lv)
+	return senya.xyzfilter3(c,xyzcard,f,lv) and rf and rf(c)
+end
+function senya.xyzcon3(rf,f,lv,ct)
+return function(e,c,og,min,max)
+	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+	if og then
+		if min then
+			if min>ct or max<ct then return false end
+			if og:IsExists(senya.xyzfilter3,ct,nil,c,f,lv) then return true end
+			if min==ct-1 then
+				local tg=og:Filter(senya.xyzfilter3,nil,c,f,lv)
+				if tg:GetCount()>=ct-1 and tg:IsExists(senya.xyzfilter3_kobato,1,nil,c,rf,f,lv) then return true end
+			end
+			return false
+		else
+			local count=og:GetCount()
+			if count==ct-1 then
+				return og:FilterCount(senya.xyzfilter3,nil,c,f,lv)==ct-1 and og:IsExists(senya.xyzfilter3_kobato,1,nil,c,rf,f,lv)
+			elseif count==ct then
+				return og:FilterCount(senya.xyzfilter3,nil,c,f,lv)==ct
+			end
+			return false
+		end
+	end
+	local tg=Duel.GetMatchingGroup(senya.xyzfilter3,c:GetControler(),LOCATION_MZONE,0,nil,c,f,lv)
+	if tg:GetCount()<ct-1 then return false end
+	return tg:GetCount()>=ct or tg:IsExists(senya.xyzfilter3_kobato,1,nil,c,rf,f,lv)
+end
+end
+function senya.xyzop3(rf,desc,f,lv,ct)
+return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local mg=og or Duel.GetMatchingGroup(senya.xyzfilter3,tp,LOCATION_MZONE,0,nil,c,f,lv)
+	if not og or min then
+		local mg1=mg:Filter(senya.xyzfilter3,nil,c,f,lv)
+		local mg2=mg:Filter(senya.xyzfilter3_kobato,nil,c,rf,f,lv)
+		if (not min or min<ct) and (mg1:GetCount()==ct-1 or mg2:GetCount()>0 and Duel.SelectYesNo(tp,desc)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			local tg=mg2:Select(tp,1,1,nil)
+			mg1:Sub(tg)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			mg=mg1:Select(tp,ct-1,ct-1,nil)
+			mg:Merge(tg)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			mg=mg1:Select(tp,ct,ct,nil)
+		end
+	end
+	local sg=Group.CreateGroup()
+	local tc=mg:GetFirst()
+	while tc do
+		local sg1=tc:GetOverlayGroup()
+		sg:Merge(sg1)
+		tc=mg:GetNext()
+	end
+	Duel.SendtoGrave(sg,REASON_RULE)
+	c:SetMaterial(mg)
+	Duel.Overlay(c,mg)
+end
 end

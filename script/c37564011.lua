@@ -1,8 +1,8 @@
 --元素掌握者·Ayane
+if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564011.initial_effect(c)
 	--xyz summon
-	aux.AddXyzProcedure(c,nil,5,4,nil,nil,5)
-	c:EnableReviveLimit()
+	senya.rxyz1(c,4)
 	--不会成为攻击效果对象
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)

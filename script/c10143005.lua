@@ -59,7 +59,7 @@ function c10143005.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c10143005.indcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c10143005.indfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil)
+	return Duel.IsExistingMatchingCard(c10143005.indfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 
 function c10143005.indfilter(c)

@@ -1,3 +1,4 @@
+--魔战姬 霞风
 function c73203100.initial_effect(c)
 	c:SetSPSummonOnce(73203100)
 	--spsummon

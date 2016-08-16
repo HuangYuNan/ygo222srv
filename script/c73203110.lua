@@ -1,3 +1,4 @@
+--幻灭魔战姬 艾妮斯娜
 function c73203110.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),aux.NonTuner(Card.IsRace,RACE_WARRIOR),2)

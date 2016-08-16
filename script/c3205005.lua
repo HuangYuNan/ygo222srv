@@ -1,42 +1,70 @@
---é©±é­”å¸ˆ æ‹‰æ¯”
+--¿ËÀÍÀû
 function c3205005.initial_effect(c)
-    --special summon
+	--special summon from hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(3205005,0))
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetCountLimit(1,3205005)
-	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(c3205005.spcon)
+	e1:SetOperation(c3205005.sptg1)
+	e1:SetOperation(c3205005.spop1)
 	c:RegisterEffect(e1)
-	--damage
-    local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(3205005,1))
-	e2:SetCategory(CATEGORY_DAMAGE)
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCountLimit(1,3205006)
-	e2:SetTarget(c3205005.target)
-	e2:SetOperation(c3205005.operation)
+	--special summon from grave
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+    e2:SetCountLimit(1,3205005)
+	e2:SetCode(EFFECT_SPSUMMON_PROC)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCondition(c3205005.spcon2)
+	e2:SetOperation(c3205005.spop2)
 	c:RegisterEffect(e2)
+	--cannot be material
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e5:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+	e5:SetValue(c3205005.limit)
+	c:RegisterEffect(e5)
+	local e6=e5:Clone()
+	e6:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	c:RegisterEffect(e6) 
 	end
+	function c3205005.limit(e,c)
+	if not c then return false end
+	return not c:IsSetCard(0x109e)
+end
+function c3205005.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c3205005.spop1(e,tp,eg,ep,ev,re,r,rp)
+	Duel.PayLPCost(tp,1000)
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
+	end
+end
 function c3205005.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x340) and not c:IsCode(3205005)
+	return c:IsFaceup() and c:IsSetCard(0x109e) and c:IsType(TYPE_MONSTER)
 end
-function c3205005.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c3205005.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
+function c3205005.spcon2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	return Duel.IsExistingMatchingCard(c3205005.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
-function c3205005.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(800)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,800)
-end
-function c3205005.operation(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Damage(p,d,REASON_EFFECT)
+function c3205005.spop2(e,tp,eg,ep,ev,re,r,rp,d)
+	Duel.PayLPCost(tp,1000)
+	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,1,tp,tp,false,false,POS_FACEUP)
+	end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_ADD_TYPE)
+	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetValue(TYPE_TUNER)
+	e1:SetReset(RESET_EVENT+0xfe0000)
+	c:RegisterEffect(e1)
 end

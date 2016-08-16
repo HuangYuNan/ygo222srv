@@ -1,3 +1,4 @@
+--魔战姬 娜琪
 function c73203101.initial_effect(c)
 	--draw
 	local e1=Effect.CreateEffect(c)

@@ -46,7 +46,7 @@ function c10143006.actcon(e)
 end
 
 function c10143006.indcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(c10143006.indfilter,tp,LOCATION_SZONE,LOCATION_SZONE,1,nil)
+	return Duel.IsExistingMatchingCard(c10143006.indfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 
 function c10143006.indfilter(c)

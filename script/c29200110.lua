@@ -1,77 +1,62 @@
 --凋叶棕-被弃置的小伞怨节
 function c29200110.initial_effect(c)
-    --spsummon
-    local e1=Effect.CreateEffect(c)
-    e1:SetDescription(aux.Stringid(29200110,0))
-    e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_RECOVER)
-    e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-    e1:SetCode(EVENT_BE_BATTLE_TARGET)
-    e1:SetRange(LOCATION_HAND)
-    e1:SetCondition(c29200110.condition)
-    e1:SetTarget(c29200110.target)
-    e1:SetOperation(c29200110.operation)
-    c:RegisterEffect(e1)
-    --[[--xyz
-    local e2=Effect.CreateEffect(c)
-    e2:SetDescription(aux.Stringid(29200110,1))
-    e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
-    e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-    e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-    e2:SetCondition(c29200110.spcon)
-    e2:SetTarget(c29200110.sptg)
-    e2:SetOperation(c29200110.spop)
-    c:RegisterEffect(e2)]]
+	--deck
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(29200110,0))
+	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetType(0x0081)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetCountLimit(1,29200110)
+	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetTarget(c29200110.target)
+	e1:SetOperation(c29200110.operation)
+	c:RegisterEffect(e1)
+	--to hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(29200110,1))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetType(0x0081)
+	e2:SetCode(29200000)
+	e2:SetProperty(0x14000)
+	e2:SetTarget(c29200110.tdtg)
+	e2:SetOperation(c29200110.tdop)
+	c:RegisterEffect(e2)
 end
-c29200110.dyz_utai_list=true
-function c29200110.condition(e,tp,eg,ep,ev,re,r,rp)
-    local at=Duel.GetAttackTarget()
-    return at:IsFaceup() and at:IsControler(tp) and at:IsSetCard(0x53e0)
-end
-function c29200110.target(e,tp,eg,ep,ev,re,r,rp,chk)
+function c29200110.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
         and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
 end
-function c29200110.xyzfilter(c,mg)
-    return c:IsSetCard(0x53e0) and c:IsXyzSummonable(mg)
-end
-function c29200110.operation(e,tp,eg,ep,ev,re,r,rp)
+function c29200110.tdop(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
     if not c:IsRelateToEffect(e) then return end
-    if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
-        Duel.Recover(tp,1000,REASON_EFFECT)
-        Duel.BreakEffect()
-        local xyzg=Duel.GetMatchingGroup(c29200110.xyzfilter,tp,LOCATION_EXTRA,0,nil,g)
-        if xyzg:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(29200110,2)) then
-            Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-            local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-            Duel.XyzSummon(tp,xyz,g,1,5)
-        end
-    elseif Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
+    if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+        and c:IsCanBeSpecialSummoned(e,0,tp,false,false) then
         Duel.SendtoGrave(c,REASON_RULE)
     end
 end
-function c29200110.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
+function c29200110.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    if chk==0 then return Duel.IsPlayerCanDiscardDeck(tp,4) end
 end
-function c29200110.mfilter(c)
-    return c:IsFaceup() and c:IsSetCard(0x53e0) and not c:IsType(TYPE_TOKEN)
+function c29200110.filter(c)
+	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSetCard(0x53e0)
 end
-function c29200110.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then
-        local g=Duel.GetMatchingGroup(c29200110.mfilter,tp,LOCATION_MZONE,0,nil)
-        return Duel.IsExistingMatchingCard(c29200110.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,g)
-    end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
+function c29200110.operation(e,tp,eg,ep,ev,re,r,rp)
+    if not Duel.IsPlayerCanDiscardDeck(tp,4) then return end
+    Duel.ConfirmDecktop(tp,4)
+    local g=Duel.GetDecktopGroup(tp,4)
+	if g:GetCount()>0 then
+		local sg=g:Filter(c29200110.filter,nil)
+        if sg:GetCount()>0 then
+            Duel.DisableShuffleCheck()
+            Duel.SendtoGrave(sg,REASON_EFFECT+REASON_REVEAL)
+        end
+        Duel.SortDecktop(tp,tp,4-sg:GetCount())
+        for i=1,4-sg:GetCount() do
+            local mg=Duel.GetDecktopGroup(tp,1)
+            Duel.MoveSequence(mg:GetFirst(),1)
+		    Duel.RaiseSingleEvent(mg:GetFirst(),29200000,e,0,0,0,0)
+		    Duel.RaiseEvent(mg:GetFirst(),EVENT_CUSTOM+29200001,e,0,tp,0,0)
+		end
+	end
 end
-function c29200110.spop(e,tp,eg,ep,ev,re,r,rp)
-    local g=Duel.GetMatchingGroup(c29200110.mfilter,tp,LOCATION_MZONE,0,nil)
-    local xyzg=Duel.GetMatchingGroup(c29200110.xyzfilter,tp,LOCATION_EXTRA,0,nil,g)
-    if xyzg:GetCount()>0 then
-        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-        local xyz=xyzg:Select(tp,1,1,nil):GetFirst()
-        Duel.XyzSummon(tp,xyz,g,1,5)
-    end
-end
-

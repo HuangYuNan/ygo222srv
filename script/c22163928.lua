@@ -7,7 +7,7 @@
 --①：这张卡为同调素材的「傲娇」同调怪兽不会被战斗·效果破坏。
 function c22163928.initial_effect(c)
 	--pendulum summon
-	aux.AddPendulumProcedure(c)
+	aux.EnablePendulumAttribute(c)
 	--Return To Hand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(22163928,0))

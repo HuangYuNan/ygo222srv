@@ -1,4 +1,4 @@
---冰雪元素·布利扎
+--冰雪元素·布利扎 
 function c37564004.initial_effect(c)
 		--xyz summon
 	aux.AddXyzProcedure(c,nil,4,2,nil,nil,5)

@@ -23,7 +23,7 @@ function c29200111.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_PZONE)
-	e2:SetCountLimit(1,29200111)
+	e2:SetCountLimit(1,29211111)
 	e2:SetCost(c29200111.spcost)
 	e2:SetTarget(c29200111.sptg)
 	e2:SetOperation(c29200111.spop)
@@ -39,18 +39,6 @@ function c29200111.initial_effect(c)
 	e7:SetTarget(c29200111.pentg)
 	e7:SetOperation(c29200111.penop)
 	c:RegisterEffect(e7)
-	--
-	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_UPDATE_ATTACK)
-	e4:SetRange(LOCATION_PZONE)
-	e4:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
-	e4:SetTarget(c29200111.target1)
-	e4:SetValue(500)
-	c:RegisterEffect(e4)
-	local e3=e4:Clone()
-	e3:SetCode(EFFECT_UPDATE_DEFENSE)
-	c:RegisterEffect(e3)
 	--atk up
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
@@ -59,8 +47,24 @@ function c29200111.initial_effect(c)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetValue(c29200111.atkval)
 	c:RegisterEffect(e5)
+    --Trap activate in set turn
+    local e8=Effect.CreateEffect(c)
+    e8:SetType(EFFECT_TYPE_FIELD)
+    e8:SetCode(EFFECT_TRAP_ACT_IN_SET_TURN)
+    e8:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
+    e8:SetRange(LOCATION_PZONE)
+    e8:SetTargetRange(LOCATION_SZONE,0)
+    e8:SetCountLimit(1,29201111)
+    c:RegisterEffect(e8)
+    --cannot destroy
+    local e10=Effect.CreateEffect(c)
+    e10:SetType(EFFECT_TYPE_SINGLE)
+    e10:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+    e10:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e10:SetRange(LOCATION_MZONE)
+    e10:SetValue(1)
+    c:RegisterEffect(e10)
 end
-c29200111.dyz_utai_list=true
 function c29200111.pencon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT+REASON_BATTLE)~=0 and e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
 end
@@ -118,11 +122,5 @@ function c29200111.cfilter(c)
 end
 function c29200111.atkval(e,c)
 	return Duel.GetMatchingGroupCount(c29200111.cfilter,c:GetControler(),LOCATION_EXTRA,0,nil)*300
-end
-function c29200111.cfilter1(c,code)
-	return c:IsFaceup() and c:IsCode(code)
-end
-function c29200111.target1(e,c)
-	return Duel.IsExistingMatchingCard(c29200111.cfilter1,0,LOCATION_MZONE,LOCATION_MZONE,1,c,c:GetCode())
 end
 

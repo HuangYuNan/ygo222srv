@@ -30,16 +30,6 @@ function c1007013.initial_effect(c)
 	e4:SetCondition(c1007013.decon)
 	e4:SetValue(c1007013.val)
 	c:RegisterEffect(e4)
-	--1/2
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_FIELD)
-	e5:SetCode(EFFECT_CHANGE_DAMAGE)
-	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e5:SetRange(LOCATION_PZONE)
-	e5:SetTargetRange(0,1)
-	e5:SetCondition(c1007013.decon)
-	e5:SetValue(c1007013.val2)
-	c:RegisterEffect(e5)
 	--spsummon
 	local e6=Effect.CreateEffect(c)
 	e6:SetType(EFFECT_TYPE_SINGLE)
@@ -57,6 +47,25 @@ function c1007013.initial_effect(c)
 	e7:SetValue(1)
 	e7:SetCondition(c1007013.condition1)
 	c:RegisterEffect(e7)
+	--negate
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e8:SetCode(EVENT_ATTACK_ANNOUNCE)
+	e8:SetRange(LOCATION_MZONE)
+	e8:SetCondition(c1007013.discon)
+	e8:SetTarget(c1007013.distg)
+	e8:SetOperation(c1007013.disop)
+	c:RegisterEffect(e8)
+	--Revive
+	local e9=Effect.CreateEffect(c)
+	e9:SetDescription(aux.Stringid(1007015,1))
+	e9:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_FIELD)
+	e9:SetCode(EVENT_PHASE+PHASE_END)
+	e9:SetRange(LOCATION_MZONE)
+	e9:SetCountLimit(1)
+	e9:SetTarget(c1007013.sumtg)
+	e9:SetOperation(c1007013.sumop)
+	c:RegisterEffect(e9)
 end
 function c1007013.sccon(e)
 	local seq=e:GetHandler():GetSequence()
@@ -89,11 +98,52 @@ function c1007013.val(e,re,dam,r,rp,rc)
 		return dam/2
 	else return dam end
 end
-function c1007013.val2(e,re,dam,r,rp,rc)
-	if bit.band(r,REASON_BATTLE+REASON_EFFECT)~=0 then
-		return dam*2
-	else return dam end
-end
 function c1007013.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_PENDULUM
+end
+function c1007013.discon(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	return bc and bit.band(bc:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL
+end
+function c1007013.distg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():RegisterFlagEffect(1007013,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,0) end
+	e:GetHandler():GetBattleTarget():CreateEffectRelation(e)
+end
+function c1007013.disop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local bc=c:GetBattleTarget()
+	if c:IsRelateToEffect(e) and c:IsFaceup() and bc:IsRelateToEffect(e) and bc:IsFaceup()  then
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_DISABLE)
+	e1:SetReset(RESET_EVENT+0x1fe0000)
+	bc:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE)
+	e2:SetCode(EFFECT_DISABLE_EFFECT)
+	e2:SetReset(RESET_EVENT+0x1fe0000)
+	bc:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_UPDATE_ATTACK)
+	e3:SetValue(bc:GetAttack()/2)
+	e3:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_BATTLE)
+	c:RegisterEffect(e3)
+	end
+end
+function c1007013.thfilter1(c)
+	return c:IsSetCard(0x245) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+end
+function c1007013.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():GetFlagEffect(1007013)>0 and Duel.IsExistingMatchingCard(c1007013.thfilter1,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c1007013.sumop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c1007013.thfilter1,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
 end

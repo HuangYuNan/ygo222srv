@@ -95,7 +95,7 @@ function c10162006.spfilter1(c,tp)
 end
 
 function c10162006.spfilter2(c,att)
-	return c:IsSetCard(0x9333) and c:IsAbleToDeckAsCost() and c:IsCanBeFusionMaterial() and c:IsFaceup() and c:IsAttribute(att)
+	return c:IsSetCard(0x9333) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial() and c:IsFaceup() and c:IsAttribute(att)
 end
 
 function c10162006.sprcon(e,c)
@@ -112,7 +112,7 @@ function c10162006.sprop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g2=Duel.SelectMatchingCard(tp,c10162006.spfilter2,tp,LOCATION_MZONE,0,1,1,g1:GetFirst(),g1:GetFirst():GetAttribute())
 	g1:Merge(g2)
 	c:SetMaterial(g1)
-	Duel.SendtoDeck(g1,nil,2,REASON_COST)
+	Duel.SendtoGrave(g1,REASON_COST)
 end
 
 function c10162006.fscon(e,g,gc,chkf)

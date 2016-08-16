@@ -1,3 +1,4 @@
+--魔战姬 金灵
 function c73203095.initial_effect(c)
 	--to hand 
 	local e1=Effect.CreateEffect(c)

@@ -57,7 +57,7 @@ function c5012612.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end
 function c5012612.filter(c)
-	return c:IsAbleToHand() and c:IsSetCard(0x350) and not c:IsType(TYPE_TRAP)
+	return c:IsAbleToHand() and c:IsSetCard(0x350) 
 end
 function c5012612.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and chkc:IsAbleToHand() end

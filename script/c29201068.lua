@@ -7,12 +7,12 @@ function c29201068.initial_effect(c)
     e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
     e1:SetCode(EFFECT_SPSUMMON_CONDITION)
     c:RegisterEffect(e1)
-    --special summon
+    --special summon +LOCATION_GRAVE
     local e2=Effect.CreateEffect(c)
     e2:SetType(EFFECT_TYPE_FIELD)
     e2:SetCode(EFFECT_SPSUMMON_PROC)
     e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-    e2:SetRange(LOCATION_HAND+LOCATION_GRAVE)
+    e2:SetRange(LOCATION_HAND)
     e2:SetCondition(c29201068.spcon)
     e2:SetOperation(c29201068.spop)
     c:RegisterEffect(e2)
@@ -24,14 +24,14 @@ function c29201068.initial_effect(c)
     e3:SetTargetRange(LOCATION_MZONE,0)
     e3:SetTarget(c29201068.antarget)
     c:RegisterEffect(e3)
-    --immune
+    --[[immune
     local e5=Effect.CreateEffect(c)
     e5:SetType(EFFECT_TYPE_SINGLE)
     e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_UNCOPYABLE)
     e5:SetRange(LOCATION_MZONE)
     e5:SetCode(EFFECT_IMMUNE_EFFECT)
-    e5:SetValue(c29201068.efilter)
-    c:RegisterEffect(e5)
+    e5:SetValue(c29201068.efilter2)
+    c:RegisterEffect(e5)]]
     --Eraser
     local e6=Effect.CreateEffect(c)
     e6:SetDescription(aux.Stringid(29201068,0))
@@ -51,14 +51,33 @@ function c29201068.initial_effect(c)
     e7:SetTarget(c29201068.destg)
     e7:SetOperation(c29201068.desop)
     c:RegisterEffect(e7)
+    local e10=Effect.CreateEffect(c)
+    e10:SetType(EFFECT_TYPE_SINGLE)
+    e10:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+    e10:SetRange(LOCATION_ONFIELD)
+    e10:SetCode(EFFECT_IMMUNE_EFFECT)
+    e10:SetCondition(c29201068.con)
+    e10:SetValue(c29201068.efilter)
+    c:RegisterEffect(e10)
+end
+function c29201068.filter7(c)
+    return c:IsFaceup() and c:GetType()==TYPE_SPELL+TYPE_CONTINUOUS 
+end
+function c29201068.con(e)
+    return Duel.IsExistingMatchingCard(c29201068.filter7,e:GetHandlerPlayer(),LOCATION_ONFIELD,0,1,nil)
+end
+function c29201068.efilter(e,te)
+    return te:GetOwner()~=e:GetOwner()
 end
 function c29201068.antarget(e,c)
     return c~=e:GetHandler()
 end
-function c29201068.efilter(e,te)
+--[[
+function c29201068.efilter2(e,te)
     if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true
     else return aux.qlifilter(e,te) end
 end
+]]
 function c29201068.spcfilter(c)
     return c:IsSetCard(0x63e0) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
 end

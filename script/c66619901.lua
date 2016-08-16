@@ -70,8 +70,14 @@ function c66619901.thop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function c66619901.cfilter(c)
+	return c:IsFaceup() and c:IsCode(66619916) and c:IsAbleToGraveAsCost()
+end
 function c66619901.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619901.cfilter,tp,LOCATION_ONFIELD,0,1,nil) and e:GetHandler():IsAbleToDeck() end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,c66619901.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
 	Duel.SendtoDeck(e:GetHandler(),c,nil,2,REASON_COST)
 end
 function c66619901.cfilter1(c)

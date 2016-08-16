@@ -26,7 +26,7 @@ function c37564613.spcon(e,c)
 		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
 end
 function c37564613.swwcostfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsHasEffect(37564600) and not c:IsPublic()
+	return c:IsType(TYPE_MONSTER) and c:IsHasEffect(37564600) and c:IsDiscardable()
 end
 function c37564613.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=1
@@ -34,7 +34,7 @@ function c37564613.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564613.swwcostfilter,tp,LOCATION_HAND,0,1,nil) and c:GetFlagEffect(37564613)==0 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectMatchingCard(tp,c37564613.swwcostfilter,tp,LOCATION_HAND,0,1,1,nil)
-	Duel.ConfirmCards(1-tp,g)
+	Duel.SendtoGrave(g,REASON_COST+REASON_DISCARD)
 	e:SetLabel(g:GetFirst():GetTextAttack())
 	c:RegisterFlagEffect(37564613,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE_CAL,0,1)
 end

@@ -2,18 +2,13 @@
 function c22163904.initial_effect(c)
 	--to hand
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_QUICK_O)
-	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_GRAVE)
 	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCountLimit(1,22163903)
-	e1:SetCondition(c22163904.condition)
 	e1:SetTarget(c22163904.thtg)
 	e1:SetOperation(c22163904.thop)
 	c:RegisterEffect(e1)
-end
-function c22163904.condition(e,tp,eg,ep,ev,re,r,rp)
-    return (ph>=PHASE_DRAW and ph<PHASE_BATTLE_START) and Duel.GetTurnPlayer()==tp
 end
 function c22163904.filter(c)
 	return c:IsSetCard(0x370) and c:IsType(TYPE_MONSTER) and c:IsFaceup()

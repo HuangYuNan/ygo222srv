@@ -68,7 +68,7 @@ function c37564305.initial_effect(c)
 	e9:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e9:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e9:SetCode(EVENT_TO_GRAVE)
-	e9:SetCondition(senya.mkcon(false))
+	e9:SetCondition(senya.mkcon(false,c37564305.rcon))
 	e9:SetTarget(c37564305.target)
 	e9:SetOperation(c37564305.activate)
 	c:RegisterEffect(e9)
@@ -128,6 +128,9 @@ end
 function c37564305.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
+end
+function c37564305.rcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
 end
 function c37564305.filter(c,e,tp)
 	return (c:IsCode(37564303) or c:IsCode(37564201)) and c:IsCanBeSpecialSummoned(e,0,tp,true,true)

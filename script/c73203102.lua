@@ -1,3 +1,4 @@
+--魔战姬归来
 function c73203102.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)

@@ -47,7 +47,7 @@ function c10161001.initial_effect(c)
 	--draw
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(10161001,0))
-	e7:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_RECOVER)
+	e7:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e7:SetType(EFFECT_TYPE_IGNITION)
 	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e7:SetCountLimit(1)
@@ -99,14 +99,14 @@ function c10161001.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
+	--Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,2000)
 end
 
 function c10161001.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	if Duel.Draw(p,d,REASON_EFFECT)~=0 then
-	Duel.BreakEffect()
-	Duel.Recover(p,2000,REASON_EFFECT)
+	--Duel.BreakEffect()
+	--Duel.Recover(p,2000,REASON_EFFECT)
 	end
 end
 

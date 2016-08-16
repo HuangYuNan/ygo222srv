@@ -1,3 +1,4 @@
+--暗影魔战姬 影之蝶
 function c73203108.initial_effect(c)
 	c:SetUniqueOnField(1,0,73203108)
 	--xyz summon

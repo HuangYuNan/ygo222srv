@@ -32,9 +32,13 @@ function c60151357.cfilter(c)
     return c:IsSetCard(0xcb23) and c:IsAbleToGraveAsCost()
 end
 function c60151357.negcost(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.IsExistingMatchingCard(c60151357.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+    if chk==0 then return Duel.IsExistingMatchingCard(c60151357.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-    local g=Duel.SelectMatchingCard(tp,c60151357.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,c60151357.cfilter,tp,LOCATION_ONFIELD+LOCATION_HAND,0,1,1,nil)
+    local cg=g:Filter(Card.IsFacedown,nil)
+    if cg:GetCount()>0 then
+        Duel.ConfirmCards(1-tp,cg)
+    end
     Duel.SendtoGrave(g,REASON_COST)
 end
 function c60151357.filter(c,e,tp)

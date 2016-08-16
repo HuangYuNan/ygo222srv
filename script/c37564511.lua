@@ -23,7 +23,22 @@ function c37564511.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,c37564511.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 and g:GetFirst():IsCode(37564765) and Duel.IsPlayerCanDraw(tp,1) then
-		Duel.Draw(tp,1,REASON_EFFECT)
+	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+		local sc=g:GetFirst()
+		if sc:IsCode(37564765) and Duel.IsPlayerCanDraw(tp,1) then
+			Duel.BreakEffect()
+			Duel.Draw(tp,1,REASON_EFFECT)
+		end
+		if sc:GetOriginalCode()==37564765 and Duel.IsExistingMatchingCard(c37564511.rfilter,tp,0,LOCATION_ONFIELD,1,nil) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+			local rg=Duel.SelectMatchingCard(tp,c37564511.rfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
+			if rg:GetCount()>0 then
+				Duel.BreakEffect()
+				Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+			end
+		end
 	end
+end
+function c37564511.rfilter(c)
+	return c:IsAbleToRemove() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end

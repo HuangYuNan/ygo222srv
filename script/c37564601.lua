@@ -74,7 +74,6 @@ function c37564601.filter1(c)
 end
 function c37564601.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c37564601.filter1,tp,0,LOCATION_ONFIELD,1,nil) end
-	Duel.SetChainLimit(aux.FALSE)
 end
 function c37564601.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

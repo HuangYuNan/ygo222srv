@@ -82,7 +82,7 @@ function Dazz.EnableDFCGlobalCheck(c)
 		ex:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		ex:SetCode(EVENT_ADJUST)
 		ex:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-			return Dazz.DFCStackSet:GetCount()>=0
+			return Dazz.DFCStackSet:GetCount()>0
 		end)
 		ex:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
 			local tc=Dazz.DFCStackSet:GetFirst()
@@ -682,7 +682,7 @@ function Dazz.SimulatedSetCodeCore(c,f,v,func,...)
 		local m=_G["c"..code]
 		if m then
 			local val=func(m)
-			if val and (type(v)~=type(val) or val==v) then return true end
+			if val and (not v or val==v) then return true end
 		end
 	end
 	return false
@@ -701,6 +701,9 @@ function Dazz.IsInheritor(c,f,v)
 end
 function Dazz.IsAzorius(c,f,v)
 	return Dazz.SimulatedSetCodeCore(c,f,v,function(m) return m.Dazz_name_Azorius end)
+end
+function Dazz.IsAephiex(c,f,v)
+	return Dazz.SimulatedSetCodeCore(c,f,v,function(m) return m.Dazz_name_Aephiex end)
 end
 
 --Modules for Eldrazi
@@ -779,15 +782,17 @@ function Dazz.SynConditionEldrazi(minc,maxc,exi)
 			g2=Duel.GetMatchingGroup(Dazz.SynchroProcedureEldraziFilter2,tp,LOCATION_MZONE,LOCATION_MZONE,nil,c)
 		end
 		local tuner=tuner
+		local pe=Duel.IsPlayerAffectedByEffect(tp,EFFECT_MUST_BE_SMATERIAL)
 		if not tuner and pe then tuner=pe:GetOwner() end
-		if tuner then
-			return Dazz.SynchroProcedureEldraziFilter1(tuner,c)
-				and Dazz.SynchroProcedureTunerFilter(tuner,c,lv,minc,maxc,g2)
-		end
+		if tuner and not Dazz.SynchroProcedureEldraziFilter1(tuner,c) then return false end
 		local eldv=Dazz.EldraziValue(c,tp)
 		for i=lv,2,-1 do
 			if i+eldv<lv then break end
-			if g1:IsExists(Dazz.SynchroProcedureTunerFilter,1,nil,c,i,minc,maxc,g2) then return true end
+			if tuner then
+				if Dazz.SynchroProcedureTunerFilter(tuner,c,i,minc,maxc,g2) then return true end
+			else
+				if g1:IsExists(Dazz.SynchroProcedureTunerFilter,1,nil,c,i,minc,maxc,g2) then return true end
+			end
 		end
 		return false
 	end
@@ -807,7 +812,7 @@ function Dazz.SynTargetEldrazi(minc,maxc)
 		local lv,tlv=c:GetLevel(),0
 		local eldv=Dazz.EldraziValue(c,tp)
 		local selt={tp}
-		local keyt={0}
+		local keyt={}
 		for i=lv,2,-1 do
 			if i+eldv<lv then break end
 			if g1:IsExists(Dazz.SynchroProcedureTunerFilter,1,nil,c,i,minc,maxc,g2) then
@@ -817,10 +822,10 @@ function Dazz.SynTargetEldrazi(minc,maxc)
 		end
 		local mlv=nil
 		if not selt[3] then
-			mlv=keyt[2]
+			mlv=keyt[1]
 		else
-			local sel=Duel.SelectOption(table.unpack(selt))
-			mlv=keyt[sel+2]
+			local sel=Duel.SelectOption(table.unpack(selt))+1
+			mlv=keyt[sel]
 		end
 		if tuner then
 			g:AddCard(tuner)

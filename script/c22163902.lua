@@ -9,7 +9,6 @@ function c22163902.initial_effect(c)
     e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
     e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
     e2:SetTargetRange(1,0)
-    e2:SetCondition(aux.nfbdncon)
     e2:SetTarget(c22163902.splimit)
     c:RegisterEffect(e2)
 	--negate
@@ -105,7 +104,7 @@ function c22163902.desop(e,tp,eg,ep,ev,re,r,rp)
             e1:SetReset(RESET_EVENT+0x1fe0000)
             tc:RegisterEffect(e1)
             local e2=e1:Clone()
-            e2:SetCode(EFFECT_UPDATE_DEFENCE)
+            e2:SetCode(EFFECT_UPDATE_DEFENSE)
             tc:RegisterEffect(e2)
         end
     end

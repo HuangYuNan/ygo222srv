@@ -21,7 +21,7 @@ function c37564003.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetTargetRange(1,0)
 	e3:SetTarget(c37564003.sumlimit)
-	c:RegisterEffect(e3)
+	--c:RegisterEffect(e3)
 end
 function c37564003.sumlimit(e,c,tp,sumtp,sumpos)
 	return c:IsLocation(LOCATION_EXTRA) and not c:IsSetCard(0x770)

@@ -22,7 +22,9 @@ function c37564502.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	local val=Duel.GetFlagEffect(tp,37564502)*100
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,val+100)
-	Duel.SetChainLimit(aux.FALSE)
+	Duel.SetChainLimit(function(e,p1,p2)
+		return p1~=p2
+	end)
 end
 function c37564502.disop(e,tp,eg,ep,ev,re,r,rp) 
 	Duel.RegisterFlagEffect(tp,37564502,RESET_PHASE+PHASE_END,0,1)
@@ -32,6 +34,6 @@ function c37564502.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.NegateActivation(ev)
 		if re:GetHandler():IsRelateToEffect(re) then
 			Duel.Destroy(eg,REASON_EFFECT)
-		end	
+		end 
 	end
 end
