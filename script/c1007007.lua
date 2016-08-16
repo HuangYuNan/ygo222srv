@@ -96,7 +96,7 @@ function c1007007.decon(e,tp,eg,ep,ev,re,r,rp)
 	and rc:IsSetCard(0xa245) or e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM 
 end
 function c1007007.filter(c,tp)
-	return (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
+	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007007.detg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1007007.filter,tp,LOCATION_DECK,0,1,nil,tp) end
