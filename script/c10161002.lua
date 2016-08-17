@@ -126,9 +126,9 @@ function c10161002.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c10161002.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end--Duel.GetFlagEffect(tp,10161002)==0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end--Duel.GetFlagEffect(tp,10161002)==0 end
 	--Duel.RegisterFlagEffect(tp,10161002,0,0,0)
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD,e:GetHandler())
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
 end
 

@@ -62,7 +62,7 @@ function c10163005.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c10163005.drop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c10163005.desfilter0,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c10163005.desfilter0,tp,LOCATION_MZONE+LOCATION_HAND,LOCATION_MZONE,1,2,nil)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
 	   sg=Duel.GetOperatedGroup()
 	   local d1=0
