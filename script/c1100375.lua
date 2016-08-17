@@ -60,16 +60,14 @@ function c1100375.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c1100375.filter,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local g=Duel.SelectTarget(tp,c1100375.filter,tp,0,LOCATION_MZONE,1,1,nil)
-	local tc=g:GetFirst()
-	local atk=g:GetFirst():GetTextAttack()
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,1,1-tp,atk)
 end
 function c1100375.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	local atk=g:GetFirst():GetTextAttack()
+	local atk=tc:GetTextAttack()
 	if atk<0 then atk=0 end
-	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.Damage(1-tp,atk,REASON_EFFECT)~=0 then
+	if tc:IsRelateToEffect(e) and tc:IsFaceup() and Duel.Damage(1-tp,atk,REASON_EFFECT)>0 then
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
