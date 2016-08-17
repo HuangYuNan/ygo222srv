@@ -64,12 +64,12 @@ end
 function c75646119.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ct=Duel.GetMatchingGroupCount(c75646119.damfilter,tp,0xc,0,nil)
 	if chk==0 then return ct>0 end
-	Duel.SetTargetParam(ct*400)
-	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,ct*400)
+	Duel.SetTargetParam(ct*300)
+	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,ct*300)
 end
 function c75646119.damop(e,tp,eg,ep,ev,re,r,rp)
 	local ct=Duel.GetMatchingGroupCount(c75646119.damfilter,tp,0xc,0,nil)
-	if Duel.Damage(1-tp,ct*400,0x40)~=0 then
+	if Duel.Damage(1-tp,ct*300,0x40)~=0 then
 	local c=e:GetHandler()
 	Duel.RaiseEvent(c,0x10000000+75646112,e,0,tp,0,0)
 	end

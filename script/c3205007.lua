@@ -24,7 +24,7 @@ function c3205007.initial_effect(c)
 	c:RegisterEffect(e2) 
 end
 function c3205007.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x109e) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER)
 end
 function c3205007.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c3205007.filter(chkc) end
@@ -47,7 +47,7 @@ function c3205007.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c3205007.tfilter(c,tp)
-	return c:IsLocation(LOCATION_ONFIELD) and c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x109e)
+	return c:IsLocation(LOCATION_ONFIELD) and c:IsControler(tp) and c:IsFaceup() and c:IsSetCard(0x340)
 end
 function c3205007.negcon(e,tp,eg,ep,ev,re,r,rp)
 	if not re:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then return false end

@@ -1,4 +1,4 @@
-local m=66600605
+local m=66600607
 local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c66600601") end) then require("script/c66600601") end
 function cm.initial_effect(c)
@@ -40,7 +40,7 @@ function cm.bmssop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			e1:SetOperation(cm.retop)
 			Duel.RegisterEffect(e1,tp)
-			Duel.BreakEffect()
+			--Duel.BreakEffect()
 			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 		end
 	end

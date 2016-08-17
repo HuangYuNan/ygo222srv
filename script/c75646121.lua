@@ -53,7 +53,7 @@ function c75646121.dacost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(3,tp,504)
 	local g=Duel.SelectMatchingCard(tp,c75646121.cfilter,tp,0x2,0,1,1,nil)
 	Duel.SendtoGrave(g,0x80)
-	e:SetLabel(g:GetFirst():GetBaseAttack())
+	e:SetLabel(g:GetFirst():GetBaseAttack()/2)
 end
 function c75646121.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end

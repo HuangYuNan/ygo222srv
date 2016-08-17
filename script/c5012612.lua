@@ -1,6 +1,5 @@
 --虚数学区·五行机关
 function c5012612.initial_effect(c)
-	c:SetSPSummonOnce(5012612)
 	--fusion material
 	c:EnableReviveLimit()
 	aux.AddFusionProcFunRep(c,aux.FilterBoolFunction(Card.IsSetCard,0x350),2,true)

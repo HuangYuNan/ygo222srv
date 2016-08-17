@@ -34,10 +34,10 @@ function c3205003.initial_effect(c)
 end
 	function c3205003.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205003.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x109e) and not c:IsCode(3205003)
+	return c:IsFaceup() and c:IsSetCard(0x340) and not c:IsCode(3205003)
 end
 function c3205003.spcon(e,c)
 	if c==nil then return true end
@@ -45,7 +45,7 @@ function c3205003.spcon(e,c)
 		and Duel.IsExistingMatchingCard(c3205003.filter,c:GetControler(),LOCATION_MZONE,0,1,nil)
 end
 function c3205003.con(e,tp,eg,ep,ev,re,r,rp)
-		return re:GetHandler():IsSetCard(0x109e) and not re:GetHandler():IsCode(3205003)
+		return re:GetHandler():IsSetCard(0x340) and not re:GetHandler():IsCode(3205003)
 end
 function c3205003.desfilter(c)
 	return c:IsAbleToHand()

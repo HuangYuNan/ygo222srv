@@ -78,12 +78,12 @@ function c1100375.spcn(e,tp,eg,ep,ev,re,r,rp)
 	return c:IsReason(REASON_DESTROY) and c:IsReason(REASON_BATTLE+REASON_EFFECT)
 		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==tp
 end
-function c1100375.filter(c,e,tp)
+function c1100375.filter1(c,e,tp)
 	return c:IsSetCard(0x6243) and c:IsType(TYPE_MONSTER) and not c:IsCode(1100375) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1100375.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c1100375.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(c1100375.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE+LOCATION_REMOVED)
 	local rec=e:GetHandler():GetBaseAttack()
 	Duel.SetTargetPlayer(tp)
@@ -93,7 +93,7 @@ end
 function c1100375.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,c1100375.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c1100375.filter1,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
 	local c=e:GetHandler()
 	if Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
 	Duel.BreakEffect()

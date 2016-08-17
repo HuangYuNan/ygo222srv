@@ -52,7 +52,7 @@ function c10121006.descost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c10121006.desfilter(c)
-	return c:GetCounter(0x346)>0 and c:IsDestructable()
+	return c:GetCounter(0x1346)>0 and c:IsDestructable()
 end
 
 function c10121006.destg(e,tp,eg,ep,ev,re,r,rp,chk)

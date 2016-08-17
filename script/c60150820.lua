@@ -23,7 +23,6 @@ function c60150820.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD)
 	e3:SetCode(EFFECT_SPSUMMON_PROC_G)
-	e3:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
 	e3:SetCondition(c60150820.spCondition())
@@ -85,7 +84,7 @@ function c60150820.spOperation()
 		local fr2=Duel.GetFieldGroupCount(tp,0,LOCATION_REMOVED)
 		if fr>fr2 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,c60150820.spConditionFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,ft,nil,e,tp)
+			local g=Duel.SelectMatchingCard(tp,c60150820.spConditionFilter,tp,LOCATION_HAND+LOCATION_REMOVED,0,1,1,nil,e,tp)
 			sg:Merge(g)
 			local tc=sg:GetFirst()
 			if tc then
@@ -98,7 +97,7 @@ function c60150820.spOperation()
 			end
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,c60150820.spConditionFilter,tp,LOCATION_HAND,0,1,ft,nil,e,tp)
+			local g=Duel.SelectMatchingCard(tp,c60150820.spConditionFilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 			sg:Merge(g)
 			local tc=sg:GetFirst()
 			if tc then

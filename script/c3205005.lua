@@ -31,7 +31,7 @@ function c3205005.initial_effect(c)
 	end
 	function c3205005.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205005.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -47,7 +47,7 @@ function c3205005.spop1(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c3205005.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x109e) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER)
 end
 function c3205005.spcon2(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

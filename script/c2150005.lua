@@ -15,7 +15,7 @@ function c2150005.tga(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,tp,LOCATION_GRAVE)
 end
 function BiDiuNo5(c)return BiDiuF(c)and c:GetCode()~=2150005 end
-function c2150005.opa(e)
+function c2150005.opa(e,tp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e)then return end
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP_ATTACK)

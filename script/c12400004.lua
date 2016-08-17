@@ -51,8 +51,8 @@ end
 function c12400004.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(300)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
+	Duel.SetTargetParam(200)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,200)
 end
 function c12400004.spfilter(c)
 	return c:IsSetCard(0x3390) 

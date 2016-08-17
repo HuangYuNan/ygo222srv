@@ -61,6 +61,7 @@ end
 function c1007005.addct(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_COUNTER,nil,1,0,0x1245)
+	Duel.SetChainLimit(aux.FALSE)
 end
 function c1007005.addc(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then

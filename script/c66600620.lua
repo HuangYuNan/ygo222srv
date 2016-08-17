@@ -1,4 +1,4 @@
-local m=66600612
+local m=66600620
 local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c66600601") end) then require("script/c66600601") end
 function cm.initial_effect(c)

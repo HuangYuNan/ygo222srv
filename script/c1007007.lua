@@ -65,7 +65,7 @@ end
 function c1007007.thcon(e,tp,eg,ep,ev,re,r,rp)
 	local seq=e:GetHandler():GetSequence()
 	local sc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
-	return sc and sc:IsSetCard(0xa245) and not sc:IsCode(1007007)
+	return sc and not sc:IsCode(1007007)
 end
 function c1007007.thfilter(c)
 	return c:IsSetCard(0xa245) and not c:IsCode(1007007) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()

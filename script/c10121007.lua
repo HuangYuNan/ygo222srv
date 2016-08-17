@@ -52,7 +52,7 @@ function c10121007.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c10121007.thfilter(c)
-	return c:GetCounter(0x346)>0 and c:IsAbleToHand()
+	return c:GetCounter(0x1346)>0 and c:IsAbleToHand()
 end
 
 function c10121007.thtg(e,tp,eg,ep,ev,re,r,rp,chk)

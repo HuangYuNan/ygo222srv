@@ -9,7 +9,7 @@ function cm.initial_effect(c)
 	sixth.bm(c)
 end
 function cm.filter(c,e,tp)
-	return c:IsSetCard(0x9c) and not c:IsCode(38667773) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsHasEffect(66600600) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function cm.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -137,7 +137,7 @@ function sixth.bmssop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SendtoGrave(tc,REASON_EFFECT)>0 then
-			Duel.BreakEffect()
+			--Duel.BreakEffect()
 			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
@@ -173,7 +173,6 @@ function sixth.gtgeff(c,f,cost,tg,op,ctlm,ctlmid,istg,ctg,range)
 			while tc do
 				local p=tc:GetControler()
 				Duel.RegisterFlagEffect(p,66600602,RESET_CHAIN,0,1)
-				tc=eg:GetNext()
 				e:GetLabelObject():AddCard(tc)
 				tc=eg:GetNext()
 			end
@@ -193,7 +192,7 @@ function sixth.gtgeff(c,f,cost,tg,op,ctlm,ctlmid,istg,ctg,range)
 	e1:SetCategory(ctg)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(range)
-	e3:SetLabelObject(sixth.gtg[cd])
+	e1:SetLabelObject(sixth.gtg[cd])
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(ctlm,ctlmid)
 	e1:SetProperty(tgid+EFFECT_FLAG_CHAIN_UNIQUE+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)

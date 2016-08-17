@@ -1,7 +1,7 @@
 --»Ê¹ÚÐ¡³ó
 function c3205011.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x109e),aux.NonTuner(Card.IsSetCard,0x109e),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x340),aux.NonTuner(Card.IsSetCard,0x340),1)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -39,7 +39,7 @@ function c3205011.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function c3205011.filter(c)
 	local lv=c:GetLevel()
-	return c:IsSetCard(0x109e) and c:IsAbleToHand() and lv==4
+	return c:IsSetCard(0x340) and c:IsAbleToHand() and lv==4
 end
 function c3205011.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c3205011.filter,tp,LOCATION_DECK,0,1,nil) end

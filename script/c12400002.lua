@@ -50,10 +50,17 @@ function c12400002.costfilter(c)
 	return c:IsAbleToGraveAsCost()
 end
 function c12400002.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c12400002.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c12400002.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
-	Duel.SendtoGrave(g,REASON_COST)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then
+		if chk==0 then return Duel.IsExistingMatchingCard(c12400002.costfilter,tp,LOCATION_MZONE,0,1,nil) end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,c12400002.costfilter,tp,LOCATION_MZONE,0,1,1,nil)
+		Duel.SendtoGrave(g,REASON_COST)
+	else
+		if chk==0 then return Duel.IsExistingMatchingCard(c12400002.costfilter,tp,LOCATION_ONFIELD,0,1,nil) end
+		local g=Duel.SelectMatchingCard(tp,c12400002.costfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		Duel.SendtoGrave(g,REASON_COST)
+	end
 end
 function c12400002.spfilter(c,e,tp)
 	return c:IsSetCard(0x3390) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -74,8 +81,8 @@ end
 function c12400002.damtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetTargetPlayer(1-tp)
-	Duel.SetTargetParam(300)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,300)
+	Duel.SetTargetParam(200)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,200)
 end
 function c12400002.tgfilter(c)
 	return c:IsSetCard(0x3390) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

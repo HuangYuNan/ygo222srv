@@ -1,5 +1,13 @@
 --Stella-星灵
 function c75646118.initial_effect(c)
+	--special summon
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(0x2)
+	e2:SetCode(34)
+	e2:SetProperty(0x40000)
+	e2:SetRange(0x2)
+	e2:SetCondition(c75646118.spcon)
+	c:RegisterEffect(e2)
 	--damage
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(75646118,0))
@@ -24,6 +32,14 @@ function c75646118.initial_effect(c)
 	e3:SetTarget(c75646118.tg)
 	e3:SetOperation(c75646118.op)
 	c:RegisterEffect(e3)
+end
+function c75646118.filter1(c)
+	return c:IsFaceup() and c:IsSetCard(0x62c3) 
+end
+function c75646118.spcon(e,c)
+	if c==nil then return true end
+	return Duel.GetLocationCount(c:GetControler(),0x4)>0 and
+		Duel.IsExistingMatchingCard(c75646118.filter1,c:GetControler(),0x4,0,1,nil)
 end
 function c75646118.filter(c)
 	return c:IsFaceup() and c:GetBaseAttack()>0

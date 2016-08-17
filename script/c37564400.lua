@@ -95,9 +95,8 @@ function c37564400.rgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RegisterFlagEffect(37560400,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
 end
 function c37564400.descon(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():GetFlagEffect(37564400)>0 then return end
 	local ct=e:GetHandler():GetOverlayCount()
-	return (e:GetLabel()==2 and ct>2) or (e:GetLabel()==1 and ct<3)
+	return ((e:GetLabel()==2 and ct>2) or (e:GetLabel()==1 and ct<3)) and e:GetHandler():GetFlagEffect(37564400)>0
 end
 function c37564400.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c37564400.desfilter(chkc) end

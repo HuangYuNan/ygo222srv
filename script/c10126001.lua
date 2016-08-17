@@ -35,7 +35,7 @@ function c10126001.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c10126001.filter1(c,tp)
 	local ec=c:GetEquipTarget()
-	return ec and ec:IsControler(tp) 
+	return ec and ec:IsControler(tp) and c:IsAbleToGraveAsCost()
 end
 function c10126001.filter2(c,e,tp,ct)
 	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_EARTH) and c:IsLevelBelow(ct) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(10126001)

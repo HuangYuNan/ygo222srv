@@ -43,13 +43,6 @@ function c1100800.initial_effect(c)
 	e2:SetValue(aux.tgoval)
 	c:RegisterEffect(e2)
 	--atkup
-	local e5=Effect.CreateEffect(c)
-	e5:SetType(EFFECT_TYPE_SINGLE)
-	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e5:SetCode(EFFECT_UPDATE_ATTACK)
-	e5:SetRange(LOCATION_MZONE)
-	e5:SetValue(c1100800.atkval)
-	c:RegisterEffect(e5) 
 end
 function c1100800.splimit(e,se,sp,st)
 	local sc=se:GetHandler()
@@ -66,10 +59,4 @@ function c1100800.atlimit(e,c)
 end
 function c1100800.tglimit(e,c)
 	return c:IsSetCard(0x1243) and c~=e:GetHandler()
-end
-function c1100800.atkval(e,c)
-	local lps=Duel.GetLP(c:GetControler())
-	local lpo=Duel.GetLP(1-c:GetControler())
-	if lps>=lpo then return 0
-	else return lpo-lps end
 end

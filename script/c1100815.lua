@@ -43,7 +43,7 @@ function c1100815.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c1100815.mfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(4)and c:IsSetCard(0x1243) and not c:IsType(TYPE_XYZ)
+	return c:IsFaceup() and c:IsType(TYPE_MONSTER) and c:IsLevelAbove(7)and c:IsSetCard(0x1243) and not c:IsType(TYPE_XYZ)
 end
 function c1100815.xyzfilter1(c,g)
 	return g:IsExists(c1100815.xyzfilter2,1,c,c:GetLevel())

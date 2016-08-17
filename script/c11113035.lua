@@ -10,6 +10,7 @@ function c11113035.initial_effect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCountLimit(1,11113035)
 	e1:SetCondition(c11113035.rmcon)
 	e1:SetTarget(c11113035.rmtg)
 	e1:SetOperation(c11113035.rmop)
@@ -57,27 +58,41 @@ function c11113035.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return g:FilterCount(Card.IsAbleToRemove,nil)>0
 	end
 end
-function c11113035.rmfilter(c)
-	return c:IsType(TYPE_MONSTER) and c:IsSetCard(0x15c)
+function c11113035.filter(c)
+	return c:IsSetCard(0x15c) and c:IsAbleToRemove()
+end
+function c11113035.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c11113035.filter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_DECK)
 end
 function c11113035.rmop(e,tp,eg,ep,ev,re,r,rp)
-    local c=e:GetHandler()
-	if Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)<3 
-	    or not Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_DECK,0,1,nil) then return end
-	Duel.ConfirmDecktop(tp,3)
-	local g=Duel.GetDecktopGroup(tp,3)
-	local sg=g:Filter(c11113035.rmfilter,nil)
-	Duel.DisableShuffleCheck()
-	if Duel.Remove(sg,POS_FACEUP,REASON_EFFECT+REASON_REVEAL)~=0 
-	   and c:IsFaceup() and c:IsRelateToEffect(e) then
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_UPDATE_ATTACK)
-		e1:SetValue(sg:GetCount()*200)
-		e1:SetReset(RESET_EVENT+0x1ff0000)
-		c:RegisterEffect(e1)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectMatchingCard(tp,c11113035.filter,tp,LOCATION_DECK,0,1,1,nil)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+		e1:SetRange(LOCATION_REMOVED)
+		e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+		e1:SetCountLimit(1)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_STANDBY+RESET_SELF_TURN,2)
+		e1:SetCondition(c11113035.thcon)
+		e1:SetOperation(c11113035.thop)
+		e1:SetLabel(0)
+		tc:RegisterEffect(e1)
 	end
-	Duel.ShuffleDeck(tp)
+end
+function c11113035.thcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.GetTurnPlayer()==tp
+end
+function c11113035.thop(e,tp,eg,ep,ev,re,r,rp)
+	local ct=e:GetLabel()
+	e:GetHandler():SetTurnCounter(ct+1)
+	if ct==1 then
+		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,e:GetHandler())
+	else e:SetLabel(1) end
 end
 function c11113035.dfilter(c)
     return c:IsSetCard(0x15c) and c:IsAbleToRemove()

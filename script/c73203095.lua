@@ -1,6 +1,5 @@
---魔战姬 金灵
 function c73203095.initial_effect(c)
-	--to hand 
+    --to hand 
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73203095,0))
 	e1:SetCategory(CATEGORY_SEARCH+CATEGORY_TOHAND)
@@ -21,7 +20,7 @@ function c73203095.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,73203095)
+	e2:SetCountLimit(1,73200000)
 	e2:SetCost(c73203095.spcost)
 	e2:SetTarget(c73203095.sptg)
 	e2:SetOperation(c73203095.spop)
@@ -33,7 +32,7 @@ function c73203095.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return rc:IsSetCard(0x732)
 end
 function c73203095.thfilter(c)
-	return c:IsSetCard(0x732) and not c:IsCode(73203095) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x732) and not c:IsCode(73203095) and c:IsAbleToHand()
 end
 function c73203095.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c73203095.thfilter,tp,LOCATION_DECK,0,1,nil) end
@@ -56,8 +55,8 @@ function c73203095.filter(c,e,tp)
 end
 function c73203095.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c73203095.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)  
+	    and Duel.IsExistingMatchingCard(c73203095.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,e:GetHandler(),e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)	
 end
 function c73203095.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end

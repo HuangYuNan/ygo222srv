@@ -22,7 +22,14 @@ function c10160004.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e6=e2:Clone()
 	e6:SetCode(EVENT_SSET)
-	c:RegisterEffect(e6)  
+	c:RegisterEffect(e6) 
+	local e7=e2:Clone()
+	e7:SetCode(EVENT_CHANGE_POS)
+	e7:SetCondition(c10160004.spcon)
+	c:RegisterEffect(e7) 
+	local e8=e7:Clone()
+	e8:SetCode(EVENT_SPSUMMON_SUCCESS)
+	c:RegisterEffect(e8) 
 	--search
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(10160004,1))
@@ -48,22 +55,18 @@ function c10160004.antarget(e,c)
 end
 
 function c10160004.acfilter(c,tp)
-	return c:IsType(TYPE_FIELD) and c:GetActivateEffect():IsActivatable(tp)
+	return c:IsCode(10161004) and c:GetActivateEffect() and c:IsActivatable(tp)
 end
 
 function c10160004.actg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
 end
 
 function c10160004.acop(e,tp,eg,ep,ev,re,r,rp)
+	if  Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(10160004,2))
-	local tc=Duel.SelectMatchingCard(tp,c10160004.acfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc and not tc:IsHasEffect(EFFECT_NECRO_VALLEY) then
-		local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
-		if fc then
-			Duel.SendtoGrave(fc,REASON_RULE)
-			Duel.BreakEffect()
-		end
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
@@ -74,6 +77,9 @@ function c10160004.acop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 
+function c10160004.spcon(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(Card.IsFacedown,1,nil)
+end
 function c10160004.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.PayLPCost(tp,math.floor(Duel.GetLP(tp)/2))
@@ -87,7 +93,9 @@ end
 
 function c10160004.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,true,true,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,0,tp,true,true) and c:IsLocation(LOCATION_HAND) then
+		Duel.SendtoGrave(c,REASON_RULE)
 	end
 end

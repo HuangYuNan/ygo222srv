@@ -34,7 +34,7 @@ function c37564511.activate(e,tp,eg,ep,ev,re,r,rp)
 			local rg=Duel.SelectMatchingCard(tp,c37564511.rfilter,tp,0,LOCATION_ONFIELD,1,1,nil)
 			if rg:GetCount()>0 then
 				Duel.BreakEffect()
-				Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+				Duel.Remove(rg,POS_FACEUP,REASON_EFFECT)
 			end
 		end
 	end

@@ -22,7 +22,7 @@ function cm.cf(c)
 end
 function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=e:GetLabelObject()
-	if chk==0 then return g:IsExists(cm.cf,1,nil,tp)
+	if chk==0 then return g:IsExists(cm.cf,1,nil,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local sg=g:Select(tp,1,1,nil)
 	Duel.SendtoGrave(sg,REASON_COST)

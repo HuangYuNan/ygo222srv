@@ -45,7 +45,7 @@ function c10163003.accost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 end
 function c10163003.acfilter(c,e,tp,eg,ep,ev,re,r,rp)
-	if c:GetType()==TYPE_SPELL and c:IsAbleToGraveAsCost() then
+	if c:GetType()==TYPE_SPELL and c:IsAbleToRemoveAsCost() then
 		if c:CheckActivateEffect(false,true,false)~=nil then return true end
 		local te=c:GetActivateEffect()
 		local con=te:GetCondition()
@@ -66,10 +66,10 @@ function c10163003.actg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
 		e:SetLabel(0)
-		return Duel.IsExistingMatchingCard(c10163003.acfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp,eg,ep,ev,re,r,rp)
+		return Duel.IsExistingMatchingCard(c10163003.acfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c10163003.acfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,c10163003.acfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	local te,ceg,cep,cev,cre,cr,crp
 	local fchain=c10163003.acfilter(tc)

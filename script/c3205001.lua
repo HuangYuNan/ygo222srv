@@ -35,10 +35,10 @@ function c3205001.initial_effect(c)
 end
 function c3205001.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205001.filter1(c)
-	return c:IsSetCard(0x109e) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
+	return c:IsSetCard(0x340) and c:IsType(TYPE_SPELL) and c:IsAbleToHand()
 end
 function c3205001.tg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c3205001.filter1,tp,LOCATION_DECK,0,1,nil) end

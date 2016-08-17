@@ -36,10 +36,10 @@ function c3205004.initial_effect(c)
 end
 function c3205004.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205004.condition(e,tp,eg,ep,ev,re,r,rp)
-	return bit.band(r,REASON_EFFECT)>0 and re:GetHandler():IsSetCard(0x109e)
+	return bit.band(r,REASON_EFFECT)>0 and re:GetHandler():IsSetCard(0x340)
 		and e:GetHandler():GetPreviousLocation()==LOCATION_DECK and e:GetHandler():GetPreviousControler()==tp
 end
 function c3205004.target(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -60,7 +60,7 @@ function c3205004.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c3205004.filter(c,e,tp)
 	local lv=c:GetLevel()
-	return not c:IsCode(3205004) and c:IsSetCard(0x109e) and lv==4 and c:IsCanBeSpecialSummoned(e,105,tp,false,false)
+	return not c:IsCode(3205004) and c:IsSetCard(0x340) and lv==4 and c:IsCanBeSpecialSummoned(e,105,tp,false,false)
 end
 function c3205004.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1

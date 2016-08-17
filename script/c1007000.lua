@@ -37,7 +37,8 @@ function mfszy.qingsptg(filter)
 	return  function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg=Duel.GetRitualMaterial(tp)
-		return Duel.IsExistingMatchingCard(mfszy.qingfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,mg)
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		return ft>-1 and Duel.IsExistingMatchingCard(mfszy.qingfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,mg)
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 	end

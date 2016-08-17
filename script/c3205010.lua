@@ -22,7 +22,7 @@ function c3205010.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c3205010.filtercon(c)
-	return c:IsSetCard(0x109e) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
+	return c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER) and c:IsFaceup()
 end
 function c3205010.filter1(c,tp)
 	return c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:GetSummonPlayer()~=tp

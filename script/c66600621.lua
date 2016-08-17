@@ -1,4 +1,4 @@
-local m=66600612
+local m=66600621
 local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c66600601") end) then require("script/c66600601") end
 function cm.initial_effect(c)
@@ -25,16 +25,16 @@ function cm.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c66600621.filter(c)
-	return c:IsFaceup() and c:IsHasEffect(66600600)
+	return c:IsFaceup() and c:IsHasEffect(66600600) and c:IsAbleToRemove()
 end
 function c66600621.tg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
 	if chk==0 then return Duel.IsExistingTarget(c66600621.filter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingTarget(Card.IsAbleToHand,tp,0,LOCATION_MZONE,1,nil) end
+		and Duel.IsExistingTarget(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g1=Duel.SelectTarget(tp,c66600621.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g2=Duel.SelectTarget(tp,Card.IsAbleToHand,tp,0,LOCATION_MZONE,1,1,nil)
+	local g2=Duel.SelectTarget(tp,Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g1,2,0,0)
 end

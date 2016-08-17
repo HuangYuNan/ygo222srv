@@ -18,11 +18,11 @@ function c1007001.initial_effect(c)
 	e2:SetOperation(c1007001.spop)
 	c:RegisterEffect(e2)
 end
-function c1007001.efilter(e,te)
-	return te:IsActiveType(TYPE_EFFECT)
+function c1007001.cfilter2(c)
+	return c:IsFaceup() and c:IsSetCard(0xc245)
 end
 function c1007001.condition(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2
+	return (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2) and Duel.IsExistingMatchingCard(c1007001.cfilter2,tp,LOCATION_MZONE,0,1,nil)
 end
 function c1007001.spfilter(c,e,tp)
 	return c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

@@ -59,13 +59,13 @@ function c75646116.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,0x4)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,0x200,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,900)
+	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,450)
 end
 function c75646116.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
 	Duel.SpecialSummon(c,0,tp,tp,false,false,0x5)
-		if Duel.Damage(1-tp,900,0x40)~=0 then 
+		if Duel.Damage(1-tp,450,0x40)~=0 then 
 		Duel.RaiseEvent(c,0x10000000+75646112,e,0,tp,0,0)
 		end
 	end

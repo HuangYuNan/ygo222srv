@@ -29,7 +29,7 @@ function c1100340.condition(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
 	local ct=g:GetCount()
 	local tg=g:GetFirst()
-	return ct==1 and tg:IsFaceup() and tg:IsRace(RACE_FAIRY)
+	return ct==1 and tg:IsFaceup() and tg:IsRace(RACE_FAIRY) and tg:IsAttribute(ATTRIBUTE_WIND)
 end
 function c1100340.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetControler()~=tp and chkc:IsOnField() and chkc:IsAbleToHand() end

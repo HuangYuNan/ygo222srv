@@ -68,12 +68,12 @@ function c75646114.datg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingTarget(c75646114.filter1,tp,0x4,0,1,nil) end
 	Duel.Hint(3,tp,551)
 	local g=Duel.SelectTarget(tp,c75646114.filter1,tp,0x4,0,1,1,nil)
-	local atk=g:GetFirst():GetBaseAttack()
+	local atk=g:GetFirst():GetBaseAttack()/2
 	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,atk)
 end
 function c75646114.daop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if Duel.Damage(1-tp,tc:GetBaseAttack(),0x40)~=0 then
+	if Duel.Damage(1-tp,tc:GetBaseAttack()/2,0x40)~=0 then
 	Duel.RaiseEvent(e:GetHandler(),0x10000000+75646112,e,0,tp,0,0)
 	end
 end

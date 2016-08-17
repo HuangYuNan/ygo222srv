@@ -40,11 +40,11 @@ local e2=Effect.CreateEffect(c)
 end
 function c3205006.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205006.filter1(c,e,tp)
 	local lv=c:GetLevel()
-	return lv==4 and c:IsSetCard(0x109e) and not c:IsCode(3205006) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return lv==4 and c:IsSetCard(0x340) and not c:IsCode(3205006) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c3205006.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and c3205006.filter1(chkc,e,tp) end
@@ -78,7 +78,7 @@ function c3205006.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function c3205006.filter(c,e,tp)
-	return c:IsSetCard(0x109e) and not c:IsCode(3205006) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x340) and not c:IsCode(3205006) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c3205006.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and c3205006.filter(chkc,e,tp) end

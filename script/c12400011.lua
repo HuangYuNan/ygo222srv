@@ -22,7 +22,7 @@ function c12400011.initial_effect(c)
     e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
     e4:SetCode(EVENT_PHASE+PHASE_END)
     e4:SetRange(LOCATION_GRAVE)
-    e4:SetCountLimit(1,12400011)
+    e4:SetCountLimit(1)
     e4:SetCondition(c12400011.thcon)
     e4:SetCost(c12400011.cost2)
     e4:SetTarget(c12400011.thtg)
@@ -82,8 +82,7 @@ function c12400011.filter8(c,e,tp)
     return c:IsSetCard(0x3390) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c12400011.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return e:GetHandler():IsRelateToEffect(e)
-        and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
         and Duel.IsExistingMatchingCard(c12400011.filter8,tp,LOCATION_DECK,0,1,nil,e,tp) end
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end

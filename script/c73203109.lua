@@ -1,4 +1,3 @@
---幻魔战姬 伊莉尔
 function c73203109.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),aux.NonTuner(Card.IsRace,RACE_WARRIOR),1)
@@ -33,13 +32,13 @@ function c73203109.initial_effect(c)
 	local e4=e2:Clone()
 	e4:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e4)
-end 
+end	
 function c73203109.cfilter(c)
 	return c:IsSetCard(0x732) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c73203109.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c3101.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	local g=Duel.SelectTarget(tp,c3101.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
+	if chk==0 then return Duel.IsExistingTarget(c73203109.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
+	local g=Duel.SelectTarget(tp,c73203109.cfilter,tp,LOCATION_GRAVE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c73203109.atktg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -57,11 +56,11 @@ function c73203109.atkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetValue(0)
 		tc:RegisterEffect(e1)
 		if not tc:IsPosition(POS_FACEUP_ATTACK) and Duel.SelectYesNo(tp,aux.Stringid(73203109,1)) then
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-			local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,1,nil)
-			if sg:GetCount()>0 then
-				Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
-			end 
+		    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+	        local sg=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_REMOVED,0,1,1,nil)
+	        if sg:GetCount()>0 then
+		        Duel.SendtoDeck(sg,nil,2,REASON_EFFECT)
+			end	
 		end
 	end
 end

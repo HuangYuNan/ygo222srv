@@ -37,7 +37,7 @@ function c3205015.initial_effect(c)
 	c:RegisterEffect(e3)
 	end
 	function c3205015.ffilter(c)
-	return  c:IsSetCard(0x109e) and not c:IsCode(3205015)
+	return  c:IsSetCard(0x340) and not c:IsCode(3205015)
 end
 	function c3205015.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -46,7 +46,7 @@ end
 end
 function c3205015.filter(c,e,tp)
 	local lv=c:GetLevel()
-	return c:IsSetCard(0x109e) and lv==4 and c:IsCanBeSpecialSummoned(e,105,tp,false,false)
+	return c:IsSetCard(0x340) and lv==4 and c:IsCanBeSpecialSummoned(e,105,tp,false,false)
 end
 function c3205015.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
@@ -68,7 +68,7 @@ function c3205015.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c3205015.filter1(c,ec)
-	return c:IsSetCard(0x109e) and not c:IsCode(3205015) and not ec:IsHasCardTarget(c)
+	return c:IsSetCard(0x340) and not c:IsCode(3205015) and not ec:IsHasCardTarget(c)
 end
 function c3205015.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

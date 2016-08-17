@@ -28,7 +28,7 @@ function c3205014.initial_effect(c)
 	c:RegisterEffect(e5)
 	end
 	function c3205014.ffilter(c)
-	return  c:IsSetCard(0x109e)
+	return  c:IsSetCard(0x340)
 end
 	function c3205014.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ

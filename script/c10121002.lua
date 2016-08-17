@@ -49,7 +49,7 @@ function c10121002.adop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(Card.IsFaceup,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,nil)
 	local tc=g:GetFirst()
 	while tc do
-		tc:AddCounter(0x346+COUNTER_NEED_ENABLE,1)
+		tc:AddCounter(0x1346,1)
 		tc=g:GetNext()
 	end
 end

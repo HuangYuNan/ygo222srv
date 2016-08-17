@@ -52,12 +52,12 @@ function c10121005.rmcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function c10121005.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetCounter(tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0x346) and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
+	if chk==0 then return Duel.GetCounter(tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0x1346) and Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,0,LOCATION_GRAVE)
 end
 
 function c10121005.rmop(e,tp,eg,ep,ev,re,r,rp)
-	local counter=Duel.GetCounter(tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0x346)
+	local counter=Duel.GetCounter(tp,LOCATION_ONFIELD,LOCATION_ONFIELD,0x1346)
 	if counter<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToRemove,tp,LOCATION_GRAVE,LOCATION_GRAVE,1,counter,nil)

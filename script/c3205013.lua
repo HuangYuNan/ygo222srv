@@ -1,7 +1,7 @@
 --幻式
 function c3205013.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x109e),aux.NonTuner(Card.IsSetCard,0x109e),1)
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x340),aux.NonTuner(Card.IsSetCard,0x340),1)
 	c:EnableReviveLimit()
 	--cannot 
 	local e0=Effect.CreateEffect(c)
@@ -17,7 +17,6 @@ function c3205013.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetCountLimit(1,3205013)
-	--e1:SetCost(c3205013.cost)
 	e1:SetCondition(c3205013.descon)
 	e1:SetTarget(c3205013.destg)
 	e1:SetOperation(c3205013.desop)

@@ -29,7 +29,7 @@ function c3205009.initial_effect(c)
 end
 function c3205009.filter(c)
 	local lv=c:GetLevel()	
-	return c:IsSetCard(0x109e) and lv==4 and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x340) and lv==4 and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c3205009.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c3205009.filter,tp,LOCATION_DECK,0,1,nil) end

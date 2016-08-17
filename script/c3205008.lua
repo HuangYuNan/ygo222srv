@@ -47,7 +47,7 @@ function c3205008.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c3205008.filter1(c)
-	return c:IsFaceup() and c:IsSetCard(0x109e) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER)
 end
 function c3205008.desrepcon(e)
 	return Duel.IsExistingMatchingCard(c3205008.filter1,e:GetHandler():GetControler(),LOCATION_ONFIELD,0,1,nil)
@@ -56,5 +56,5 @@ function c3205008.effectfilter(e,ct)
 	local p=e:GetHandlerPlayer()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
 	local tc=te:GetHandler()
-	return p==tp and bit.band(loc,LOCATION_ONFIELD)~=0 and tc:IsSetCard(0x109e) and tc:IsType(TYPE_MONSTER) and tc~=e:GetHandler()
+	return p==tp and bit.band(loc,LOCATION_ONFIELD)~=0 and tc:IsSetCard(0x340) and tc:IsType(TYPE_MONSTER) and tc~=e:GetHandler()
 end

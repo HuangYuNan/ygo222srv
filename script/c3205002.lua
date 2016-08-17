@@ -32,10 +32,10 @@ function c3205002.initial_effect(c)
 end
 	function c3205002.limit(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x109e)
+	return not c:IsSetCard(0x340)
 end
 function c3205002.descon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler():IsSetCard(0x109e) and not re:GetHandler():IsCode(3205002)
+	return re:GetHandler():IsSetCard(0x340) and not re:GetHandler():IsCode(3205002)
 end
 function c3205002.desfilter(c)
 	return c:IsDestructable()

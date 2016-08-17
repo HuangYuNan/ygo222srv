@@ -1,22 +1,19 @@
 --小亚里亚
 function c22163920.initial_effect(c)
-	--pendulum summon
-    aux.EnablePendulumAttribute(c)
 	--splimit
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetRange(LOCATION_PZONE)
-    e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-    e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-    e2:SetTargetRange(1,0)
-    e2:SetTarget(c22163920.splimit)
-    c:RegisterEffect(e2)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetTargetRange(1,0)
+	e2:SetTarget(c22163920.splimit)
+	c:RegisterEffect(e2)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e1:SetCountLimit(1,22163920)
 	e1:SetTarget(c22163920.sptg)
 	e1:SetOperation(c22163920.spop)
@@ -39,7 +36,7 @@ function c22163920.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c22163920.splimit(e,c,tp,sumtp,sumpos)
-    return not c:IsSetCard(0x370) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
+	return not c:IsSetCard(0x370) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c22163920.filter(c,e,tp)
 	return c:IsSetCard(0x370) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
