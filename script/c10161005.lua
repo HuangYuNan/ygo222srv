@@ -32,7 +32,7 @@ function c10161005.initial_effect(c)
 	e4:SetCode(EFFECT_NO_EFFECT_DAMAGE)
 	c:RegisterEffect(e4) 
 end
-
+c10161005.card_code_list={10160001}
 function c10161005.damval(e,re,val,r,rp,rc)
 	if bit.band(r,REASON_EFFECT)~=0 then return 0 end
 	return val

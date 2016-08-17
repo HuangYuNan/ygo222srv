@@ -42,7 +42,7 @@ function c10161002.initial_effect(c)
 	e4:SetOperation(c10161002.operation)
 	c:RegisterEffect(e4)
 end
-
+c10161002.card_code_list={10160001}
 function c10161002.operation(e,tp,eg,ep,ev,re,r,rp)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -50,11 +50,16 @@ function c10161002.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetTargetRange(1,0)
 	e1:SetValue(0)
-	e1:SetReset(RESET_PHASE+PHASE_END)
+		if Duel.GetTurnPlayer()==tp then
+			e1:SetLabel(Duel.GetTurnCount())
+			e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN,2)
+		else
+			e1:SetLabel(0)
+			e1:SetReset(RESET_PHASE+PHASE_END+RESET_SELF_TURN)
+		end
 	Duel.RegisterEffect(e1,tp)
 	local e2=e1:Clone()
 	e2:SetCode(EFFECT_NO_EFFECT_DAMAGE)
-	e2:SetReset(RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
 

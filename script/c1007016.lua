@@ -91,7 +91,7 @@ function c1007016.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1007016.xycon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
+	return e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM or e:GetHandler():GetSummonType()~=SUMMON_TYPE_XYZ 
 end
 function c1007016.filter(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)

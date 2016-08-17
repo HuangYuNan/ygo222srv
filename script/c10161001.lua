@@ -65,7 +65,7 @@ function c10161001.initial_effect(c)
 	e8:SetOperation(c10161001.reop)
 	c:RegisterEffect(e8)
 end
-
+c10161001.card_code_list={10160001}
 function c10161001.con1(e)
 	return Duel.GetLP(e:GetHandlerPlayer())>=6000
 end
@@ -109,9 +109,14 @@ function c10161001.drop(e,tp,eg,ep,ev,re,r,rp)
 	--Duel.Recover(p,2000,REASON_EFFECT)
 	end
 end
-
+function c10161001.filter(c)
+	return c:IsSetCard(0x9333) and c:IsFaceup()
+end
 function c10161001.reop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_CARD,0,10161001)
 	Duel.Recover(tp,2000,REASON_EFFECT)
-	Duel.Recover(1-tp,2000,REASON_EFFECT)
+	if not Duel.IsExistingMatchingCard(c10161001.filter,tp,LOCATION_MZONE,0,1,nil) then
+	   Duel.Recover(1-tp,2000,REASON_EFFECT)
+	end
 end
 

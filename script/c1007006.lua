@@ -112,9 +112,8 @@ function c1007006.spcon1(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c1007006.cfilter,1,nil,tp)
 end
 function c1007006.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local rc=re:GetHandler()
-	return re 
-	and rc:IsSetCard(0xa245) or e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM 
+	local st=e:GetHandler():GetSummonType()
+	return (st>=(SUMMON_TYPE_SPECIAL+350) and st<(SUMMON_TYPE_SPECIAL+360)) or st==SUMMON_TYPE_PENDULUM 
 end
 function c1007006.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -123,11 +122,11 @@ function c1007006.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c1007006.spop1(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
-		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(e:GetHandler(),357,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c1007006.filter2(c,tp)
-	return (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
+	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007006.detg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter2,tp,LOCATION_DECK,0,1,nil,tp) end

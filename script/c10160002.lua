@@ -45,7 +45,7 @@ function c10160002.antarget(e,c)
 end
 
 function c10160002.filter(c)
-	return c:IsCode(10161005) and c:IsSSetable()
+	return aux.IsCodeListed(c,10160001) and c:IsSSetable() and bit.band(c:GetType(),0x20004)==0x20004
 end
 
 function c10160002.sstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

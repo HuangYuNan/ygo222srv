@@ -54,26 +54,29 @@ function c10160004.antarget(e,c)
 	return c~=e:GetHandler()
 end
 
-function c10160004.acfilter(c,tp)
-	return c:IsCode(10161004) and c:GetActivateEffect() and c:IsActivatable(tp)
+function c10160004.acfilter(c,tp,ft)
+	return aux.IsCodeListed(c,10160001) and c:GetActivateEffect() and c:GetActivateEffect():IsActivatable(tp) and (bit.band(c:GetType(),0x80002)==0x80002 or (ft>0 and bit.band(c:GetType(),0x20002)==0x20002))
 end
 
 function c10160004.actg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) and Duel.GetLocationCount(tp,LOCATION_SZONE)>0 end
+	if chk==0 then return Duel.IsExistingMatchingCard(c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp,Duel.GetLocationCount(tp,LOCATION_SZONE)) end
 end
 
 function c10160004.acop(e,tp,eg,ep,ev,re,r,rp)
-	if  Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(10160004,2))
-	local tc=Duel.SelectMatchingCard(tp,c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c10160004.acfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp,Duel.GetLocationCount(tp,LOCATION_SZONE)):GetFirst()
 	if tc and not tc:IsHasEffect(EFFECT_NECRO_VALLEY) then
+		local fc=Duel.GetFieldCard(tp,LOCATION_SZONE,5)
+		if fc and tc:IsType(TYPE_FIELD) then
+			Duel.SendtoGrave(fc,REASON_RULE)
+			Duel.BreakEffect()
+		end
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
 		local cost=te:GetCost()
 		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
-		Duel.ShuffleDeck(tp)
+		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end
 

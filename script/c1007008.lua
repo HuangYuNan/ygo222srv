@@ -91,7 +91,7 @@ function c1007008.op(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		if ft>0 and tc:IsCanBeSpecialSummoned(e,0,tp,false,false)
 			and (not tc:IsAbleToHand() or Duel.SelectYesNo(tp,aux.Stringid(1000504,1))) then
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(tc,357,tp,tp,false,false,POS_FACEUP)
 		else
 			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 			Duel.ConfirmCards(1-tp,tc)
@@ -99,9 +99,7 @@ function c1007008.op(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1007008.thcon(e,tp,eg,ep,ev,re,r,rp)
-	local rc=re:GetHandler()
-	return re 
-	and (e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM or e:GetHandler():GetSummonType()~=SUMMON_TYPE_XYZ)
+	return e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM or e:GetHandler():GetSummonType()~=SUMMON_TYPE_XYZ 
 end
 function c1007008.filter1(c)
 	return c:IsSetCard(0x245) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

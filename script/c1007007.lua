@@ -33,11 +33,11 @@ function c1007007.initial_effect(c)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
-	e4:SetType(EFFECT_TYPE_FIELD)
-	e4:SetCode(EFFECT_SPSUMMON_PROC)
-	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_DESTROY)
+	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_EXTRA+LOCATION_GRAVE)
-	e4:SetCondition(c1007007.spcon)
+	e4:SetCost(c1007007.spcost)
+	e4:SetTarget(c1007007.sptg)
 	e4:SetOperation(c1007007.spop)
 	c:RegisterEffect(e4)
 	--atk down
@@ -91,9 +91,8 @@ function c1007007.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1007007.decon(e,tp,eg,ep,ev,re,r,rp)
-	local rc=re:GetHandler()
-	return re 
-	and rc:IsSetCard(0xa245) or e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM 
+	local st=e:GetHandler():GetSummonType()
+	return (st>=(SUMMON_TYPE_SPECIAL+350) and st<(SUMMON_TYPE_SPECIAL+360)) or st==SUMMON_TYPE_PENDULUM 
 end
 function c1007007.filter(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
@@ -122,18 +121,27 @@ function c1007007.deop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
 	end
 end
-function c1007007.spfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0x245) and c:IsType(TYPE_MONSTER) and c:IsDestructable()
+function c1007007.defilter3(c)
+	return c:IsSetCard(0x245) and c:IsType(TYPE_MONSTER) and c:IsDestructable()
 end
-function c1007007.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c1007007.spfilter,c:GetControler(),LOCATION_MZONE,0,2,nil)
-end
-function c1007007.spop(e,tp,eg,ep,ev,re,r,rp,c)
+function c1007007.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007007.defilter3,tp,LOCATION_MZONE,0,2,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c1007007.spfilter,tp,LOCATION_MZONE,0,2,2,nil)
+	local g=Duel.SelectMatchingCard(tp,c1007007.defilter3,tp,LOCATION_MZONE,0,2,2,nil)
 	Duel.Destroy(g,REASON_COST)
+end
+function c1007007.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c1007007.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if not c:IsRelateToEffect(e) then return end
+	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
+		and c:IsCanBeSpecialSummoned(e,357,tp,false,false) then
+		Duel.SendtoGrave(c,REASON_RULE)
+	end
 end
 function c1007007.tkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

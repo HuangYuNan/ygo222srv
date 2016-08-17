@@ -23,7 +23,7 @@ function c10161004.initial_effect(c)
 	e3:SetDescription(aux.Stringid(10161004,1))
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_LEAVE_FIELD)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
 	e3:SetCondition(c10161004.avcon)
 	e3:SetOperation(c10161004.avop)
 	c:RegisterEffect(e3) 
@@ -35,7 +35,7 @@ function c10161004.initial_effect(c)
 	e4:SetOperation(c10161004.damop)
 	c:RegisterEffect(e4)  
 end
-
+c10161004.card_code_list={10160001}
 function c10161004.damfilter(c,sp)
 	return c:GetSummonPlayer()==sp and c:IsSetCard(0x9333)
 end
@@ -80,6 +80,6 @@ function c10161004.activate(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local ac=Duel.GetAttacker()
 	if Duel.NegateAttack() and ac:IsRelateToBattle() and ac:IsFaceup() then
-	   Duel.ChangePosition(ac,POS_FACEDOWN_DEFENSE)
+	   Duel.ChangePosition(ac,POS_FACEDOWN_DEFENCE)
 	end
 end
