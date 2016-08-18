@@ -78,15 +78,15 @@ function c1007006.decon(e,tp,eg,ep,ev,re,r,rp)
 	local sc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
 	return sc and sc:IsSetCard(0xa245) and not sc:IsCode(1007006)
 end
-function c1007006.filter11(c,tp)
+function c1007006.tddfilter(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007006.detg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter11,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.tddfilter,tp,LOCATION_DECK,0,1,nil,tp) end
 end
 function c1007006.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(1007006,3))
-	local tc=Duel.SelectMatchingCard(tp,c1007006.filter11,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c1007006.tddfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
 	if tc and (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) then
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
