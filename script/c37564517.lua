@@ -87,9 +87,10 @@ function c37564517.thop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) and Duel.IsPlayerCanSpecialSummonMonster(tp,37564517,0,0x11,7,1400,700,RACE_FAIRY,ATTRIBUTE_LIGHT) then
-		c:AddMonsterAttribute(0,0,0,0,0)
-		Duel.SpecialSummonStep(c,0,tp,tp,true,false,POS_FACEUP)
-			--c:AddMonsterAttributeComplete()
+		--c:AddMonsterAttribute(0,0,0,0,0)
+		c:AddMonsterAttribute(TYPE_EFFECT)
+		Duel.SpecialSummonStep(c,0,tp,tp,true,true,POS_FACEUP)
+			c:AddMonsterAttributeComplete()
 			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_CHANGE_CODE)
@@ -103,7 +104,7 @@ function c37564517.thop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e2:SetValue(TYPE_EFFECT+TYPE_MONSTER)
 			e2:SetReset(RESET_EVENT+0x1fc0000)
-			c:RegisterEffect(e2,true)
+			--c:RegisterEffect(e2,true)
 		Duel.SpecialSummonComplete()
 	end
 end
