@@ -41,6 +41,7 @@ function c1007029.initial_effect(c)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(2,107029)
+	e5:SetCondition(c1007029.czcon)
 	e5:SetCost(c1007029.cost2)
 	e5:SetTarget(c1007029.tg)
 	e5:SetOperation(c1007029.op)
@@ -99,17 +100,23 @@ function c1007029.cost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsCanRemoveCounter(tp,0x1245,30,REASON_COST) end
 	e:GetHandler():RemoveCounter(tp,0x1245,30,REASON_COST)
 end
+function c1007029.cfilter12(c)
+	return c:IsFaceup() and c:IsSetCard(0x245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
+end
+function c1007029.czcon(e)
+	return Duel.IsExistingMatchingCard(c1007009.cfilter12,tp,LOCATION_SZONE,0,1,nil)
+end
 function c1007029.filter1(c)
 	return c:IsAbleToGrave()
 end
 function c1007029.tg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007029.filter1,tp,0,LOCATION_ONFIELD,1,nil) end
-	local g=Duel.GetMatchingGroup(c1007029.filter1,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007029.filter1,tp,0,LOCATION_MZONE,1,nil) end
+	local g=Duel.GetMatchingGroup(c1007029.filter1,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,g,1,0,0)
 end
 function c1007029.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c1007029.filter1,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c1007029.filter1,tp,0,LOCATION_MZONE,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.Hint(HINT_CARD,0,1007029)

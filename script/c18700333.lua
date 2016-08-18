@@ -29,12 +29,12 @@ function c18700333.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(LOCATION_SZONE,0)
-	e2:SetTarget(aux.TargetBoolFunction(Card.IsCode,9999982))
+	e2:SetTarget(aux.TargetBoolFunction(Card.IsCode,99999982))
 	e2:SetValue(1)
 	c:RegisterEffect(e2)
 end
 function c18700333.filter(c)
-	return c:IsCode(9999982)
+	return c:IsCode(99999982)
 end
 function c18700333.stg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c18700333.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
