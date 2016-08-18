@@ -28,6 +28,7 @@ function c60159915.initial_effect(c)
     e13:SetCondition(c60159915.setcon2)
     c:RegisterEffect(e13)
 end
+c60159915.fit_monster={60159914}
 function c60159915.filter(c,e,tp,m)
 	if not c:IsCode(60159914) or bit.band(c:GetType(),0x81)~=0x81
 		or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_RITUAL,tp,true,true) 

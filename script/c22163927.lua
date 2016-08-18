@@ -1,16 +1,16 @@
 --傲娇三千院凪
 function c22163927.initial_effect(c)
 	--pendulum summon
-	aux.EnablePendulumAttribute(c)
+	aux.EnablePendulumAttribute(c,false)
 	--splimit
-    local e2=Effect.CreateEffect(c)
-    e2:SetType(EFFECT_TYPE_FIELD)
-    e2:SetRange(LOCATION_PZONE)
-    e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-    e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
-    e2:SetTargetRange(1,0)
-    e2:SetTarget(c22163927.splimit)
-    c:RegisterEffect(e2)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetRange(LOCATION_PZONE)
+	e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetTargetRange(1,0)
+	e2:SetTarget(c22163927.splimit)
+	c:RegisterEffect(e2)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -44,7 +44,7 @@ function c22163927.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c22163927.splimit(e,c,tp,sumtp,sumpos)
-    return not c:IsSetCard(0x370) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
+	return not c:IsSetCard(0x370) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 --universal filter
 function c22163927.filter(c)

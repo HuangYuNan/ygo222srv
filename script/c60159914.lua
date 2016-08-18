@@ -136,11 +136,11 @@ function c60159914.cfilter(c)
     return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemoveAsCost()
 end
 function c60159914.costchk(e,te_or_c,tp)
-    return Duel.IsExistingMatchingCard(c60159914.cfilter,1-tp,0,LOCATION_HAND+LOCATION_DECK,1,nil)
+    return Duel.IsExistingMatchingCard(c60159914.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
 end
 function c60159914.costop(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,0,60159914)
-    local g=Duel.SelectMatchingCard(tp,c60159914.cfilter,1-tp,0,LOCATION_HAND+LOCATION_DECK,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,c60159914.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
     Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c60159914.actarget2(e,te,tp)
@@ -150,10 +150,10 @@ function c60159914.cfilter2(c)
     return c:IsType(TYPE_MONSTER) and c:IsAbleToDeckAsCost()
 end
 function c60159914.costchk2(e,te_or_c,tp)
-    return Duel.IsExistingMatchingCard(c60159914.cfilter2,1-tp,0,LOCATION_HAND+LOCATION_MZONE,1,nil)
+    return Duel.IsExistingMatchingCard(c60159914.cfilter2,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
 end
 function c60159914.costop2(e,tp,eg,ep,ev,re,r,rp)
     Duel.Hint(HINT_CARD,0,60159914)
-    local g=Duel.SelectMatchingCard(tp,c60159914.cfilter2,1-tp,0,LOCATION_HAND+LOCATION_MZONE,1,1,nil)
+    local g=Duel.SelectMatchingCard(tp,c60159914.cfilter2,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
     Duel.SendtoDeck(g,nil,2,REASON_COST)
 end

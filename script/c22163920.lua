@@ -1,5 +1,7 @@
 --小亚里亚
 function c22163920.initial_effect(c)
+	--pendulum summon
+	aux.EnablePendulumAttribute(c,false)
 	--splimit
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)

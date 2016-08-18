@@ -76,7 +76,7 @@ function c1007008.splimit(e,c)
 	return not c:IsSetCard(0x245)
 end
 function c1007008.filter(c,e,tp,ft)
-	return c:IsSetCard(0x245) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false)))
+	return c:IsSetCard(0x245) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,357,tp,false,false)))
 end
 function c1007008.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -208,11 +208,11 @@ function c1007008.filter3(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007008.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007008.filter3,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007008.filter3,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
 end
 function c1007008.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(1007006,3))
-	local tc=Duel.SelectMatchingCard(tp,c1007008.filter3,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c1007008.filter3,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc and (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) then
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()

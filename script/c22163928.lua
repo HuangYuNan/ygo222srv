@@ -54,7 +54,7 @@ function c22163928.reop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
-		Duel.SendtoHand(g,REASON_EFFECT)
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
 end
 --Draw (Copy&Paste from c19990056)
@@ -97,5 +97,5 @@ function c22163928.indop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetValue(1)
 	e2:SetReset(RESET_EVENT+0x1fe0000)
-	rc:RegisterEffect(e1)	
+	rc:RegisterEffect(e1)   
 end
