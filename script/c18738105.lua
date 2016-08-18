@@ -33,7 +33,7 @@ function c18738105.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 end
 function c18738105.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chkc then return chkc:IsOnField() and c18738105.rmfilter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c18738105.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(c18738105.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false)  end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
 	local g=Duel.SelectTarget(tp,c18738105.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
