@@ -274,7 +274,7 @@ function c1007016.desop(e,tp,eg,ep,ev,re,r,rp)
 		token:RegisterEffect(e12)
 		Duel.SpecialSummonComplete()
 	end
-	local sg=Duel.GetMatchingGroup(c1007016.dfilter,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
+	local sg=Duel.GetMatchingGroup(c1007016.dfilter1,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
 	if Duel.Destroy(sg,REASON_EFFECT)~=0 then
 		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 	end
