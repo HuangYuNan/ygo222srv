@@ -25,7 +25,7 @@ function c22163923.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 function c22163923.atkcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(Card.IsCode,c:GetControler(),LOCATION_ONFIELD,0,1,nil,22163943)
+	return Duel.IsExistingMatchingCard(Card.IsCode,tp,LOCATION_ONFIELD,0,1,nil,22163943)
 end
 function c22163923.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 

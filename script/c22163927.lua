@@ -65,11 +65,14 @@ function c22163927.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --Bannish to Hand （Copy&Paste from c40907115)
+function c22163927.filter2(c)
+	return c:IsSetCard(0x370) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand() and c:IsFaceup()
+end
 function c22163927.retg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c22163927.filter(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c22163927.filter,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
+	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_REMOVED) and c22163927.filter2(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c22163927.filter2,tp,LOCATION_REMOVED,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,c22163927.filter,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c22163927.filter2,tp,LOCATION_REMOVED,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c22163927.reop(e,tp,eg,ep,ev,re,r,rp)

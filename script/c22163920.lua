@@ -41,21 +41,20 @@ function c22163920.splimit(e,c,tp,sumtp,sumpos)
 	return not c:IsSetCard(0x370) and bit.band(sumtp,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 function c22163920.filter(c,e,tp)
-	return c:IsSetCard(0x370) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(0x370) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()<=4
 end
 function c22163920.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_GRAVE+LOCATION_REMOVED) and chkc:IsControler(tp) and c22163920.filter(chkc,e,tp) end
-	if chk==0 then return Duel.IsExistingTarget(c22163920.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c22163920.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c22163920.spop(e,tp,eg,ep,ev,re,r,rp)
-	if not e:GetHandler():IsRelateToEffect(e) then return end
-	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local g=Duel.GetMatchingGroup(c22163920.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,nil,e,tp)
+    if g:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(95929069,1)) then
+        Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+        local sg=g:Select(tp,1,1,nil)
+        Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+    end
 end
 function c22163920.atktg(e,c)
 	return c:IsFaceup() and c:IsSetCard(0x370)
