@@ -7,15 +7,15 @@ function c66612327.initial_effect(c)
 	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
 	c:RegisterEffect(e1)
 	--spsummon
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(66612327,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetRange(LOCATION_HAND)
-	e1:SetTarget(c66612327.target)
-	e1:SetOperation(c66612327.operation)
-	c:RegisterEffect(e1)
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(66612327,0))
+	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_HAND)
+	e2:SetTarget(c66612327.target)
+	e2:SetOperation(c66612327.operation)
+	c:RegisterEffect(e2)
 	--recover
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(46159582,0))
@@ -34,7 +34,7 @@ function c66612327.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c66612327.filter(chkc) end
 	local c=e:GetHandler()
 	if chk==0 then return Duel.IsExistingTarget(c66612327.filter,tp,LOCATION_MZONE,0,1,nil)
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and c:IsCanBeSpecialSummoned(e,0,tp,true,true) end
 	Duel.SelectTarget(tp,c66612327.filter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,0,0)
 end
@@ -48,11 +48,17 @@ function c66612327.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	e1:SetValue(-1)
 	tc:RegisterEffect(e1)
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLocation(LOCATION_HAND) then
-		Duel.SendtoGrave(c,REASON_RULE)
-		end
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummonStep(c,0,tp,tp,true,true,POS_FACEUP)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e3:SetValue(c66612327.splimit)
+		e3:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e3)
+		Duel.SpecialSummonComplete()
+	end
 end
 function c66612327.recost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeckAsCost() end

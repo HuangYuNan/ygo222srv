@@ -48,11 +48,17 @@ function c66612328.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+0x1fe0000)
 	e1:SetValue(2)
 	tc:RegisterEffect(e1)
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLocation(LOCATION_HAND) then
-		Duel.SendtoGrave(c,REASON_RULE)
-		end
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummonStep(c,0,tp,tp,true,true,POS_FACEUP)
+		local e3=Effect.CreateEffect(c)
+		e3:SetType(EFFECT_TYPE_SINGLE)
+		e3:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+		e3:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+		e3:SetValue(c66612328.splimit)
+		e3:SetReset(RESET_EVENT+0x1fe0000)
+		tc:RegisterEffect(e3)
+		Duel.SpecialSummonComplete()
+	end
 end
 function c66612328.recost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
