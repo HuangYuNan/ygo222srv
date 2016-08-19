@@ -21,7 +21,7 @@ function c66612327.initial_effect(c)
 	e4:SetDescription(aux.Stringid(46159582,0))
 	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_IGNITION)
-	e4:SetRange(LOCATION_GRAVE)\
+	e4:SetRange(LOCATION_GRAVE)
 	e4:SetCost(c66612327.recost)
 	e4:SetTarget(c66612327.rectg)
 	e4:SetOperation(c66612327.recop)
