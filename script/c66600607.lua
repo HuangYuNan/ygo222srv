@@ -11,8 +11,11 @@ function cm.initial_effect(c)
 	e4:SetTarget(cm.bmsstg)
 	e4:SetOperation(cm.bmssop)
 	c:RegisterEffect(e4)
-	sixth.gtgeff(c,aux.FilterEqualFunction(Card.GetLevel,7),nil,cm.swwsstg,cm.swwssop,1,nil,nil,CATEGORY_SPECIAL_SUMMON,LOCATION_HAND)
+	sixth.gtgeff(c,cm.sf,nil,cm.swwsstg,cm.swwssop,1,nil,nil,CATEGORY_SPECIAL_SUMMON,LOCATION_HAND)
 	sixth.tgeff(c,nil,nil,nil,cm.op,1,nil,nil,nil,nil)
+end
+function cm.sf(c)
+	return c:GetLevel()==7
 end
 function cm.bmssfilter(c)
    return c:IsAbleToRemove() and c:IsHasEffect(66600600) and c:IsFaceup()

@@ -18,6 +18,7 @@ function cm.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_CHAIN_UNIQUE+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e1:SetTarget(cm.tg)
 	e1:SetOperation(cm.op)
+	c:RegisterEffect(e1)
 end
 function c66600619.filter(c)
 	return c:IsFaceup() and c:IsAbleToHand() and c:IsHasEffect(66600600)

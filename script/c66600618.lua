@@ -4,6 +4,10 @@ if not pcall(function() require("expansions/script/c66600601") end) then require
 --6th-下一个是谁呢？
 function cm.initial_effect(c)
 	--td
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_ACTIVATE)
+	e0:SetCode(EVENT_FREE_CHAIN)
+	c:RegisterEffect(e0)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(90953320,0))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SPECIAL_SUMMON)
