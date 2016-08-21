@@ -37,16 +37,16 @@ function c37564039.reg(e,tp,eg,ep,ev,re,r,rp)
 	e:Reset()
 end
 function c37564039.mtfilter(c)
-	return c:IsSetCard(0x770)
+	return c:IsSetCard(0x770) or c:IsSetCard(0x771)
 end
 function c37564039.mttg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c37564039.mtfilter,tp,LOCATION_EXTRA,0,1,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c37564039.mtfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil) end
 end
 function c37564039.mtop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=Duel.SelectMatchingCard(tp,c37564039.mtfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c37564039.mtfilter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.Overlay(c,g)
 	end

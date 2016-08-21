@@ -66,12 +66,12 @@ function c66666611.filter(c)
 	return c:IsAbleToRemove()
 end
 function c66666611.remtg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingTarget(c66666611.filter,tp,0,LOCATION_ONFIELD,1,e:GetHandler())
-		and Duel.IsExistingTarget(c66666611.filter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingTarget(c66666611.filter,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.IsExistingTarget(c66666611.filter,tp,LOCATION_ONFIELD,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g1=Duel.SelectTarget(tp,c66666611.filter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	local g1=Duel.SelectTarget(tp,c66666611.filter,tp,LOCATION_ONFIELD,0,1,1,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g2=Duel.SelectTarget(tp,c66666611.filter,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
+	local g2=Duel.SelectTarget(tp,c66666611.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,2,0,0)
 end

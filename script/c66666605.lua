@@ -1,4 +1,5 @@
 --星之华的御梦者-音色
+--modded
 function c66666605.initial_effect(c)
 	--Remove
 	local e1=Effect.CreateEffect(c)

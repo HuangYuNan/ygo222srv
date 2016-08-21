@@ -15,10 +15,11 @@ function c66619906.initial_effect(c)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(66619904,0))
-	e4:SetCategory(CATEGORY_DRAW)
+	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetCode(EVENT_TO_GRAVE)
+	e4:SetCost(c66619906.spcost)
 	e4:SetTarget(c66619906.thtg)
 	e4:SetOperation(c66619906.thop)
 	c:RegisterEffect(e4)
@@ -48,6 +49,15 @@ function c66619906.operation(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 	end
+end
+function c66619906.cfilter1(c)
+	return c:IsFaceup() and c:IsCode(66619916) and c:IsAbleToGraveAsCost()
+end
+function c66619906.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619906.cfilter1,tp,LOCATION_ONFIELD,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,c66619906.cfilter1,tp,LOCATION_ONFIELD,0,1,1,nil)
+	Duel.SendtoGrave(g,REASON_COST)
 end
 function c66619906.spfilter(c,e,tp)
 	return c:IsSetCard(0x666) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

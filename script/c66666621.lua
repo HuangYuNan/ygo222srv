@@ -103,7 +103,7 @@ end
 function c66666621.bsactivate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateActivation(ev)
 	if re:GetHandler():IsRelateToEffect(re) then
-		Duel.Remove(eg,POS_FACEUP,REASON_EFFECT)
+		Duel.Remove(eg,REASON_EFFECT)
 	end
 	Duel.BreakEffect()
 end

@@ -63,7 +63,7 @@ end
 function c80100011.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	--[[return se:IsActiveType(TYPE_MONSTER) and se:IsHasType(EFFECT_TYPE_ACTIONS) 
 		and c:IsLocation(LOCATION_GRAVE+LOCATION_HAND)]]
-    return not c:IsLocation(LOCATION_GRAVE+LOCATION_EXTRA)
+	return not c:IsLocation(LOCATION_GRAVE+LOCATION_EXTRA)
 end
 function c80100011.setlimit(e,c,tp)
 	return c:IsType(TYPE_FIELD)
@@ -88,7 +88,7 @@ function c80100011.lpop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c80100011.filter(c)
-	return c:IsSetCard(0x3400) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(0x3400) and c:IsAbleToHand()
 end
 function c80100011.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c80100011.filter,tp,LOCATION_DECK,0,1,nil) end

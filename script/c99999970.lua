@@ -66,7 +66,7 @@ function c99999970.eqlimit(e,c)
 	return  c:IsCode(99999998) or c:IsCode(99999933)  or c:IsCode(99999971)  or c:IsCode(99999987)
 end
 function c99999970.filter(c)
-	return c:IsFaceup() and c:IsCode(99999998) or c:IsCode(99999933)  or c:IsCode(99999971)  or c:IsCode(99999987)
+	return c:IsFaceup() and (c:IsCode(99999998) or c:IsCode(99999933)  or c:IsCode(99999971)  or c:IsCode(99999987))
 end
 function c99999970.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:GetLocation()==LOCATION_MZONE and c99999970.filter(chkc) end

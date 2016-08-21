@@ -1,15 +1,14 @@
 --先代的群星之领主-羽弥
 function c66666612.initial_effect(c)
-	c:SetUniqueOnField(1,0,66666612)
-	c:SetUniqueOnField(1,0,66666610)
 	--xyz summon
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x661),6,2,c66666612.ovfilter,aux.Stringid(66666612,0))
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x661),6,2)
 	c:EnableReviveLimit()
 	--code
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetCode(EFFECT_ADD_CODE)
+	e1:SetRange(LOCATION_ONFIELD+LOCATION_GRAVE)
 	e1:SetValue(66666610)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)

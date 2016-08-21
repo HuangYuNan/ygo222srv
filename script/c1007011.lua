@@ -70,7 +70,7 @@ function c1007011.repfilter(c,tp)
 		and c:IsControler(tp) and c:IsReason(REASON_EFFECT+REASON_BATTLE)
 end
 function c1007011.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c1007011.repfilter,1,nil,tp) end
+	if chk==0 then return e:GetHandler():IsAbleToRemove() and eg:IsExists(c1007011.repfilter,1,nil,tp) and Duel.IsExistingMatchingCard(c1007011.cffilter,tp,LOCATION_HAND,0,1,nil) end
 	return Duel.SelectYesNo(tp,aux.Stringid(1007011,0))
 end
 function c1007011.repval(e,c)

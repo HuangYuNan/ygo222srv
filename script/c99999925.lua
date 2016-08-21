@@ -42,10 +42,10 @@ function c99999925.eqlimit(e,c)
 	return  c:IsCode(99998995) or c:IsCode(99999926) 
 end
 function c99999925.filter(c)
-	return c:IsFaceup() and c:IsCode(99998995) or c:IsCode(99999926) 
+	return c:IsFaceup() and (c:IsCode(99998995) or c:IsCode(99999926)) 
 end
 function c99999925.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and c99999925.filter(chkc) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c99999925.filter(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(c99999925.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,c99999925.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)

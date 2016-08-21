@@ -52,10 +52,9 @@ function c60150820.sprop(e,tp,eg,ep,ev,re,r,rp,c)
     c:SetMaterial(g1)
     Duel.Remove(g1,POS_FACEUP,REASON_COST)
 end
-function c60150820.spConditionFilter(c,e,tp,lscale,rscale)
+function c60150820.spConditionFilter(c,e,tp)
 	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsLocation(LOCATION_REMOVED)))
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false) and c:IsSetCard(0x3b23)
-		and not c:IsForbidden()
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x3b23) and not c:IsForbidden()
 end
 function c60150820.spCondition()
 	return  

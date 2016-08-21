@@ -23,10 +23,9 @@ function c1007006.initial_effect(c)
 	c:RegisterEffect(e2)
 	--act
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-	e3:SetCondition(c1007006.thcon)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCost(c1007006.sscost)
 	e3:SetTarget(c1007006.detg1)
 	e3:SetOperation(c1007006.deop1)
 	c:RegisterEffect(e3)
@@ -67,8 +66,8 @@ function c1007006.mtval(e,c)
 end
 function c1007006.sccon(e)
 	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return not tc or not tc:IsSetCard(0xa245)
+	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
+	return tc and not tc:IsSetCard(0x245)
 end
 function c1007006.splimit(e,c)
 	return not c:IsSetCard(0x245)
@@ -78,15 +77,15 @@ function c1007006.decon(e,tp,eg,ep,ev,re,r,rp)
 	local sc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
 	return sc and sc:IsSetCard(0xa245) and not sc:IsCode(1007006)
 end
-function c1007006.tddfilter(c,tp)
+function c1007006.filter11(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007006.detg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.tddfilter,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter11,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
 end
 function c1007006.deop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(1007006,3))
-	local tc=Duel.SelectMatchingCard(tp,c1007006.tddfilter,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c1007006.filter11,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc and (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) then
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
@@ -125,15 +124,19 @@ function c1007006.spop1(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(e:GetHandler(),357,tp,tp,false,false,POS_FACEUP)
 	end
 end
+function c1007006.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+end
 function c1007006.filter2(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
 end
 function c1007006.detg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter2,tp,LOCATION_DECK,0,1,nil,tp) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
 end
 function c1007006.deop1(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(1007006,3))
-	local tc=Duel.SelectMatchingCard(tp,c1007006.filter2,tp,LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+	local tc=Duel.SelectMatchingCard(tp,c1007006.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
 	if tc and (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) then
 		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
 		local te=tc:GetActivateEffect()
@@ -198,6 +201,7 @@ function c1007006.tkop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetProperty(EFFECT_FLAG_NO_TURN_RESET)
 		e1:SetType(EFFECT_TYPE_IGNITION)
 		e1:SetRange(LOCATION_MZONE)
+		e1:SetCountLimit(1)
 		e1:SetTarget(c1007006.setg)
 		e1:SetOperation(c1007006.seop)
 		e1:SetReset(RESET_EVENT+0x1ff0000)

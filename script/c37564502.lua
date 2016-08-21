@@ -23,7 +23,7 @@ function c37564502.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local val=Duel.GetFlagEffect(tp,37564502)*100
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,val+100)
 	Duel.SetChainLimit(function(e,p1,p2)
-		return p1~=p2
+		return p1==p2
 	end)
 end
 function c37564502.disop(e,tp,eg,ep,ev,re,r,rp) 

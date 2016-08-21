@@ -26,18 +26,18 @@ function c23310015.handcon(e)
 	return not g:IsExists(c23310015.handfilter,1,nil)
 end
 function c23310015.filter(c)
-	return c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsDestructable() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function c23310015.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and c23310015.filter(chkc) and chkc~=e:GetHandler() end
 	if chk==0 then return Duel.IsExistingTarget(c23310015.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,c23310015.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c23310015.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
-		Duel.SendtoHand(tc,nil,REASON_EFFECT)
+		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

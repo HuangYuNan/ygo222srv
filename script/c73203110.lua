@@ -1,4 +1,3 @@
---幻灭魔战姬 艾妮斯娜
 function c73203110.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsRace,RACE_SPELLCASTER),aux.NonTuner(Card.IsRace,RACE_WARRIOR),2)
@@ -36,22 +35,22 @@ function c73203110.initial_effect(c)
 	e5:SetCode(EVENT_TO_DECK)
 	c:RegisterEffect(e5)
 	--spsummon limit
-	local e6=Effect.CreateEffect(c)
-	e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e6:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e6:SetRange(LOCATION_MZONE)
+    local e6=Effect.CreateEffect(c)
+    e6:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+    e6:SetCode(EVENT_SPSUMMON_SUCCESS)
+    e6:SetRange(LOCATION_MZONE)
 	e6:SetOperation(c73203110.splimit)
-	c:RegisterEffect(e6)
-	local e7=Effect.CreateEffect(c)
-	e7:SetType(EFFECT_TYPE_FIELD)
-	e7:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e7:SetRange(LOCATION_MZONE)
-	e7:SetTargetRange(1,1)
-	e7:SetCondition(c73203110.spccon)
-	e7:SetTarget(c73203110.spctg)
-	c:RegisterEffect(e7)
-end 
+    c:RegisterEffect(e6)
+    local e7=Effect.CreateEffect(c)
+    e7:SetType(EFFECT_TYPE_FIELD)
+    e7:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+    e7:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+    e7:SetRange(LOCATION_MZONE)
+    e7:SetTargetRange(1,1)
+    e7:SetCondition(c73203110.spccon)
+    e7:SetTarget(c73203110.spctg)
+    c:RegisterEffect(e7)
+end	
 function c73203110.discon(e,tp,eg,ep,ev,re,r,rp)
 	local loc=Duel.GetChainInfo(ev,CHAININFO_TRIGGERING_LOCATION)
 	return Duel.IsChainNegatable(ev) and (loc==LOCATION_GRAVE or loc==LOCATION_HAND) and rp~=tp and re:IsActiveType(TYPE_MONSTER)
@@ -76,7 +75,7 @@ end
 function c73203110.loop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_ONFIELD) then
-		--special summon
+	    --special summon
 		local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(73203110,1))
 		e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -88,7 +87,7 @@ function c73203110.loop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetOperation(c73203110.spop)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
-	end 
+	end	
 end
 function c73203110.spfilter(c,e,tp)
 	return c:IsSetCard(0x732) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsLevelBelow(4)
@@ -107,19 +106,19 @@ function c73203110.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummonComplete()
 end
 function c73203110.splimit(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+    local c=e:GetHandler()
 	local tc=eg:GetFirst()
 	while tc do
-		if tc:IsPreviousLocation(LOCATION_EXTRA) then
-			c:RegisterFlagEffect(73203110,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
+	    if tc:IsPreviousLocation(LOCATION_EXTRA) and c ~ =tc then
+		    c:RegisterFlagEffect(73203110,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
 		end
-		tc=eg:GetNext()
-	end	 
+        tc=eg:GetNext()
+    end		
 	--[[if not tc:IsPreviousLocation(LOCATION_EXTRA) then return end
-	c:RegisterFlagEffect(73203110,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)]]--
+    c:RegisterFlagEffect(73203110,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)]]--
 end
 function c73203110.spccon(e)
-	return e:GetHandler():GetFlagEffect(73203110)~=0
+    return e:GetHandler():GetFlagEffect(73203110)~=0
 end
 function c73203110.spctg(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA)

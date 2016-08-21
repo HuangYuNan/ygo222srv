@@ -76,6 +76,7 @@ function c1007019.sptg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function c1007019.spop1(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)~=0 then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)

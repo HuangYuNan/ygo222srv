@@ -45,16 +45,6 @@ function c1007008.initial_effect(c)
 	e5:SetOperation(c1007008.desop)
 	c:RegisterEffect(e5)
 	--spsummon
-	local e6=Effect.CreateEffect(c)
-	e6:SetDescription(aux.Stringid(2766877,0))
-	e6:SetType(EFFECT_TYPE_IGNITION)
-	e6:SetCountLimit(1)
-	e6:SetRange(LOCATION_MZONE)
-	e6:SetCost(c1007008.cost)
-	e6:SetTarget(c1007008.target)
-	e6:SetOperation(c1007008.operation)
-	c:RegisterEffect(e6)
-	--destroy
 	local e7=Effect.CreateEffect(c)
 	e7:SetDescription(aux.Stringid(1007008,2))
 	e7:SetType(EFFECT_TYPE_QUICK_O)
@@ -69,8 +59,8 @@ end
 c1007008.pendulum_level=10
 function c1007008.sccon(e)
 	local seq=e:GetHandler():GetSequence()
-	local tc=Duel.GetFieldCard(e:GetHandlerPlayer(),LOCATION_SZONE,13-seq)
-	return not tc or not tc:IsSetCard(0x245)
+	local tc=Duel.GetFieldCard(tp,LOCATION_SZONE,13-seq)
+	return tc and not tc:IsSetCard(0x245)
 end
 function c1007008.splimit(e,c)
 	return not c:IsSetCard(0x245)

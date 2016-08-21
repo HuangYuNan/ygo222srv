@@ -30,9 +30,20 @@ function c1007014.initial_effect(c)
 	e6:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCode(EFFECT_IMMUNE_EFFECT)
-	e6:SetCondition(c1007014.dacon)
+	e6:SetCondition(c1007014.immcon)
 	e6:SetValue(c1007014.efilter)
 	c:RegisterEffect(e6)
+	--
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE)
+	e7:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e7:SetRange(LOCATION_MZONE)
+	e7:SetCode(EFFECT_IMMUNE_EFFECT)
+	e7:SetValue(function(e,re)
+		return e:GetHandler():GetOverlayCount()>0 and e:GetOwnerPlayer()~=re:GetOwnerPlayer()
+			and re:IsActiveType(TYPE_SPELL+TYPE_TRAP)
+	end)
+	c:RegisterEffect(e7)
 end
 function c1007014.filter1(c)
 	return c:IsCode(1007013)
@@ -68,12 +79,20 @@ function c1007014.dddop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Damage(1-tp,dam,REASON_EFFECT)
 	Duel.Draw(tp,ct,REASON_EFFECT)
 end
-function c1007014.dacon(e)
+function c1007014.immcon(e)
 	return e:GetHandler():GetOverlayCount()>0
 end
 function c1007014.efilter(e,te)
-	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then return true
-	else return aux.qlifilter(e,te) end
+	if te:IsActiveType(TYPE_MONSTER) and te:GetOwnerPlayer()~=e:GetHandlerPlayer() then
+		local lv=e:GetHandler():GetRank()
+		local ec=te:GetOwner()
+		if ec:IsType(TYPE_XYZ) then
+			return ec:GetOriginalRank()<=lv
+		else
+			return ec:GetOriginalLevel()<=lv
+		end
+	end
+	return false
 end
 function c1007014.refilter(c)
 	return bit.band(c:GetSummonType(),SUMMON_TYPE_SPECIAL)==SUMMON_TYPE_SPECIAL and c:IsFaceup() and c:IsAbleToGrave()

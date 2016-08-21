@@ -74,7 +74,7 @@ function c1007029.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c1007029.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	local tc=g:GetFirst()
 	if tc then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
 function c1007029.cost1(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -104,7 +104,7 @@ function c1007029.cfilter12(c)
 	return c:IsFaceup() and c:IsSetCard(0x245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP))
 end
 function c1007029.czcon(e)
-	return Duel.IsExistingMatchingCard(c1007009.cfilter12,tp,LOCATION_SZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(c1007029.cfilter12,tp,LOCATION_SZONE,0,1,nil)
 end
 function c1007029.filter1(c)
 	return c:IsAbleToGrave()

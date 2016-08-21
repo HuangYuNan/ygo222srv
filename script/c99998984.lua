@@ -75,8 +75,8 @@ function c99998984.filter(c)
 	return c:IsFaceup() and (c:IsCode(99998985) or c:IsCode(99999987) or c:IsSetCard(0x2e3))
 end
 function c99998984.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetLocation()==LOCATION_MZONE and c99999968.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c999982e0.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c99998984.filter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(c99998984.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
 	Duel.SelectTarget(tp,c99998984.filter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_EQUIP,e:GetHandler(),1,0,0)

@@ -97,7 +97,7 @@ function c99991085.lpcost(e,tp,eg,ep,ev,re,r,rp)
 end
 function c99991085.detg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsDestructable() and chkc~=e:GetHandler()  end
-	if chk==0 then return Duel.IsExistingTarget(Card.IIsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)  end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil)  end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
@@ -146,17 +146,14 @@ function c99991085.tg3(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c99991085.tgfilter,tp,LOCATION_DECK,0,1,nil) end
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
-function c99991085.thfilter(c)
-	return c:IsAbleToHand() 
-end
 function c99991085.op3(e,tp,eg,ep,ev,re,r,rp)
    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(tp,c99991085.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if g:GetCount()>0 and Duel.SendtoGrave(g,REASON_EFFECT)>0 then
-    if 	Duel.IsExistingMatchingCard(c99991085.thfilter,tp,LOCATION_REMOVED,0,1,nil)
+    if 	Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_REMOVED,0,1,nil)
 	and  Duel.SelectYesNo(tp,aux.Stringid(99991085,4)) then
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local tg=Duel.SelectMatchingCard(tp,c99991085.tgfilter,tp,LOCATION_REMOVED,0,1,1,nil)
+	local tg=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_REMOVED,0,1,1,nil)
 	if tg:GetCount()>0 then
 	Duel.SendtoHand(tg,nil,REASON_EFFECT)
 	Duel.ConfirmCards(1-tp,tg)

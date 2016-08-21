@@ -76,17 +76,17 @@ function c29201212.atkop(e,tp,eg,ep,ev,re,r,rp)
     end
 end
 function c29201212.thcon(e,tp,eg,ep,ev,re,r,rp)
-    local ct1=Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
-    local ct2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)
+    local ct1=Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
+    local ct2=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND+LOCATION_ONFIELD)
     return ct2>ct1 and Duel.GetTurnPlayer()==tp
 end
 function c29201212.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-    local ct1=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+    local ct1=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND+LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
     if chk==0 then return ct1>0 and Duel.IsPlayerCanDraw(tp,ct1) end
     Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct1)
 end
 function c29201212.thop(e,tp,eg,ep,ev,re,r,rp)
-    local ct1=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND)-Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)
+    local ct1=Duel.GetFieldGroupCount(tp,0,LOCATION_HAND+LOCATION_ONFIELD)-Duel.GetFieldGroupCount(tp,LOCATION_HAND+LOCATION_ONFIELD,0)
     if ct1>0 then
         Duel.Draw(tp,ct1,REASON_EFFECT)
     end

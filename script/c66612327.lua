@@ -65,7 +65,7 @@ function c66612327.recost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoDeck(e:GetHandler(),c,nil,2,REASON_COST)
 end
 function c66612327.filter2(c,e,tp)
-	return c:IsCode(66619916) and c:IsAbleToHand()
+	return c:IsCode(66612323) and c:IsAbleToHand()
 end
 function c66612327.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c66612327.filter2,tp,LOCATION_GRAVE,0,1,nil) end

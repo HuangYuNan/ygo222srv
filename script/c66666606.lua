@@ -63,7 +63,7 @@ function c66666606.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c66666606.drcon(e,tp,eg,ep,ev,re,r,rp)
-	return re:GetHandler()~=e:GetHandler() and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND)
+	return (not re or re:GetHandler()~=e:GetHandler()) and e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD+LOCATION_HAND)
 end
 function c66666606.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end

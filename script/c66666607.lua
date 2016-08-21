@@ -17,6 +17,8 @@ function c66666607.initial_effect(c)
 	e2:SetOperation(c66666607.atkop)
 	c:RegisterEffect(e2)
 	local e3=Effect.CreateEffect(c)
+	e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e3:SetCategory(CATEGORY_DRAW)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
@@ -48,9 +50,9 @@ function c66666607.remfilter(c)
 	return c:IsSetCard(0x661) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
 function c66666607.remcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66666607.remfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c66666607.remfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,c66666607.remfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,e:GetHandler())
+	local g=Duel.SelectMatchingCard(tp,c66666607.remfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function c66666607.remtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
