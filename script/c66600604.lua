@@ -43,10 +43,10 @@ function cm.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cm.bmssop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 then
+	if e:GetHandler():IsRelateToEffect(e) then
+		if Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)>0 and tc:IsRelateToEffect(e) then
 			--Duel.BreakEffect()
-			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		end
 	end
 end

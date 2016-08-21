@@ -90,7 +90,6 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 	local g2=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(cm.rfilter,nil)
 	if g2:GetCount()>0 and g1:GetCount()>0 then
 		local val=math.max(g2:GetFirst():GetAttack(),0)
-		Duel.SendtoGrave(g2,REASON_EFFECT)
 		local tc=g1:GetFirst()
 		while tc do
 			local e1=Effect.CreateEffect(c)
@@ -118,8 +117,9 @@ function cm.op(e,tp,eg,ep,ev,re,r,rp)
 				e4:SetReset(RESET_EVENT+0x1fe0000)
 				tc:RegisterEffect(e4)
 			end
-			tc=g1:GetNext()
 			Duel.GetControl(tc,tp)
+			tc=g1:GetNext() 
 		end
+		Duel.SendtoGrave(g2,REASON_EFFECT)
 	end
 end

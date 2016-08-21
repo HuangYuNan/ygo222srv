@@ -135,10 +135,10 @@ function sixth.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function sixth.bmssop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.SendtoGrave(tc,REASON_EFFECT)>0 then
+	if e:GetHandler():IsRelateToEffect(e) then
+		if Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)>0 and tc:IsRelateToEffect(e) then
 			--Duel.BreakEffect()
-			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+			Duel.SendtoGrave(tc,REASON_EFFECT)
 		end
 	end
 end

@@ -28,8 +28,8 @@ function cm.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function cm.bmssop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
-		if Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
+	if e:GetHandler():IsRelateToEffect(e)  then
+		if Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)>0 and tc:IsRelateToEffect(e) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
 			local og=Duel.GetOperatedGroup()
 			og:KeepAlive()
 			local e1=Effect.CreateEffect(e:GetHandler())
@@ -40,8 +40,7 @@ function cm.bmssop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1)
 			e1:SetOperation(cm.retop)
 			Duel.RegisterEffect(e1,tp)
-			--Duel.BreakEffect()
-			Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
+			--Duel.BreakEffect()			
 		end
 	end
 end
