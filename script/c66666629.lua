@@ -61,7 +61,7 @@ function c66666629.xyzoperation(e,tp,eg,ep,ev,re,r,rp,c,og)
 	Duel.DiscardHand(tp,c66666629.cfilter,1,1,REASON_COST,e:GetHandler())
 	local mg=Duel.GetMatchingGroup(c66666629.xyzfilter,tp,LOCATION_MZONE,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-	local g=mg:Select(tp,2,2,nil)
+	local g=mg:Select(tp,1,1,nil)
 	local tc=g:GetFirst()
 	while tc do
 		if tc:IsType(TYPE_XYZ) then

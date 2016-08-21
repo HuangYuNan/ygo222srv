@@ -56,7 +56,7 @@ function c1007012.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1007012.filter2(c)
-	return c:IsRace(RACE_SPELLCASTER)
+	return c:IsFaceup() and c:IsRace(RACE_SPELLCASTER)
 end
 function c1007012.value(e,c)
 	return Duel.GetMatchingGroupCount(c1007012.filter2,0,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,nil)*300
