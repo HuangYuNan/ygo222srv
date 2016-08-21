@@ -1,7 +1,7 @@
 --神奈备命
 function c1100337.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.NonTuner(c1100337.sfilter))
+	aux.AddSynchroProcedure2(c,aux.FilterBoolFunction(Card.IsRace,RACE_FAIRY),aux.NonTuner(c1100337.sfilter),2)
 	c:EnableReviveLimit()
 	c:SetUniqueOnField(1,0,1100337)
 	--cannot special summon

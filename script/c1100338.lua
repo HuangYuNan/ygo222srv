@@ -76,7 +76,7 @@ function c1100338.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 
 function c1100338.cardiansynlevel(c)
-	return 4
+	return 3
 end
 function c1100338.synfilter(c,syncard,tuner,f)
 	return c:IsFaceup() and c:IsNotTuner() and c:IsCanBeSynchroMaterial(syncard,tuner) and (f==nil or f(c))

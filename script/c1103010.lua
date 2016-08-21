@@ -1,5 +1,19 @@
 --绀珠传·月狂之枪
 function c1103010.initial_effect(c)
+	--destory
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(1103010,0))
+	e1:SetCategory(CATEGORY_DESTROY)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e1:SetRange(LOCATION_HAND)
+	e1:SetCode(EVENT_TO_GRAVE)
+	e1:SetCountLimit(1,1103010)
+	e1:SetCondition(c1103010.condition)
+	e1:SetCost(c1103010.descost)
+	e1:SetTarget(c1103010.destg)
+	e1:SetOperation(c1103010.desop)
+	c:RegisterEffect(e1)
 	--act limit
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(1103010,0))
@@ -38,6 +52,13 @@ function c1103010.initial_effect(c)
 	e4:SetTarget(c1103010.negtg)
 	e4:SetOperation(c1103010.negop)
 	c:RegisterEffect(e4)
+end
+function c1103010.cfilter(c,tp)
+	return c:GetPreviousControler()==tp and c:IsPreviousLocation(LOCATION_MZONE)
+		and c:IsSetCard(0xa240) and c:IsType(TYPE_MONSTER) and c:IsReason(REASON_BATTLE+REASON_EFFECT) 
+end
+function c1103010.condition(e,tp,eg,ep,ev,re,r,rp)
+	return eg:IsExists(c1103010.cfilter,1,nil,tp)
 end
 function c1103010.descon(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()

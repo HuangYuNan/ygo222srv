@@ -12,15 +12,15 @@ function c1100333.initial_effect(c)
 	--tohand
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(1100333,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_RELEASE)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCountLimit(1,1100333)
-	e1:SetCondition(c1100333.thcon)
+	e1:SetCondition(c1100333.con)
 	e1:SetCost(c1100333.cost)
-	e1:SetTarget(c1100333.thtg)
-	e1:SetOperation(c1100333.thop)
+	e1:SetTarget(c1100333.tg)
+	e1:SetOperation(c1100333.op)
 	c:RegisterEffect(e1)
 	--activate limit
 	local e2=Effect.CreateEffect(c)
@@ -78,21 +78,16 @@ function c1100333.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
-function c1100333.thcon(e,tp,eg,ep,ev,re,r,rp)
+function c1100333.con(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_EFFECT)~=0
 end
-function c1100333.thfilter(c)
-	return c:IsSetCard(0x5243) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
+function c1100333.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c1100333.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1100333.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK+LOCATION_REMOVED)
-end
-function c1100333.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c1100333.thfilter,tp,LOCATION_DECK+LOCATION_REMOVED,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+function c1100333.op(e,tp,eg,ep,ev,re,r,rp)
+	 local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	 Duel.Draw(p,d,REASON_EFFECT)
 end

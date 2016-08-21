@@ -109,7 +109,7 @@ function c73203110.splimit(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	local tc=eg:GetFirst()
 	while tc do
-	    if tc:IsPreviousLocation(LOCATION_EXTRA) and c ~ =tc then
+	    if tc:IsPreviousLocation(LOCATION_EXTRA) and c~=tc then
 		    c:RegisterFlagEffect(73203110,RESET_EVENT+0x3ff0000+RESET_PHASE+PHASE_END,0,1)
 		end
         tc=eg:GetNext()

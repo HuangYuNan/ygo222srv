@@ -1,16 +1,16 @@
 --顽强的少女·神尾观铃
 function c1100334.initial_effect(c)
 	c:SetSPSummonOnce(1100334) 
-	--tohand
+	--draw
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(1100334,0))
-	e1:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e1:SetCategory(CATEGORY_DRAW)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
 	e1:SetCountLimit(1,1100334)
-	e1:SetTarget(c1100334.thtg)
-	e1:SetOperation(c1100334.thop)
+	e1:SetTarget(c1100334.tg)
+	e1:SetOperation(c1100334.op)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_FLIP_SUMMON_SUCCESS)
@@ -37,20 +37,15 @@ function c1100334.initial_effect(c)
 	e3:SetOperation(c1100334.synop)
 	c:RegisterEffect(e3)
 end
-function c1100334.thfilter(c)
-	return c:IsSetCard(0x5243) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
+function c1100334.tg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
+	Duel.SetTargetPlayer(tp)
+	Duel.SetTargetParam(1)
+	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
-function c1100334.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1100334.thfilter,tp,LOCATION_DECK,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
-end
-function c1100334.thop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c1100334.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
+function c1100334.op(e,tp,eg,ep,ev,re,r,rp)
+	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
+	 Duel.Draw(p,d,REASON_EFFECT)
 end
 function c1100334.filter(c,e,tp,m,ft)
 	if not c:IsSetCard(0x5243) or bit.band(c:GetType(),0x81)~=0x81
@@ -104,7 +99,7 @@ function c1100334.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c1100334.cardiansynlevel(c)
-	return 4
+	return 3
 end
 function c1100334.synfilter(c,syncard,tuner,f)
 	return c:IsFaceup() and c:IsNotTuner() and c:IsCanBeSynchroMaterial(syncard,tuner) and (f==nil or f(c))
