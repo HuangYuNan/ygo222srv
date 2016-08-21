@@ -14,10 +14,11 @@ function c1004502.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c1004502.spfilter1(c,tp)
-	return c:IsCode(1004501)
+	return c:IsCode(1004501) and c:IsDestructable()
 end
 function c1004502.sprcon(e,c)
 	if c==nil then return true end
+	if chk==0 then return Duel.IsExistingMatchingCard(c1004502.spfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	local tp=c:GetControler()
 	return Duel.IsExistingMatchingCard(c1004502.spfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,2,nil,tp)
 end
