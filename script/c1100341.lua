@@ -40,7 +40,7 @@ function c1100341.pmfilter(c)
 end
 function c1100341.rmcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	return c:GetSummonType()==SUMMON_TYPE_SYNCHRO and c:GetMaterial():IsExists(c1100363.pmfilter,1,nil)
+	return c:GetSummonType()==SUMMON_TYPE_SYNCHRO and c:GetMaterial():IsExists(c1100341.pmfilter,1,nil)
 end
 function c1100341.rmfilter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToRemove()
