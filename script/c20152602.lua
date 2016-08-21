@@ -27,10 +27,11 @@ function c20152602.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function c20152602.sdfilter(c)
-	return not c:IsSetCard(0xa290)
+	return c:IsFaceup() and not c:IsSetCard(0xa290)
 end
 function c20152602.discon(e,tp,eg,ep,ev,re,r,rp)
-	return re:IsActiveType(TYPE_EFFECT) and re:IsHasType(EFFECT_TYPE_ACTIONS) and Duel.IsChainNegatable(ev) and not Duel.IsExistingMatchingCard(c20152602.sdfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	return re:IsActiveType(TYPE_EFFECT) and re:IsHasType(EFFECT_TYPE_ACTIONS) and Duel.IsChainNegatable(ev) and g:GetCount()>0 and not g:IsExists(c20152602.sdfilter,1,nil)
 end
 function c20152602.filter7(c)
 	return c:IsSetCard(0xa290)

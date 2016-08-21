@@ -35,7 +35,6 @@ function c99998977.initial_effect(c)
 	e5:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
 	e5:SetCode(EVENT_BATTLE_START)
 	e5:SetRange(LOCATION_SZONE)
-	e5:SetCondition(c99998977.descon)
 	e5:SetTarget(c99998977.destg)
 	e5:SetOperation(c99998977.desop)
 	c:RegisterEffect(e5)
@@ -80,15 +79,10 @@ function c99998977.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Equip(tp,c,tc)
 	end
 end
-function c99998977.descon(e,tp,eg,ep,ev,re,r,rp)
-	local tg=e:GetHandler():GetEquipTarget()
-	local tc=tg:GetBattleTarget()
-	return tg and (tc:IsAttribute(ATTRIBUTE_DARK)
-    or  tc:IsRace(RACE_ZOMBIE)) and (Duel.GetAttacker()==tg or Duel.GetAttackTarget()==tg)
-end
 function c99998977.destg(e,tp,eg,ep,ev,re,r,rp,chk)
     local tc=e:GetHandler():GetEquipTarget():GetBattleTarget()
-	if chk==0 then return true end
+	if chk==0 then return tc and tc:IsFaceup() and  (tc:IsAttribute(ATTRIBUTE_DARK)
+    or  tc:IsRace(RACE_ZOMBIE)) end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,tc:GetBaseAttack())
 end
