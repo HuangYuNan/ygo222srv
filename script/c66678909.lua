@@ -7,8 +7,8 @@ function c66678909.initial_effect(c)
 	e1:SetCode(EFFECT_EXTRA_SUMMON_COUNT)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(LOCATION_HAND+LOCATION_MZONE,0)
-	e1:SetCondition(c96789758.excon)
-	e1:SetTarget(c96789758.extg)
+	e1:SetCondition(c66678909.excon)
+	e1:SetTarget(c66678909.extg)
 	c:RegisterEffect(e1)
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_TOHAND)
@@ -20,10 +20,10 @@ function c66678909.initial_effect(c)
 	e5:SetOperation(c66678909.grop)
 	c:RegisterEffect(e5)
 end
-function c96789758.excon(e)
+function c66678909.excon(e)
 	return e:GetHandler():GetOverlayCount()>0
 end
-function c96789758.extg(e,c)
+function c66678909.extg(e,c)
 	return c:IsSetCard(0x665)
 end
 function c66678909.grcon(e,tp,eg,ep,ev,re,r,rp)
