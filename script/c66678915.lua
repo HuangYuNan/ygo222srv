@@ -74,22 +74,24 @@ function c66678915.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
 	e4:SetCode(EVENT_TO_GRAVE)
 	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	return rp~=tp and c:IsPreviousLocation(LOCATION_ONFIELD) and c:GetPreviousControler()==tp
+		return bit.band(e:GetHandler():GetPreviousPosition(),POS_FACEUP)~=0
+			and bit.band(e:GetHandler():GetPreviousLocation(),LOCATION_ONFIELD)~=0
 	end)
 	e4:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66678915.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
-	local sg=Duel.GetMatchingGroup(c66678915.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,sg,sg:GetCount(),0,0)
+		local g=Duel.GetMatchingGroup(c66678915.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if chk==0 then return g:GetCount()~=0 end
+		Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,g:GetCount(),0,0)
 	end)
 	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-	local sg=Duel.GetMatchingGroup(c66678915.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	Duel.SendtoGrave(sg,REASON_EFFECT)
+		local g=Duel.GetMatchingGroup(c66678915.tgfilter,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+		if g:GetCount()>0 then
+			Duel.SendtoGrave(g,REASON_EFFECT)
+		end
 	end)
 	c:RegisterEffect(e4)
 end
 function c66678915.tgfilter(c)
-	return c:IsAbleToGrave() and not c:IsAttribute(ATTRIBUTE_WATER)
+	return c:IsAbleToGrave() and (c:IsFacedown() or c:IsAttribute(ATTRIBUTE_WATER))
 end
 function c66678915.schfilter(c)
 	return c:IsSetCard(0x665) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

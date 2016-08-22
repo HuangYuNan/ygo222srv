@@ -8,7 +8,7 @@ function c66678910.initial_effect(c)
 	e5:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e5:SetType(EFFECT_TYPE_IGNITION)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCountLimit(1)
+	--e5:SetCountLimit(1)
 	e5:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
 		if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,2,REASON_COST) end
 		e:GetHandler():RemoveOverlayCard(tp,2,2,REASON_COST)

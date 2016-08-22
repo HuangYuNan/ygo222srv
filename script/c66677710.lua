@@ -39,7 +39,7 @@ function cm.activate(e,tp,eg,ep,ev,re,r,rp)
 	if g:GetCount()>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
 		local sc=g:GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-		local rg=Duel.SelectMatchingCard(tp,cm.rfilter,tp,LOCATION_DECK,0,1,1,nil)
+		local rg=Duel.SelectMatchingCard(tp,cm.rfilter,tp,LOCATION_DECK,0,1,1,nil,sc)
 		if rg:GetCount()>0 then
 			Duel.BreakEffect()
 			Duel.SendtoGrave(rg,REASON_EFFECT)
