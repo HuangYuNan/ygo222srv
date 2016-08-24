@@ -1,22 +1,24 @@
 --幻想的第五乐章·魔鬼的晚会 魔女回旋曲
 function c60150522.initial_effect(c)
 	--xyz summon
-    aux.AddXyzProcedure(c,c60150522.mfilter,10,3)
-    c:EnableReviveLimit()
+	aux.AddXyzProcedure(c,c60150522.mfilter,10,3)
+	c:EnableReviveLimit()
 	--
-    local e1=Effect.CreateEffect(c)
-    e1:SetCategory(CATEGORY_RELEASE+CATEGORY_SPECIAL_SUMMON)
-    e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-    e1:SetType(EFFECT_TYPE_QUICK_O)
-    e1:SetRange(LOCATION_MZONE)
-    e1:SetCountLimit(1)
-    e1:SetCode(EVENT_FREE_CHAIN)
-    e1:SetHintTiming(0,0x1e0)
-    e1:SetTarget(c60150522.thtg)
-    e1:SetOperation(c60150522.thop)
-    c:RegisterEffect(e1)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(4417407,0))
+	e1:SetCategory(CATEGORY_RELEASE+CATEGORY_SPECIAL_SUMMON)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetHintTiming(0,0x1e0)
+	e1:SetTarget(c60150522.thtg)
+	e1:SetOperation(c60150522.thop)
+	c:RegisterEffect(e1)
 	--atkup
 	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(62121,1))
 	e3:SetCategory(CATEGORY_ATKCHANGE)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
@@ -54,23 +56,23 @@ function c60150522.atkop(e,tp,eg,ep,ev,re,r,rp)
 end
 function c60150522.atkcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
-    e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
 end
 function c60150522.mfilter(c)
 	return c:IsRace(RACE_FIEND) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c60150522.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-    if chk==0 then return Duel.IsExistingTarget(Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,nil) end
-    Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
-    local g=Duel.SelectTarget(tp,Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,1,nil)
-    Duel.SetOperationInfo(0,CATEGORY_RELEASE,g,1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
-    Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
+	if chk==0 then return Duel.IsExistingTarget(Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RELEASE)
+	local g=Duel.SelectTarget(tp,Card.IsReleasableByEffect,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_RELEASE,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
 end
 function c60150522.thop(e,tp,eg,ep,ev,re,r,rp)
-    local tc=Duel.GetFirstTarget()
-    if tc:IsRelateToEffect(e) then
-        if Duel.Release(tc,REASON_EFFECT)~=0 then
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) then
+		if Duel.Release(tc,REASON_EFFECT)~=0 then
 			if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0
 				or not Duel.IsPlayerCanSpecialSummonMonster(tp,60150523,0,0x4011,1000,1000,12,RACE_FIEND,ATTRIBUTE_LIGHT) then return end
 			local token=Duel.CreateToken(tp,60150523)
@@ -105,5 +107,5 @@ function c60150522.thop(e,tp,eg,ep,ev,re,r,rp)
 			token:RegisterEffect(e4)
 			Duel.SpecialSummonComplete()
 		end
-    end
+	end
 end

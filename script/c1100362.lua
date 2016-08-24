@@ -24,8 +24,8 @@ function c1100362.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetHintTiming(0,0x1c0)
 	e3:SetCountLimit(1)
-	e3:SetTarget(c1100362.target)
-	e3:SetOperation(c1100362.operation)
+	e3:SetTarget(c1100362.target1)
+	e3:SetOperation(c1100362.operation1)
 	c:RegisterEffect(e3)
 	--spsummon
 	local e2=Effect.CreateEffect(c)
@@ -53,14 +53,14 @@ function c1100362.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
 	end
 end
-function c1100362.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+function c1100362.target1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and aux.disfilter1(chkc) end
 	if chk==0 then return Duel.IsExistingTarget(aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,aux.disfilter1,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,g,1,0,0)
 end
-function c1100362.operation(e,tp,eg,ep,ev,re,r,rp)
+function c1100362.operation1(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if ((tc:IsFaceup() and not tc:IsDisabled()) or tc:IsType(TYPE_TRAPMONSTER)) and tc:IsRelateToEffect(e) then
