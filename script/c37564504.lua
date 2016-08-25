@@ -43,8 +43,11 @@ end
 function c37564504.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then
-		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
-		local m=Duel.GetMatchingGroup(c37564504.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if ft<0 then return false end
+		local loc=LOCATION_MZONE
+		if ft>0 then loc=loc+LOCATION_HAND end
+		local m=Duel.GetMatchingGroup(c37564504.matfilter,tp,loc,0,nil)
 		if c.mat_filter then
 			m=m:Filter(c.mat_filter,nil)
 		end
@@ -53,10 +56,13 @@ function c37564504.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_SZONE)
 end
 function c37564504.spop2(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	if ft<0 then return end
+	local loc=LOCATION_MZONE
+	if ft>0 then loc=loc+LOCATION_HAND end
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local c=e:GetHandler()
-	local mg=Duel.GetMatchingGroup(c37564504.matfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
+	local mg=Duel.GetMatchingGroup(c37564504.matfilter,tp,loc,0,nil)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	if c.mat_filter then
 		mg=mg:Filter(c.mat_filter,nil)
