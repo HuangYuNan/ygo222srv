@@ -28,7 +28,6 @@ function c66619911.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetTarget(c66619911.desreptg)
-	e4:SetOperation(c66619911.desrepop)
 	c:RegisterEffect(e4)
 end
 function c66619911.con(e,tp,eg,ep,ev,re,r,rp)
@@ -83,19 +82,9 @@ function c66619911.repfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost() and not c:IsStatus(STATUS_DESTROY_CONFIRMED)
 end
 function c66619911.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return not c:IsReason(REASON_REPLACE)
-		and Duel.IsExistingMatchingCard(c66619911.repfilter,tp,LOCATION_ONFIELD,0,1,c) end
-	if Duel.SelectYesNo(tp,aux.Stringid(66619911,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
-		local g=Duel.SelectMatchingCard(tp,c66619911.repfilter,tp,LOCATION_ONFIELD,0,1,1,c)
-		e:SetLabelObject(g:GetFirst())
-		g:GetFirst():SetStatus(STATUS_DESTROY_CONFIRMED,true)
+	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_EFFECT) end
+	if Duel.SelectYesNo(tp,aux.Stringid(48739166,1)) then
+		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 		return true
 	else return false end
-end
-function c66619911.desrepop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=e:GetLabelObject()
-	tc:SetStatus(STATUS_DESTROY_CONFIRMED,false)
-	Duel.SendtoGrave(tc,REASON_EFFECT+REASON_REPLACE)
 end
