@@ -18,7 +18,6 @@ function c75646116.initial_effect(c)
 	e2:SetCategory(0x200)
 	e2:SetType(0x40)
 	e2:SetRange(0x10)
-	e2:SetCountLimit(1,75646116)
 	e2:SetCost(c75646116.spcost)
 	e2:SetTarget(c75646116.sptg)
 	e2:SetOperation(c75646116.spop)
@@ -59,14 +58,20 @@ function c75646116.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,0x4)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,0x200,e:GetHandler(),1,0,0)
-	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,450)
+	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,100)
 end
 function c75646116.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-	Duel.SpecialSummon(c,0,tp,tp,false,false,0x5)
-		if Duel.Damage(1-tp,450,0x40)~=0 then 
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,0x5)>0 then
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(0x1)
+		e1:SetCode(60)
+		e1:SetProperty(0x400)
+		e1:SetReset(0x1000+0x47e0000)
+		e1:SetValue(0x20)
+		c:RegisterEffect(e1,true)
+		if Duel.Damage(1-tp,100,0x40)~=0 then 
 		Duel.RaiseEvent(c,0x10000000+75646112,e,0,tp,0,0)
 		end
-	end
+	end 
 end

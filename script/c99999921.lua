@@ -1,19 +1,13 @@
 --传说之狂战士 弗兰肯斯坦
 function c99999921.initial_effect(c)
 	c:SetUniqueOnField(1,0,99999921)
-	aux.AddFusionProcFun2(c,c99999921.ffilter,c99999921.ffilter2,false)
+	aux.AddFusionProcFun2(c,c99999921.ffilter,c99999921.ffilter2,true)
 	c:EnableReviveLimit()
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c99999921.splimit)
-	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
 	e2:SetType(EFFECT_TYPE_TRIGGER_O+EFFECT_TYPE_SINGLE)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCondition(c99999921.con)
 	e2:SetTarget(c99999921.tg)
@@ -87,9 +81,6 @@ function c99999921.ffilter(c)
 end
 function c99999921.ffilter2(c)
 	return c:IsRace(RACE_SPELLCASTER) and c:IsAttribute(ATTRIBUTE_DARK)
-end
-function c99999921.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c99999921.con(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)

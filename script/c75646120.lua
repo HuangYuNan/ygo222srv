@@ -39,7 +39,7 @@ end
 function c75646120.damop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	Duel.Hint(10,0,75646120)
-	if Duel.Damage(1-tp,300,0x40)~=0 then
+	if Duel.Damage(1-tp,100,0x40)~=0 then
 	Duel.RaiseEvent(c,0x10000000+75646112,e,0,tp,0,0)
 	end
 end
@@ -48,18 +48,19 @@ function c75646120.filter(c,e,tp)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c75646120.tgtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(0x10) and chkc:IsControler(tp) and c75646120.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c75646120.filter,tp,0x10,0,1,nil,e,tp) end
-	Duel.Hint(3,tp,551)
+	if chkc then return chkc:IsLocation(0x10) and c75646120.filter(chkc,e,tp) end
+	if chk==0 then return Duel.GetLocationCount(tp,0x4)>0
+		and Duel.IsExistingTarget(c75646120.filter,tp,0x10,0,1,nil,e,tp) end
+	Duel.Hint(3,tp,509)
 	local g=Duel.SelectTarget(tp,c75646120.filter,tp,0x10,0,1,1,nil,e,tp)
-	local atk=g:GetFirst():GetBaseAttack()/2
-	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,atk)
 	Duel.SetOperationInfo(0,0x200,g,1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,100)
 end
 function c75646120.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.Damage(1-tp,tc:GetBaseAttack()/2,0x40)~=0 then
-		Duel.SpecialSummon(tc,0,tp,tp,false,false,0x5)
-		Duel.RaiseEvent(e:GetHandler(),0x10000000+75646112,e,0,tp,0,0)
-	end
+	if tc:IsRelateToEffect(e) then
+		if Duel.SpecialSummon(tc,0,tp,tp,false,false,0x5)~=0 then 
+			if Duel.Damage(1-tp,100,0x40)~=0 then 
+			Duel.RaiseEvent(e:GetHandler(),0x10000000+75646112,e,0,tp,0,0)
+	end end end
 end

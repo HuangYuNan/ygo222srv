@@ -1,14 +1,7 @@
---传说之骑士 贞德 
+--传说之骑士 贞德·达尔克
 function c99998990.initial_effect(c)
-	aux.AddFusionProcFun2(c,c99998990.ffilter,c99998990.ffilter2,false)
+	aux.AddFusionProcFun2(c,c99998990.ffilter,c99998990.ffilter2,true)
 	c:EnableReviveLimit()
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c99998990.splimit)
-	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -48,14 +41,12 @@ function c99998990.initial_effect(c)
 	e5:SetOperation(c99998990.bnop)
 	c:RegisterEffect(e5)
 	local e6=Effect.CreateEffect(c)
-	e6:SetCategory(CATEGORY_TOGRAVE)
 	e6:SetDescription(aux.Stringid(40921744,2))
-  	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
+  	e6:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCode(EVENT_PHASE+PHASE_BATTLE)
 	e6:SetCountLimit(1)
 	e6:SetCondition(c99998990.sgcon)
-	e6:SetTarget(c99998990.sgtg)
 	e6:SetOperation(c99998990.sgop)
 	c:RegisterEffect(e6)
 	--[[--add code
@@ -73,12 +64,20 @@ function c99998990.initial_effect(c)
 	e8:SetCountLimit(1)
 	e8:SetOperation(c99998990.cop)
 	c:RegisterEffect(e8)
+	--Attribute Dark
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_SINGLE)
+	e9:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e9:SetCode(EFFECT_ADD_ATTRIBUTE)
+	e9:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e9:SetValue(ATTRIBUTE_LIGHT)
+	c:RegisterEffect(e9)
 end
 function c99998990.ffilter(c)
-	return c:IsAttribute(ATTRIBUTE_FIRE)
+	return c:IsAttribute(ATTRIBUTE_LIRHT)
 end
 function c99998990.ffilter2(c)
-	return  c:IsRace(RACE_WARRIOR)
+	return  c:IsRace(RACE_FAIRY)
 end
 function c99998990.splimit(e,se,sp,st)
 	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
@@ -168,10 +167,6 @@ end
 end
 function c99998990.sgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(99998990)~=0
-end
-function c99998990.sgtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,e:GetHandler(),1,0,0)
 end
 function c99998990.sgop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

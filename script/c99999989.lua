@@ -1,13 +1,7 @@
 --传说之剑士 莫德雷德
 function c99999989.initial_effect(c)
+    aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsSetCard,0x2e2),aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),true)
 	c:EnableReviveLimit()
-	--spsummon condition
-	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_SINGLE)
-	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e1:SetValue(c99999989.splimit)
-	c:RegisterEffect(e1)
 	--search
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -79,15 +73,6 @@ function c99999989.initial_effect(c)
 	e12:SetCondition(c99999989.sprcon)
 	e12:SetOperation(c99999989.sprop)
 	c:RegisterEffect(e12)
-end
-function c99999989.ffilter(c)
-	return c:IsSetCard(0x2e2)
-end
-function c99999989.ffilter2(c)
-	return  c:IsRace(RACE_WARRIOR)
-end
-function c99999989.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
 end
 function c99999989.con(e,tp,eg,ep,ev,re,r,rp)
     return e:GetHandler():IsPreviousLocation(LOCATION_EXTRA)

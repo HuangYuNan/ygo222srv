@@ -1,4 +1,4 @@
---传说之骑士 阿尔托利亚·潘德拉贡
+--传说之剑士 阿尔托利亚·潘德拉贡Lily
 function c99999944.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(nil),1)
@@ -40,14 +40,11 @@ function c99999944.operation(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_PHASE+PHASE_DAMAGE)
 	Duel.RegisterEffect(e1,tp)
 end
-function c99999944.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
-end
 function c99999944.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
 end
 function c99999944.actcon(e)
-	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
+	return Duel.GetAttacker():IsSetCard(0x2e2) or Duel.GetAttackTarget():IsSetCard(0x2e2)
 end
 function c99999944.secon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO

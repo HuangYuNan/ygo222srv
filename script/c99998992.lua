@@ -1,4 +1,4 @@
---传说之裁定者 贞德
+--传说之裁定者 贞德·达尔克
 function c99998992.initial_effect(c)
      --search1
 	local e1=Effect.CreateEffect(c)
@@ -32,6 +32,14 @@ function c99998992.initial_effect(c)
 	e4:SetRange(LOCATION_MZONE)
 	e4:SetValue(c99998992.efilter)
 	c:RegisterEffect(e4)
+	--Attribute Dark
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_SINGLE)
+	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e5:SetCode(EFFECT_ADD_ATTRIBUTE)
+	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
+	e5:SetValue(ATTRIBUTE_LIGHT)
+	c:RegisterEffect(e5)
 end
 function c99998992.costfilter(c)
 	return c:IsDiscardable() and c:IsType(TYPE_SPELL) 
@@ -40,11 +48,8 @@ function c99998992.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.IsExistingMatchingCard(c99998992.costfilter,tp,LOCATION_HAND,0,1,nil) end
 	Duel.DiscardHand(tp,c99998992.costfilter,1,1,REASON_COST+REASON_DISCARD)
 end
-function c99998992.atktg(e,c)
-	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
-end
 function c99998992.filter(c)
-	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and  c:GetCode()~=99998992 and c:IsAbleToHand() and  c:IsType(TYPE_MONSTER)
+	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))  and c:IsAbleToHand() and  c:IsType(TYPE_MONSTER)
 end
 function c99998992.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c99998992.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end
@@ -66,7 +71,7 @@ function c99998992.op(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterEffect(e1,tp)
 end
 function c99998992.atktg(e,c)
-	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5))
 end
 function c99998992.filter2(c)
 	local code=c:GetCode()

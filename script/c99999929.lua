@@ -2,24 +2,23 @@
 function c99999929.initial_effect(c)
 	--Activate1
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(114000328,0))
+	e1:SetDescription(aux.Stringid(99999929,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
     e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
     e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,99999929+EFFECT_COUNT_CODE_OATH)
-	e1:SetCondition(c99999929.dcd)
+	e1:SetCost(c99999929.dcost)
 	e1:SetTarget(c99999929.dtg)
 	e1:SetOperation(c99999929.dop)
 	c:RegisterEffect(e1)
 	--Activate2
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(114000328,0))
+	e2:SetDescription(aux.Stringid(99999929,0))
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
     e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCountLimit(1,99999929+EFFECT_COUNT_CODE_OATH)
-	e2:SetCondition(c99999929.lcd)
 	e2:SetCost(c99999929.lcost)
 	e2:SetTarget(c99999929.ltg)
 	e2:SetOperation(c99999929.lop)
@@ -36,16 +35,15 @@ end
 function c99999929.counterfilter(c)
 	return c:IsAttribute(ATTRIBUTE_LIGHT) 
 end
-function c99999929.dcd(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
-	local tc=g:GetFirst()
-	return g:GetCount()==1 and tc:IsFaceup() and tc:IsAttribute(ATTRIBUTE_DARK)
+function c99999929.dcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true  end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function c99999929.filter(c,e,tp)
 	return  c:IsAttribute(ATTRIBUTE_DARK) and not c:IsType(TYPE_TOKEN) and Duel.IsExistingMatchingCard(c99999929.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 end
 function c99999929.filter2(c,e,tp)
-    return  c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_XYZ) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) 
+    return  c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_XYZ) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5)) 
 	and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c99999929.dtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -84,11 +82,9 @@ end
 function c99999929.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_EXTRA)
 end
-function c99999929.lcd(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE)>0 and Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
-end
 function c99999929.lcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(99999929,tp,ACTIVITY_SPSUMMON)==0  end
+	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -102,8 +98,8 @@ function c99999929.splimit2(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsAttribute(0xff-ATTRIBUTE_LIGHT)
 end
 function c99999929.filter3(c,e,tp)
-	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-end
+	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5)) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end 
 function c99999929.ltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(c99999929.filter3,tp,LOCATION_DECK,0,1,nil,e,tp) end
