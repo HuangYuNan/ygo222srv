@@ -3,7 +3,7 @@ function c75646117.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(75646117,0))
-	e1:SetCategory(0x80200)
+	e1:SetCategory(0x200)
 	e1:SetType(0x40)
 	e1:SetCountLimit(1,75646117)
 	e1:SetRange(0x4)
@@ -41,7 +41,6 @@ function c75646117.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,0x4)>0
 		and Duel.IsExistingMatchingCard(c75646117.filter,tp,0x1,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,0x200,nil,1,tp,0x1)
-	Duel.SetOperationInfo(0,0x80000,nil,0,1-tp,100)
 end
 function c75646117.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,0x4)<=0 then return end
@@ -49,9 +48,6 @@ function c75646117.spop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,c75646117.filter,tp,0x1,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,0x5)
-	end
-	if Duel.Damage(1-tp,100,0x40)~=0 then 
-		Duel.RaiseEvent(e:GetHandler(),0x10000000+75646112,e,0,tp,0,0)
 	end
 end
 function c75646117.sptg1(e,tp,eg,ep,ev,re,r,rp,chk)

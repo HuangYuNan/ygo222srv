@@ -30,8 +30,8 @@ function c20323003.filter2(c,lv,e,tp)
 	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetLevel()==lv and c:IsRace(RACE_FISH)
 end
 function c20323003.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c20323003.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c20323003.filter,tp,LOCATION_MZONE,0,1,nil) end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c20323003.filter(chkc,e,tp) end
+	if chk==0 then return Duel.IsExistingTarget(c20323003.filter,tp,LOCATION_MZONE,0,1,nil,e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
 	local g=Duel.SelectTarget(tp,c20323003.filter,tp,LOCATION_MZONE,0,1,1,nil,e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_GRAVE)
