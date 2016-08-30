@@ -52,6 +52,12 @@ function c66619918.initial_effect(c)
 	e7:SetTargetRange(LOCATION_MZONE,0)
 	e7:SetTarget(c66619918.trtg)
 	c:RegisterEffect(e7)
+	--act in hand
+	local e8=Effect.CreateEffect(c)
+	e8:SetType(EFFECT_TYPE_SINGLE)
+	e8:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+	e8:SetCondition(c66619918.handcon1)
+	c:RegisterEffect(e8)
 end
 function c66619918.cfilter(c)
 	return c:IsCode(66619909) and c:IsFaceup()
@@ -59,6 +65,9 @@ end
 function c66619918.handcon(e)
 	local tp=e:GetHandlerPlayer()
 	return  Duel.IsExistingMatchingCard(c66619918.cfilter,tp,LOCATION_ONFIELD,0,1,nil)
+end
+function c66619918.handcon1(e)
+	return Duel.GetTurnPlayer()==e:GetHandlerPlayer() and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function c66619918.filter(c)
 	return c:IsFaceup() and c:IsSetCard(0x666)

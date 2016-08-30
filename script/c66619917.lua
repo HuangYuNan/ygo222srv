@@ -42,6 +42,13 @@ function c66619917.initial_effect(c)
 	e6:SetCode(EFFECT_TRAP_ACT_IN_HAND)
 	e6:SetCondition(c66619917.handcon)
 	c:RegisterEffect(e6)
+	--act in hand
+	local e7=Effect.CreateEffect(c)
+	e7:SetType(EFFECT_TYPE_SINGLE)
+	e7:SetCode(EFFECT_TRAP_ACT_IN_HAND)
+	e7:SetCondition(c66619917.handcon1)
+	c:RegisterEffect(e7)
+end
 end
 function c66619917.cfilter(c)
 	return c:IsCode(66619911) and c:IsFaceup() and c:IsType(TYPE_MONSTER)
@@ -49,6 +56,9 @@ end
 function c66619917.handcon(e)
 	local g=Duel.GetFieldGroup(e:GetHandlerPlayer(),LOCATION_MZONE,0)
 	return g:IsExists(c66619917.cfilter,1,nil)
+end
+function c66619917.handcon1(e)
+	return Duel.GetTurnPlayer()==e:GetHandlerPlayer() and (Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2)
 end
 function c66619917.tgval(e,c)
 	return c:IsSetCard(0x666) and (c:GetLevel()==3 or c:GetLevel()==6)

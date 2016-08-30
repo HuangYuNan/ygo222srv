@@ -50,19 +50,6 @@ function c66619908.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c66619908.disop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.NegateActivation(ev)
-	local tc=re:GetHandler()
-	if re:GetHandler():IsRelateToEffect(re) and Duel.Remove(tc,0,REASON_EFFECT+REASON_TEMPORARY)~=0 then
-		tc:RegisterFlagEffect(66619908,RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END,0,1)
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetCode(EVENT_PHASE+PHASE_END)
-		e1:SetReset(RESET_PHASE+PHASE_END)
-		e1:SetLabelObject(tc)
-		e1:SetCountLimit(1)
-		e1:SetCondition(c66619908.retcon)
-		e1:SetOperation(c66619908.retop)
-		Duel.RegisterEffect(e1,tp)
-	end
 end
 function c66619908.retcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetLabelObject():GetFlagEffect(66619908)~=0
