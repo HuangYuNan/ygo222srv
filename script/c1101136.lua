@@ -1,6 +1,5 @@
 --�����ػ�Ů��  ������
 function c1101136.initial_effect(c)
-	c:SetUniqueOnField(1,0,1101136)
 	--xyz summon
 	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_LIGHT),8,3,c1101136.ovfilter,aux.Stringid(1101136,0))
 	c:EnableReviveLimit()
