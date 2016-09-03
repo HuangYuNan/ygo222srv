@@ -5,14 +5,15 @@ function c99999944.initial_effect(c)
 	c:EnableReviveLimit()
 	--actlimit
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetCode(EVENT_ATTACK_ANNOUNCE)
 	e1:SetRange(LOCATION_MZONE)
-	e1:SetTargetRange(0,1)
-	e1:SetValue(c99999944.aclimit)
 	e1:SetCondition(c99999944.actcon)
+	e1:SetOperation(c99999944.actop)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EVENT_BE_BATTLE_TARGET)
+	c:RegisterEffect(e2)
     --search
 	local e3=Effect.CreateEffect(c)
 	e3:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH)
@@ -30,8 +31,13 @@ function c99999944.initial_effect(c)
 	e6:SetOperation(c99999944.disop)
 	c:RegisterEffect(e6)
 end
-function c99999944.operation(e,tp,eg,ep,ev,re,r,rp)
-	local e1=Effect.CreateEffect(e:GetHandler())
+function c99999944.actcon(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetAttacker()
+	if tc:IsControler(1-tp) then tc=Duel.GetAttackTarget() end
+	return tc and tc:IsControler(tp) and tc:IsSetCard(0x2e2)
+end
+function c99999944.actop(e,tp,eg,ep,ev,re,r,rp)
+    local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
@@ -42,9 +48,6 @@ function c99999944.operation(e,tp,eg,ep,ev,re,r,rp)
 end
 function c99999944.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
-end
-function c99999944.actcon(e)
-	return Duel.GetAttacker():IsSetCard(0x2e2) or Duel.GetAttackTarget():IsSetCard(0x2e2)
 end
 function c99999944.secon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO

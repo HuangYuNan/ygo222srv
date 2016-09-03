@@ -96,7 +96,7 @@ end
 function c66612307.activate(e,tp,eg,ep,ev,re,r,rp)
 	local tg=eg:Filter(c66612307.filter,nil,tp,e)
 	tg:AddCard(e:GetHandler())
-	if e:GetHandler():IsFaceup() then
+	if  tg:IsExists(Card.IsFaceup,tg:GetCount(),nil) and tg:IsExists(Card.IsRelateToEffect,tg:GetCount(),nil,e) then
 	Duel.ChangePosition(tg,POS_FACEDOWN_DEFENSE)
 end
 end

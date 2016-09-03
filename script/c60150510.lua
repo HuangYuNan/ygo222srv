@@ -51,8 +51,6 @@ function c60150510.thop(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetReset(0)
 		Duel.RegisterEffect(e1,tp)
 	end
-	local tc=Duel.GetFirstTarget()
-	Duel.SendtoHand(tc,nil,REASON_EFFECT)
 end
 function c60150510.cfilter(c)
 	return c:IsFaceup() and c:IsCode(60150510)

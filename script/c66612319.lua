@@ -97,7 +97,7 @@ function c66612319.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c66612319.filter3(c,e)
-	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e)
+	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e) and c:IsAbleToDeck()
 end
 function c66612319.filter4(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x660) and (not f or f(c)) and not c:IsSetCard(0x3660)
@@ -106,7 +106,7 @@ end
 function c66612319.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=Duel.GetMatchingGroup(Card.IsCanBeFusionMaterial,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
+		local mg1=Duel.GetMatchingGroup(c66612319.filter3,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil,e)
 		local res=Duel.IsExistingMatchingCard(c66612319.filter4,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)

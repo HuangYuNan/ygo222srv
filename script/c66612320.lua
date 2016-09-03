@@ -20,8 +20,11 @@ function c66612320.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.SelectMatchingCard(tp,c66612320.cfilter,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
-function c66612320.filter1(c,e)
-	return c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e) and c:IsAbleToRemove()
+function c66612320.filter0(c,tp)
+	return  (c:IsControler(tp) or c:IsFaceup()) and c:IsCanBeFusionMaterial()  and c:IsAbleToRemove()
+end
+function c66612320.filter1(c,e,tp)
+	return  (c:IsControler(tp) or c:IsFaceup()) and c:IsCanBeFusionMaterial() and not c:IsImmuneToEffect(e) and c:IsAbleToRemove()
 end
 function c66612320.filter2(c,e,tp,m,f,chkf)
 	return c:IsType(TYPE_FUSION) and c:IsSetCard(0x660) and (not f or f(c))
@@ -30,7 +33,7 @@ end
 function c66612320.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-		local mg1=Duel.GetMatchingGroup(c66612320.filter1,tp,LOCATION_GRAVE,LOCATION_ONFIELD,nil,e)
+		local mg1=Duel.GetMatchingGroup(c66612320.filter0,tp,LOCATION_GRAVE,LOCATION_ONFIELD,nil,tp)
 		local res=Duel.IsExistingMatchingCard(c66612320.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp,mg1,nil,chkf)
 		if not res then
 			local ce=Duel.GetChainMaterial(tp)
@@ -47,7 +50,7 @@ function c66612320.target(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c66612320.activate(e,tp,eg,ep,ev,re,r,rp)
 	local chkf=Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and PLAYER_NONE or tp
-	local mg1=Duel.GetMatchingGroup(c66612320.filter1,tp,LOCATION_GRAVE,LOCATION_ONFIELD,nil,e)
+	local mg1=Duel.GetMatchingGroup(c66612320.filter1,tp,LOCATION_GRAVE,LOCATION_ONFIELD,nil,e,tp)
 	local sg1=Duel.GetMatchingGroup(c66612320.filter2,tp,LOCATION_EXTRA,0,nil,e,tp,mg1,nil,chkf)
 	local mg2=nil
 	local sg2=nil

@@ -1,14 +1,15 @@
 --命运扑克魔术 梦色爱丽丝
 function c66612325.initial_effect(c)
-	aux.AddFusionProcFun2(c,c66612325.filter1,c66612325.filter2,false)
+	aux.AddFusionProcFun2(c,c66612325.filter1,c66612325.filter2,true)
 	c:SetUniqueOnField(1,0,66612325)
+	 c:EnableReviveLimit()
 	--lock
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetTargetRange(0,LOCATION_ONFIELD)
-	e1:SetTarget(c66612325.filter)
 	e1:SetValue(c66612325.tgval)
 	c:RegisterEffect(e1)
 	--limit
@@ -57,12 +58,8 @@ end
 function c66612325.filter2(c)
 	return c:IsSetCard(0x666) and c:IsType(TYPE_SYNCHRO)
 end
-function c66612325.filter(c,e)
-	return c:IsControler()~=e:GetHandler():GetControler() and c:IsLocaiton(LOCAITON_ONFIELD)
-end
 function c66612325.tgval(e,re,rp)
-	local tp=e:GetHandler():GetControler()
-	return tp~=rp and aux.tgval(e,re,rp)
+	 return rp~=e:GetHandlerPlayer() and not re:GetHandler():IsImmuneToEffect(e)
 end
 function c66612325.splimit(e,se,sp,st)
 	return bit.band(st,SUMMON_TYPE_FUSION)==SUMMON_TYPE_FUSION
