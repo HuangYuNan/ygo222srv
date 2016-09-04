@@ -78,6 +78,7 @@ function c1101137.alicost1(e,tp,eg,ep,ev,re,r,rp,chk)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(1,1)
 	e2:SetCondition(c1101137.con)
+	e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 	Duel.RegisterEffect(e2,tp)
 end
 function c1101137.con(e)
