@@ -22,12 +22,19 @@ function c23300033.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetTargetPlayer(tp)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_ONFIELD)
 end
+function c23300033.cfilter1(c)
+	return c:IsSetCard(0x990) and c:IsLocation(LOCATION_GRAVE)
+end
 function c23300033.op(e,tp,eg,ep,ev,re,r,rp)
 	local p=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER)
 	Duel.Hint(HINT_SELECTMSG,p,HINTMSG_TOGRAVE)
 	local g=Duel.SelectMatchingCard(p,Card.IsAbleToGrave,p,LOCATION_ONFIELD,0,1,63,nil)
 	if g:GetCount()==0 then return end
 	Duel.SendtoGrave(g,REASON_EFFECT)
-	Duel.BreakEffect()
-	Duel.Draw(p,g:GetCount(),REASON_EFFECT)
+	local sg=Duel.GetOperatedGroup()
+	local ct=g:FilterCount(c23300033.cfilter1,nil)
+	if ct>0 then
+		Duel.BreakEffect()
+		Duel.Draw(p,ct,REASON_EFFECT)
+	end
 end
