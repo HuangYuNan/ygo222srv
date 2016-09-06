@@ -8,6 +8,7 @@ function c18706054.initial_effect(c)
 	e1:SetDescription(aux.Stringid(21521304,0))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e1:SetCondition(c18706054.con)
 	e1:SetOperation(c18706054.op)
 	c:RegisterEffect(e1)
 	--destroy
@@ -26,6 +27,9 @@ end
 function c18706054.ovfilter(c)
 	local rk=c:GetRank()
 	return c:IsFaceup() and rk==6 and c:IsCode(18700331)
+end
+function c18706054.scon(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(e:GetHandler():GetSummonType(),SUMMON_TYPE_XYZ)==SUMMON_TYPE_XYZ
 end
 function c18706054.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	local e1=Effect.CreateEffect(e:GetHandler())
