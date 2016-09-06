@@ -40,9 +40,9 @@ end
 function c18700308.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_HAND) and chkc:IsControler(tp) and c18700308.filter(chkc,e,tp) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(c18700308.filter,tp,LOCATION_HAND,0,1,nil,e,tp) end
+		and Duel.IsExistingTarget(c18700308.filter,tp,LOCATION_HAND,0,1,e:GetHandler(),e,tp) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c18700308.filter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+	local g=Duel.SelectTarget(tp,c18700308.filter,tp,LOCATION_HAND,0,1,1,e:GetHandler(),e,tp)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 function c18700308.operation(e,tp,eg,ep,ev,re,r,rp)

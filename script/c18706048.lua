@@ -58,7 +58,6 @@ function c18706048.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c18706048.op(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
-	if not tc:IsRelateToEffect(e) then return end
 	if e:GetLabel()==0 then
 		Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)
 	elseif e:GetLabel()==1 then

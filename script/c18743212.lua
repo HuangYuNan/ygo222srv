@@ -59,7 +59,7 @@ function c18743212.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function c18743212.condition(e,tp,eg,ep,ev,re,r,rp)
 	local ph=Duel.GetCurrentPhase()
-	return not Duel.GetTurnPlayer()==tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
+	return Duel.GetTurnPlayer()~=tp and (ph==PHASE_MAIN1 or ph==PHASE_MAIN2)
 end
 function c18743212.filter(c)
 	return c:IsFaceup()

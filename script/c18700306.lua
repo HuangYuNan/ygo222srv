@@ -37,7 +37,7 @@ function c18700306.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(c,REASON_COST+REASON_DISCARD)
 end
 function c18700306.filter(c)
-	return (c:IsCode(18700304) or c:IsCode(18700305) or c:IsCode(51124303) or c:IsCode(116810928) or c:IsCode(18700309)) and c:IsAbleToHand()
+	return c:IsSetCard(0xabb) and c:IsType(TYPE_SPELL) and c:IsType(TYPE_RITUAL) and c:IsAbleToHand()
 end
 function c18700306.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.IsExistingMatchingCard(c18700306.filter,tp,LOCATION_DECK,0,1,nil) end
