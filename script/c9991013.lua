@@ -1,71 +1,124 @@
---ビート・ローレライ
-require "expansions/script/c9990000"
+--ＳＡｒｋ（ステラライズ・アークエンジェル）・ベンスレイヤー
 function c9991013.initial_effect(c)
-	--Activate
+	--Xyz
+	aux.AddXyzProcedure(c,nil,4,3)
+	c:EnableReviveLimit()
+	--To Grave
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetDescription(aux.Stringid(9991013,0))
+	e1:SetCategory(CATEGORY_TOGRAVE)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetCountLimit(1,9991013+EFFECT_COUNT_CODE_OATH)
-	e1:SetCost(c9991013.cost)
-	e1:SetTarget(c9991013.target)
-	e1:SetOperation(c9991013.activate)
+	e1:SetRange(LOCATION_MZONE)
+	e1:SetCountLimit(1,19991013)
+	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end
+		e:GetHandler():RemoveOverlayCard(tp,1,1,REASON_COST)
+	end)
+	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,nil) end
+		local sg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,nil)
+		Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,sg,1,0,0)
+	end)
+	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,0,LOCATION_ONFIELD,1,1,nil)
+		if g:GetCount()>0 then
+			Duel.HintSelection(g)
+			local code=0
+			if g:GetFirst():IsFaceup() then
+				code=g:GetFirst():GetCode()
+			end
+			Duel.SendtoGrave(g,REASON_EFFECT)
+			if code~=0 then
+				--negate on this chain
+				local lab=0
+				for i=1,Duel.GetCurrentChain() do
+					local te=Duel.GetChainInfo(i,CHAININFO_TRIGGERING_EFFECT)
+					if c9991013.checkfunc(te,code) then
+						lab=lab+(2^i)
+					end
+				end
+				if lab~=0 then
+					local ge1=Effect.CreateEffect(c)
+					ge1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+					ge1:SetCode(EVENT_CHAIN_SOLVING)
+					ge1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp,chk)
+						if not (Duel.IsChainDisablable(ev)
+							and bit.band(e:GetLabel(),2^ev)~=0) then return end
+						Duel.NegateEffect(ev)
+					end)
+					ge1:SetReset(RESET_CHAIN)
+					ge1:SetLabel(lab)
+					Duel.RegisterEffect(ge1,tp)
+				end
+				--negate after this chain
+				local ge2=Effect.GlobalEffect()
+				ge2:SetType(EFFECT_TYPE_FIELD)
+				ge2:SetTargetRange(0xff,0xff)
+				ge2:SetReset(RESET_PHASE+PHASE_END)
+				ge2:SetProperty(EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_SET_AVAILABLE)
+				ge2:SetTarget(function(e,c)
+					return c:IsCode(e:GetLabel())
+				end)
+				ge2:SetLabel(code)
+				ge2:SetCode(EFFECT_DISABLE)
+				Duel.RegisterEffect(ge2,tp)
+				local ge3=Effect.GlobalEffect()
+				ge3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+				ge3:SetCode(EVENT_CHAINING)
+				ge3:SetReset(RESET_PHASE+PHASE_END)
+				ge3:SetLabel(code)
+				ge3:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+					if not c9991013.checkfunc(re,e:GetLabel()) then return end
+					local g1=Effect.GlobalEffect()
+					g1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+					g1:SetCode(EVENT_CHAIN_SOLVING)
+					g1:SetReset(RESET_CHAIN)
+					g1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+						local val=e:GetLabel()
+						if ev==val then
+							Duel.NegateEffect(val)
+						end
+					end)
+					g1:SetLabel(Duel.GetCurrentChain())
+					Duel.RegisterEffect(g1,tp)
+				end)
+				Duel.RegisterEffect(ge3,tp)
+			end
+		end
+	end)
 	c:RegisterEffect(e1)
+	--Attack Up
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(9991013,1))
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
+	e2:SetCountLimit(1)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return (Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated())
+	end)
+	e2:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return Duel.CheckLPCost(tp,1000) end
+		Duel.PayLPCost(tp,1000)
+	end)
+	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_UPDATE_ATTACK)
+		e1:SetTargetRange(LOCATION_MZONE,0)
+		e1:SetTarget(aux.TRUE)
+		e1:SetValue(1000)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+	end)
+	c:RegisterEffect(e2)
 end
-function c9991013.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	e:SetLabel(100)
-	return true
-end
-function c9991013.filter1(c)
-	return Dazz.IsVoid(c) and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
-end
-function c9991013.filter2(c,e,tp)
-	return Dazz.IsVoid(c) and Duel.IsExistingMatchingCard(c9991013.filter3,tp,LOCATION_EXTRA,0,1,c,c:GetCode(),e,tp) and c:IsAbleToRemoveAsCost()
-end
-function c9991013.filter3(c,code,e,tp)
-	return aux.IsMaterialListCode(c,code) and Dazz.IsVoid(c) and c:IsType(TYPE_SYNCHRO) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_SYNCHRO,tp,false,false)
-end
-function c9991013.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local noncost=e:GetLabel()~=100
-	local v1,v2=
-		(noncost or Duel.CheckLPCost(tp,800)) and Duel.IsExistingMatchingCard(c9991013.filter1,tp,0x41,0,1,nil)
-			and (Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)),
-		not noncost and Duel.IsExistingMatchingCard(c9991013.filter2,tp,LOCATION_MZONE,0,1,nil,e,tp)
-	if chk==0 then return v1 or v2 end
-	local lab,sel=0,0
-	if v1 and v2 then
-		if Duel.GetFieldGroupCount(tp,LOCATION_HAND,0)==0 and Duel.SelectYesNo(tp,aux.Stringid(9991013,3)) then
-			sel=3 Duel.Hint(HINT_OPSELECTED,1-tp,aux.Stringid(9991013,4))
-			else sel=Duel.SelectOption(tp,aux.Stringid(9991013,1),aux.Stringid(9991013,2))+1
-		end
-	elseif v1 and not v2 then sel=Duel.SelectOption(tp,aux.Stringid(9991013,1))+1
-	elseif v2 and not v1 then sel=Duel.SelectOption(tp,aux.Stringid(9991013,2))+2
-	end
-	if sel~=2 then lab=lab+0x10000000 if not noncost then Duel.PayLPCost(tp,800) end end
-	if sel~=1 then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-		local rc=Duel.SelectMatchingCard(tp,c9991013.filter2,tp,LOCATION_MZONE,0,1,1,nil,e,tp):GetFirst()
-		lab=lab+rc:GetCode()
-		Duel.Remove(rc,POS_FACEUP,REASON_COST)
-		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	end
-	e:SetLabel(lab)
-end
-function c9991013.activate(e,tp,eg,ep,ev,re,r,rp)
-	local lab=e:GetLabel()
-	if bit.band(lab,0x10000000)==0x10000000 then
-		lab=lab-0x10000000
-		if Duel.IsExistingMatchingCard(c9991013.filter1,tp,0x41,0,1,nil)
-			and (Duel.CheckLocation(tp,LOCATION_SZONE,6) or Duel.CheckLocation(tp,LOCATION_SZONE,7)) then
-			Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(9991013,0))
-			local tc=Duel.SelectMatchingCard(tp,c9991013.filter1,tp,0x41,0,1,1,nil):GetFirst()
-			Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		end
-	end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(c9991013.filter3,tp,LOCATION_EXTRA,0,1,nil,lab,e,tp) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tc=Duel.SelectMatchingCard(tp,c9991013.filter3,tp,LOCATION_EXTRA,0,1,1,nil,lab,e,tp):GetFirst()
-		Duel.SpecialSummon(tc,SUMMON_TYPE_SYNCHRO,tp,tp,false,false,POS_FACEUP)
-		tc:CompleteProcedure()
-	end
+c9991013.Dazz_name_stellaris="Archangel"
+function c9991013.checkfunc(re,code)
+	return re:IsHasType(0x7f0) and re:GetHandler():IsCode(code)
 end

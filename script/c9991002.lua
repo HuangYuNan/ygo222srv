@@ -1,76 +1,40 @@
---ヴォイド・スカーミッシャー ホムラ
-require "expansions/script/c9990000"
+--ＳＷ（ステラライズ・ウォリアー）・ディーメン
+if not pcall(function() require("expansions/script/c9990000") end) then require("script/c9990000") end
 function c9991002.initial_effect(c)
-	Dazz.VoidPendulumCommonEffect(c,8)
-	--Pendulum
-	aux.EnablePendulumAttribute(c)
-	--Procedure
+	Dazz.StellarisPendulumEffect(c)
+	--Remove
 	local e1=Effect.CreateEffect(c)
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetCode(EFFECT_SPSUMMON_PROC)
-	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e1:SetType(EFFECT_TYPE_QUICK_O)
+	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(function(e,c)
-		if c==nil then return true end
-		return Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-			and Duel.IsExistingMatchingCard(function(c)
-				return c:IsFaceup() and Dazz.IsVoid(c) end,c:GetControler(),LOCATION_MZONE,0,1,nil)
+	e1:SetCost(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		local fil=function(c) return c:IsDiscardable() and Dazz.IsStellaris(c,nil,"Warrior") end
+		if chk==0 then return e:GetHandler():IsDiscardable()
+			and Duel.IsExistingMatchingCard(fil,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local g=Duel.SelectMatchingCard(tp,fil,tp,LOCATION_HAND,0,1,1,e:GetHandler())
+		g:AddCard(e:GetHandler())
+		Duel.SendtoGrave(g,REASON_DISCARD+REASON_COST)
+	end)
+	e1:SetDescription(aux.Stringid(9991002,0))
+	e1:SetCategory(CATEGORY_REMOVE)
+	e1:SetHintTiming(0,0x200043e)
+	e1:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk)
+		if chk==0 then return Duel.IsExistingMatchingCard(c9991002.rmfilter,tp,0,LOCATION_ONFIELD,1,nil) end
+		local g=Duel.GetMatchingGroup(c9991002.rmfilter,tp,0,LOCATION_ONFIELD,nil)
+		Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
 	end)
 	e1:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local c=e:GetHandler()
-		local ex=Effect.CreateEffect(c)
-		ex:SetType(EFFECT_TYPE_FIELD)
-		ex:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
-		ex:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		ex:SetTargetRange(1,0)
-		ex:SetTarget(function(e,c,sump,sumtype,sumpos,targetp,sumtp)
-			return c:IsLocation(LOCATION_HAND) and sumtype~=SUMMON_TYPE_PENDULUM
-		end)
-		ex:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(ex,tp)
+		local g=Duel.GetMatchingGroup(c9991002.rmfilter,tp,0,LOCATION_ONFIELD,nil)
+		if g:GetCount()==0 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+		g=g:Select(tp,1,2,nil)
+		Duel.HintSelection(g)
+		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
 	end)
 	c:RegisterEffect(e1)
-	--Guarding
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_DESTROY)
-	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e2:SetType(EFFECT_TYPE_QUICK_O)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1)
-	e2:SetCode(EVENT_FREE_CHAIN)
-	e2:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE)
-			and c9991002.exfilter(chkc) and e:GetHandler()~=chkc end
-		if chk==0 then return Duel.IsExistingTarget(c9991002.exfilter,tp,LOCATION_MZONE,0,1,e:GetHandler())
-			and e:GetHandler():IsDestructable() end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_FACEUP)
-		Duel.SelectTarget(tp,c9991002.exfilter,tp,LOCATION_MZONE,0,1,1,e:GetHandler())
-		Duel.SetOperationInfo(0,CATEGORY_DESTROY,e:GetHandler(),1,0,0)
-	end)
-	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
-		local tc=Duel.GetFirstTarget() local c=e:GetHandler()
-		if not (c:IsRelateToEffect(e) and tc:IsRelateToEffect(e) and tc:IsFaceup()) then return end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetValue(1)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetDescription(aux.Stringid(9991002,0))
-		e2:SetProperty(EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CANNOT_DISABLE)
-		e2:SetCode(EFFECT_IMMUNE_EFFECT)
-		e2:SetValue(function(e,te)
-			return te:GetOwner()~=e:GetOwner()
-		end)
-		tc:RegisterEffect(e2)
-		Duel.Destroy(c,REASON_EFFECT)
-	end)
-	c:RegisterEffect(e2)
 end
-c9991002.Dazz_name_void=1
-function c9991002.exfilter(c)
-	return c:IsFaceup() and Dazz.IsVoid(c)
+c9991002.Dazz_name_stellaris="Warrior"
+function c9991002.rmfilter(c)
+	return c:IsAbleToRemove() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
