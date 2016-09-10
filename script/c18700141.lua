@@ -24,7 +24,7 @@ function c18700141.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
 	e1:SetReset(RESET_PHASE+PHASE_END)
 	e1:SetTargetRange(1,0)
-	e1:SetTarget(c1870141.splimit)
+	e1:SetTarget(c18700141.splimit)
 	Duel.RegisterEffect(e1,tp)
 end
 function c18700141.target(e,tp,eg,ep,ev,re,r,rp,chk)

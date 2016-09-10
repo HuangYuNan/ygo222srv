@@ -1,9 +1,12 @@
 senya=senya or {}
+local cm=senya
 os=require('os')
+table=require('table')
+io=require('io')
 --7CG universal scripts
 --test parts
-senya.delay=0x14000
-senya.fix=0x40400
+cm.delay=0x14000
+cm.fix=0x40400
 if not Card.GetDefense then
 	Card.GetDefense=Card.GetDefence
 	Card.GetBaseDefense=Card.GetBaseDefence
@@ -14,10 +17,10 @@ if not Card.GetDefense then
 	Card.IsDefenseAbove=Card.IsDefenceAbove
 end
 --effect setcode tech
-senya.setchk=senya.setchk or {}
-function senya.setreg(c,cd,setcd)   
-	if not senya.setchk[cd] then
-		senya.setchk[cd]=true
+cm.setchk=cm.setchk or {}
+function cm.setreg(c,cd,setcd)   
+	if not cm.setchk[cd] then
+		cm.setchk[cd]=true
 		local ex=Effect.GlobalEffect()
 		ex:SetType(EFFECT_TYPE_FIELD)
 		ex:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
@@ -27,36 +30,38 @@ function senya.setreg(c,cd,setcd)
 		Duel.RegisterEffect(ex,0)
 	end
 end
-function senya.sgreg(c,setcd)
+function cm.sgreg(c,setcd)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_SET_AVAILABLE)
 	e1:SetCode(setcd)
 	c:RegisterEffect(e1)
+	return e1
 end
 --xyz summon of prim
-function senya.rxyz1(c,rk,f,xm)
+function cm.rxyz1(c,rk,f,xm)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetRange(LOCATION_EXTRA)
-	e1:SetCondition(senya.xyzcon1(rk,f))
-	e1:SetOperation(senya.xyzop1(rk,f,xm))
+	e1:SetCondition(cm.xyzcon1(rk,f))
+	e1:SetOperation(cm.xyzop1(rk,f,xm))
 	e1:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e1)
+	return e1
 end
-function senya.mfilter(c,xyzc,rk,f)
+function cm.mfilter(c,xyzc,rk,f)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsCanBeXyzMaterial(xyzc) and (not rk or c:GetRank()==rk) and (not f or f(c))
 end
-function senya.xyzfilter1(c,g,ct)
-	return g:IsExists(senya.xyzfilter2,ct,c,c:GetRank())
+function cm.xyzfilter1(c,g,ct)
+	return g:IsExists(cm.xyzfilter2,ct,c,c:GetRank())
 end
-function senya.xyzfilter2(c,rk)
+function cm.xyzfilter2(c,rk)
 	return c:GetRank()==rk
 end
-function senya.xyzcon1(rk,f)
+function cm.xyzcon1(rk,f)
 return function(e,c,og,min,max)
 	if c==nil then return true end
 	local tp=c:GetControler()
@@ -70,14 +75,14 @@ return function(e,c,og,min,max)
 	local ct=math.max(minc-1,-ft)
 	local mg=nil
 	if og then
-		mg=og:Filter(senya.mfilter,nil,c,rk,f)
+		mg=og:Filter(cm.mfilter,nil,c,rk,f)
 	else
-		mg=Duel.GetMatchingGroup(senya.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
+		mg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
 	end
-	return maxc>=2 and mg:IsExists(senya.xyzfilter1,1,nil,mg,ct)
+	return maxc>=2 and mg:IsExists(cm.xyzfilter1,1,nil,mg,ct)
 end
 end
-function senya.xyzop1(rk,f,xm)
+function cm.xyzop1(rk,f,xm)
 return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	local g=nil
 	if og and not min then
@@ -85,9 +90,9 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	else
 		local mg=nil
 		if og then
-			mg=og:Filter(senya.mfilter,nil,c,rk,f)
+			mg=og:Filter(cm.mfilter,nil,c,rk,f)
 		else
-			mg=Duel.GetMatchingGroup(senya.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
+			mg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
 		end
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		local minc=2
@@ -98,9 +103,9 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 		end
 		local ct=math.max(minc-1,-ft)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		g=mg:FilterSelect(tp,senya.xyzfilter1,1,1,nil,mg,ct)
+		g=mg:FilterSelect(tp,cm.xyzfilter1,1,1,nil,mg,ct)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g2=mg:FilterSelect(tp,senya.xyzfilter2,ct,maxc-1,g:GetFirst(),g:GetFirst():GetRank())
+		local g2=mg:FilterSelect(tp,cm.xyzfilter2,ct,maxc-1,g:GetFirst(),g:GetFirst():GetRank())
 		g:Merge(g2)
 	end
 	local sg=Group.CreateGroup()
@@ -119,7 +124,7 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 end
 end
 
-function senya.rxyz2(c,rk,f,ct,xm)
+function cm.rxyz2(c,rk,f,ct,xm)
 	ct=ct or 2
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
@@ -127,29 +132,30 @@ function senya.rxyz2(c,rk,f,ct,xm)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetRange(LOCATION_EXTRA)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	e1:SetCondition(senya.xyzcon2(rk,f,ct))
-	e1:SetOperation(senya.xyzop2(rk,f,ct,xm))
+	e1:SetCondition(cm.xyzcon2(rk,f,ct))
+	e1:SetOperation(cm.xyzop2(rk,f,ct,xm))
 	e1:SetValue(SUMMON_TYPE_XYZ)
 	c:RegisterEffect(e1)
+	return e1
 end
 --reborn for mokou
-function senya.xyzcon2(rk,f,ct)
+function cm.xyzcon2(rk,f,ct)
 return function(e,c,og)
 	local lct=ct-1
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local mg=nil
 	if og then
-		mg=og:Filter(senya.mfilter,nil,c,rk,f)
+		mg=og:Filter(cm.mfilter,nil,c,rk,f)
 	else
-		mg=Duel.GetMatchingGroup(senya.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
+		mg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
 	end
 	local lm=0-ct
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>lm
-		and mg:IsExists(senya.xyzfilter1,lct,nil,mg,lct)
+		and mg:IsExists(cm.xyzfilter1,lct,nil,mg,lct)
 end
 end
-function senya.xyzop2(rk,f,ct,xm)
+function cm.xyzop2(rk,f,ct,xm)
 return function(e,tp,eg,ep,ev,re,r,rp,c,og)
 	local lct=ct-1
 	local g=nil
@@ -162,11 +168,11 @@ return function(e,tp,eg,ep,ev,re,r,rp,c,og)
 			tc=og:GetNext()
 		end
 	else
-		local mg=Duel.GetMatchingGroup(senya.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
+		local mg=Duel.GetMatchingGroup(cm.mfilter,tp,LOCATION_MZONE,0,nil,c,rk,f)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		g=mg:FilterSelect(tp,senya.xyzfilter1,1,1,nil,mg,lct)
+		g=mg:FilterSelect(tp,cm.xyzfilter1,1,1,nil,mg,lct)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-		local g2=mg:FilterSelect(tp,senya.xyzfilter2,lct,lct,g:GetFirst(),g:GetFirst():GetRank())
+		local g2=mg:FilterSelect(tp,cm.xyzfilter2,lct,lct,g:GetFirst(),g:GetFirst():GetRank())
 		g:Merge(g2)
 		local tc=g:GetFirst()
 		while tc do
@@ -185,19 +191,20 @@ end
 end
 
 --mokou reborn
-function senya.mk(c,ct,cd,eff,con,exop,excon)
+function cm.mk(c,ct,cd,eff,con,exop,excon)
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_TO_GRAVE)
 	e2:SetCountLimit(ct,cd)
-	e2:SetCondition(senya.mkcon(eff,con))
-	e2:SetTarget(senya.mktg)
-	e2:SetOperation(senya.mkop(exop,excon))
+	e2:SetCondition(cm.mkcon(eff,con))
+	e2:SetTarget(cm.mktg)
+	e2:SetOperation(cm.mkop(exop,excon))
 	c:RegisterEffect(e2)
+	return e2
 end
-function senya.mkcon(eff,con)
+function cm.mkcon(eff,con)
 	if eff then
 		return function(e,tp,eg,ep,ev,re,r,rp)
 			return bit.band(e:GetHandler():GetReason(),0x41)==0x41 and (not con or con(e,tp,eg,ep,ev,re,r,rp))
@@ -208,12 +215,12 @@ function senya.mkcon(eff,con)
 		end
 	end
 end
-function senya.mktg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.mktg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function senya.mkop(exop,excon)
+function cm.mkop(exop,excon)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
@@ -224,64 +231,64 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --chk if is 7cg
-function senya.cgcon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(senya.cgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
+function cm.cgcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsExistingMatchingCard(cm.cgfilter,tp,LOCATION_MZONE+LOCATION_GRAVE,0,1,nil)
 end
-function senya.cgfilter(c)
-	return senya.unifilter(c) and c:IsFaceup()
+function cm.cgfilter(c)
+	return cm.unifilter(c) and c:IsFaceup()
 end
-function senya.unifilter(c)
-	return (c:IsSetCard(0x770) or c:IsSetCard(0x772) or c:IsSetCard(0x773) or c:IsSetCard(0x775) or c:IsSetCard(0x776) or c:IsHasEffect(37564600)) and c:IsType(TYPE_MONSTER)
+function cm.unifilter(c)
+	return (c:IsSetCard(0x770) or c:IsSetCard(0x772) or c:IsSetCard(0x773) or c:IsSetCard(0x775) or c:IsHasEffect(37564600) or c:IsCode(37564765)) and c:IsType(TYPE_MONSTER)
 end
-function senya.uniprfilter(c)
+function cm.uniprfilter(c)
 	return ((c:IsSetCard(0x770) and c:IsType(TYPE_XYZ)) or (c:IsSetCard(0x775) and c:IsType(TYPE_XYZ)) or (c:IsSetCard(0x776) and c:IsType(TYPE_XYZ)) or c:IsSetCard(0x772) or c:IsSetCard(0x773)) and c:IsType(TYPE_MONSTER)
 end
 --rm mat cost
-function senya.rmovcost(ct)
+function cm.rmovcost(ct)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,ct,REASON_COST) end
 	e:GetHandler():RemoveOverlayCard(tp,ct,ct,REASON_COST)
 end
 end
 --discard hand cost
-function senya.discost(ct)
+function cm.discost(ct)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,ct,e:GetHandler()) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,ct,ct,REASON_COST+REASON_DISCARD,e:GetHandler())
 end
 end
 --release cost
-function senya.serlcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.serlcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
-function senya.sermcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.sermcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
-function senya.setdcost(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.setdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeckOrExtraAsCost() end
 	Duel.SendtoDeck(e:GetHandler(),nil,2,REASON_COST)
 end
 --for ss effects
-function senya.spfilter(c,e,tp,f,ig,stype)
+function cm.spfilter(c,e,tp,f,ig,stype)
 	return c:IsCanBeSpecialSummoned(e,stype,tp,ig,ig) and (not f or f(c,e,tp)) and c:IsType(TYPE_MONSTER)
 end
-function senya.tgsptg(loc,f,opp,ig,stype)
+function cm.tgsptg(loc,f,opp,ig,stype)
 return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	stype=stype or 0
 	if not ig then ig=false end
 	local oploc=0
 	if opp then oploc=loc end
-	if chkc then return chkc:IsLocation(loc) and senya.spfilter(chkc,e,tp,f,ig,stype) end
+	if chkc then return chkc:IsLocation(loc) and cm.spfilter(chkc,e,tp,f,ig,stype) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingTarget(senya.spfilter,tp,loc,oploc,1,nil,e,tp,f,ig,stype) end
+		and Duel.IsExistingTarget(cm.spfilter,tp,loc,oploc,1,nil,e,tp,f,ig,stype) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,senya.spfilter,tp,loc,oploc,1,1,nil,e,tp,f,ig,stype)
+	local g=Duel.SelectTarget(tp,cm.spfilter,tp,loc,oploc,1,1,nil,e,tp,f,ig,stype)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
 end
 end
-function senya.tgspop(ig,stype,exop)
+function cm.tgspop(ig,stype,exop)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	ig=ig or false
 	stype=stype or 0
@@ -292,23 +299,23 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
-function senya.sesptg(loc,f,ig,stype)
+function cm.sesptg(loc,f,ig,stype)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	stype=stype or 0
 	ig=ig or false
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(senya.spfilter,tp,loc,0,1,nil,e,tp,f,ig,stype) end
+		and Duel.IsExistingMatchingCard(cm.spfilter,tp,loc,0,1,nil,e,tp,f,ig,stype) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
 end
 end
-function senya.sespop(loc,f,ig,stype,exop)
+function cm.sespop(loc,f,ig,stype,exop)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	stype=stype or 0
 	ig=ig or false
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,senya.spfilter,tp,loc,0,1,1,nil,e,tp,f,ig,stype)
+	local g=Duel.SelectMatchingCard(tp,cm.spfilter,tp,loc,0,1,1,nil,e,tp,f,ig,stype)
 	local tc=g:GetFirst()
 	if tc and Duel.SpecialSummonStep(tc,stype,tp,tp,ig,ig,POS_FACEUP) then
 		if exop then exop(e,tp,tc,e:GetHandler()) end
@@ -317,35 +324,35 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 --for search effects
-function senya.srfilter(c,f)
+function cm.srfilter(c,f)
 	return c:IsAbleToHand() and (not f or f(c))
 end
-function senya.sesrtg(loc,f)
+function cm.sesrtg(loc,f)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(senya.srfilter,tp,loc,0,1,nil,f) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.srfilter,tp,loc,0,1,nil,f) end
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,loc)
 end
 end
-function senya.sesrop(loc,f)
+function cm.sesrop(loc,f)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,senya.srfilter,tp,loc,0,1,1,nil,f)
+	local g=Duel.SelectMatchingCard(tp,cm.srfilter,tp,loc,0,1,1,nil,f)
 	if g:GetCount()>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
 	end
 end
 end
-function senya.tgsrtg(loc,f)
+function cm.tgsrtg(loc,f)
 return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==loc and senya.srfilter(chkc,f) end
-	if chk==0 then return Duel.IsExistingTarget(senya.srfilter,tp,loc,0,1,nil,f) end
+	if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==loc and cm.srfilter(chkc,f) end
+	if chk==0 then return Duel.IsExistingTarget(cm.srfilter,tp,loc,0,1,nil,f) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectTarget(tp,senya.srfilter,tp,loc,0,1,1,nil,f)
+	local g=Duel.SelectTarget(tp,cm.srfilter,tp,loc,0,1,1,nil,f)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 end
-function senya.tgsrop(e,tp,eg,ep,ev,re,r,rp)
+function cm.tgsrop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc:IsRelateToEffect(e) then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
@@ -353,24 +360,24 @@ function senya.tgsrop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --arrival condition
-function senya.arcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.arcon(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(Card.IsFaceup,tp,LOCATION_MZONE,0,1,nil)
 end
 ---check date dt="Mon" "Tue" etc
-function senya.dtcon(dt,excon)
+function cm.dtcon(dt,excon)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		return dt==os.date("%a") and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 	end
 end
 --copy effect c=getcard(nil=orcard) tc=sourcecard ht=showcard(bool) res=reset event(nil=no reset)
-function senya.copy(e,c,tc,ht,res)
-		if not c then c=e:GetHandler() end
-		if not res then res=RESET_EVENT+0x1fe0000 end
+function cm.copy(e,c,tc,ht,res)
+		c=c or e:GetHandler()
+		res=res or RESET_EVENT+0x1fe0000
+		local cid=nil
 		if tc and c:IsFaceup() and c:IsRelateToEffect(e) then
 			local code=tc:GetOriginalCode()
 			local atk=tc:GetBaseAttack()
 			local def=tc:GetBaseDefense()
-			local cid=0
 			local e1=Effect.CreateEffect(e:GetHandler())
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
@@ -399,11 +406,12 @@ function senya.copy(e,c,tc,ht,res)
 				Duel.Hint(HINT_CARD,0,code)
 			end
 		end
+		return cid
 end
 --universals for sww
 
 --swwss(ct=discount ls=Lunatic Sprinter)
-function senya.sww(c,ct,ctxm,ctsm,ls)
+function cm.sww(c,ct,ctxm,ctsm,ls)
 	if ctxm then
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
@@ -422,49 +430,50 @@ function senya.sww(c,ct,ctxm,ctsm,ls)
 	end
 	--ss
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(c:GetCode(),0))
+	e4:SetDescription(aux.Stringid(c:GetOriginalCode(),0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_HAND+LOCATION_GRAVE)
-	e4:SetCost(senya.swwsscost(ct,ls))
-	e4:SetTarget(senya.swwsstg)
-	e4:SetOperation(senya.swwssop)
+	e4:SetCost(cm.swwsscost(ct,ls))
+	e4:SetTarget(cm.swwsstg)
+	e4:SetOperation(cm.swwssop)
 	c:RegisterEffect(e4)
+	return e4
 end
-function senya.swwsscost(ct,ls)
+function cm.swwsscost(ct,ls)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
 			   if e:GetHandler():IsLocation(LOCATION_HAND) and Duel.IsPlayerAffectedByEffect(tp,37564218) then return true end
-			   if chk==0 then return Duel.IsExistingMatchingCard(senya.swwssfilter,tp,LOCATION_HAND,0,ct,e:GetHandler(),e,ls) end
-			   Duel.DiscardHand(tp,senya.swwssfilter,ct,ct,REASON_COST,e:GetHandler(),e,ls)
+			   if chk==0 then return Duel.IsExistingMatchingCard(cm.swwssfilter,tp,LOCATION_HAND,0,ct,e:GetHandler(),e,ls) end
+			   Duel.DiscardHand(tp,cm.swwssfilter,ct,ct,REASON_COST,e:GetHandler(),e,ls)
 		   end
 end
-function senya.swwsstg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.swwsstg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function senya.swwssop(e,tp,eg,ep,ev,re,r,rp)
+function cm.swwssop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsRelateToEffect(e) then
 		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
-function senya.swwssfilter(c,e,ls)
+function cm.swwssfilter(c,e,ls)
 	return (c:IsSetCard(0x773) or (ls and c:GetTextAttack()==-2 and c:GetTextAttack()==-2)) and not c:IsCode(e:GetHandler():GetCode()) and c:IsAbleToGraveAsCost()
 end
 --for judge blank extra
-function senya.swwblex(e,tp)
+function cm.swwblex(e,tp)
 	tp=tp or e:GetHandlerPlayer()
 	return Duel.GetFieldGroupCount(tp,LOCATION_EXTRA,0)==0
 end
 --for sww rm grave
-function senya.swwcostfilter(c)
+function cm.swwcostfilter(c)
 	return c:IsSetCard(0x773) and c:IsType(TYPE_MONSTER) and c:IsAbleToRemoveAsCost()
 end
-function senya.swwrmcost(ct)
+function cm.swwrmcost(ct)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-			   if chk==0 then return Duel.IsExistingMatchingCard(senya.swwcostfilter,tp,LOCATION_GRAVE,0,ct,nil) end
+			   if chk==0 then return Duel.IsExistingMatchingCard(cm.swwcostfilter,tp,LOCATION_GRAVE,0,ct,nil) end
 			   Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-			   local g=Duel.SelectMatchingCard(tp,senya.swwcostfilter,tp,LOCATION_GRAVE,0,ct,ct,nil)
+			   local g=Duel.SelectMatchingCard(tp,cm.swwcostfilter,tp,LOCATION_GRAVE,0,ct,ct,nil)
 			   Duel.Remove(g,POS_FACEUP,REASON_COST)
 		   end
 end
@@ -473,52 +482,55 @@ end
 
 --bmss ctg=category istg=is-target-effect
 
-function senya.bm(c,tg,op,istg,ctg)
+function cm.bm(c,tg,op,istg,ctg)
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(37564765,0))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_TOHAND)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET) 
 	e4:SetType(EFFECT_TYPE_IGNITION)
 	e4:SetRange(LOCATION_HAND)
-	e4:SetCost(senya.bmssct(c:GetCode()))
-	e4:SetTarget(senya.bmsstg)
-	e4:SetOperation(senya.bmssop)
+	e4:SetCost(cm.bmssct(c:GetOriginalCode()))
+	e4:SetTarget(cm.bmsstg)
+	e4:SetOperation(cm.bmssop)
 	c:RegisterEffect(e4)
+	local e1=nil
 	if op then
-		local e1=Effect.CreateEffect(c)
+		e1=Effect.CreateEffect(c)
 		if ctg then e1:SetCategory(ctg) end
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e1:SetCode(EVENT_SPSUMMON_SUCCESS)  
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+cm.delay)
 		else
-			e1:SetProperty(senya.delay)
+			e1:SetProperty(cm.delay)
 		end
-		e1:SetCondition(senya.bmsscon)
+		e1:SetCondition(cm.bmsscon)
 		if tg then e1:SetTarget(tg) end
 		e1:SetOperation(op)
 		c:RegisterEffect(e1)
 	end
+	return e1
 end
-function senya.bmssfilter(c)
-   return c:IsAbleToHand() and senya.bmchkfilter(c) and c:IsFaceup()
+function cm.bmssfilter(c)
+   return c:IsAbleToHand() and cm.bmchkfilter(c) and c:IsFaceup()
 end
-function senya.bmssct(cd)
+function cm.bmssct(cd)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not cd then return false end
 	if chk==0 then return Duel.GetFlagEffect(tp,cd)==0 end
 	Duel.RegisterFlagEffect(tp,cd,RESET_PHASE+PHASE_END,0,1)
 end
 end
-function senya.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and senya.bmssfilter(chkc) end
+function cm.bmsstg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.bmssfilter(chkc) end
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
-		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(senya.bmssfilter,tp,LOCATION_MZONE,0,1,nil) end
-	local g=Duel.SelectTarget(tp,senya.bmssfilter,tp,LOCATION_MZONE,0,1,1,nil)
+		and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) and Duel.IsExistingTarget(cm.bmssfilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=Duel.SelectTarget(tp,cm.bmssfilter,tp,LOCATION_MZONE,0,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,tp,LOCATION_MZONE)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
-function senya.bmssop(e,tp,eg,ep,ev,re,r,rp)
+function cm.bmssop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if e:GetHandler():IsRelateToEffect(e) and tc:IsRelateToEffect(e) then
 		if Duel.SendtoHand(tc,nil,REASON_EFFECT)>0 then
@@ -530,16 +542,16 @@ function senya.bmssop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function senya.bmsscon(e,tp,eg,ep,ev,re,r,rp)
+function cm.bmsscon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetFlagEffect(37564499)>0
 end
 --check if is bm
-function senya.bmchkfilter(c)
+function cm.bmchkfilter(c)
 	return c:IsSetCard(0x775) and c:IsType(TYPE_MONSTER)
 end
 --damage chk for bm
 --1=remove 2=extraattack 3=atk3000 4=draw
-function senya.bmdamchkop(e,tp,eg,ep,ev,re,r,rp)
+function cm.bmdamchkop(e,tp,eg,ep,ev,re,r,rp)
 local ct=e:GetLabel()
 local c=e:GetHandler()
 local bc=c:GetBattleTarget()
@@ -547,7 +559,7 @@ if ct==0 then return end
 if c:IsRelateToEffect(e) and c:IsFaceup() then
 	Duel.ConfirmDecktop(tp,ct)
 	local g=Duel.GetDecktopGroup(tp,ct)
-	local ag=g:Filter(senya.bmchkfilter,nil)
+	local ag=g:Filter(cm.bmchkfilter,nil)
 	if ag:GetCount()>0 then
 		local val=0
 		local tc=ag:GetFirst()
@@ -594,7 +606,7 @@ if c:IsRelateToEffect(e) and c:IsFaceup() then
 			c:RegisterEffect(e1)
 		end  
 		if Duel.SelectYesNo(tp,aux.Stringid(37564765,2)) then
-			local thg=ag:Filter(senya.adfilter,nil)
+			local thg=ag:Filter(cm.adfilter,nil)
 			if thg:GetCount()>0 then
 				local thc=thg:Select(tp,1,1,nil)
 				Duel.SendtoHand(thc,nil,REASON_EFFECT)
@@ -605,55 +617,57 @@ if c:IsRelateToEffect(e) and c:IsFaceup() then
 	Duel.ShuffleDeck(tp)
 end
 end
-function senya.adfilter(c)
+function cm.adfilter(c)
 	return c:IsAbleToHand() and c:IsLocation(LOCATION_DECK)
 end
 --bm attack oppolimit
-function senya.bmdamchk(c,lm)
+function cm.bmdamchk(c,lm)
+	local e2=nil
 	if lm then
-	local e2=Effect.CreateEffect(c)
+	e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
 	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 	e2:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetTargetRange(0,1)
-	e2:SetValue(senya.bmaclimit)
-	e2:SetCondition(senya.bmactcon)
+	e2:SetValue(cm.bmaclimit)
+	e2:SetCondition(cm.bmactcon)
 	c:RegisterEffect(e2)
 	end
 	local e4=Effect.CreateEffect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetCode(EFFECT_EXTRA_ATTACK)
-	e4:SetValue(senya.bmexat)
+	e4:SetValue(cm.bmexat)
 	c:RegisterEffect(e4)
+	return e4,e2
 end
-function senya.bmaclimit(e,re,tp)
+function cm.bmaclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)
 end
-function senya.bmactcon(e)
+function cm.bmactcon(e)
 	return Duel.GetAttacker()==e:GetHandler() or Duel.GetAttackTarget()==e:GetHandler()
 end
-function senya.bmexat(e,c)
+function cm.bmexat(e,c)
 	return c:GetFlagEffect(37564498)
 end
 --for condition of damchk
-function senya.bmdamchkcon(e,tp,eg,ep,ev,re,r,rp)
+function cm.bmdamchkcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetBattleTarget()~=nil
 end
 --for cost of rmex
-function senya.bmrmcostfilter(c)
-	return senya.bmchkfilter(c) and c:IsAbleToRemoveAsCost()
+function cm.bmrmcostfilter(c)
+	return cm.bmchkfilter(c) and c:IsAbleToRemoveAsCost()
 end
-function senya.bmrmcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(senya.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,nil) end
+function cm.bmrmcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local g=Duel.SelectMatchingCard(tp,senya.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,cm.bmrmcostfilter,tp,LOCATION_EXTRA,0,1,1,nil)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 
 end
 --for release bm L5
 --fr=must be ssed
-function senya.bmrl(c,fr)
+function cm.bmrl(c,fr)
 	c:EnableReviveLimit()
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(37564765,0))
@@ -661,8 +675,8 @@ function senya.bmrl(c,fr)
 	e1:SetCode(EFFECT_SPSUMMON_PROC)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e1:SetRange(LOCATION_HAND)
-	e1:SetCondition(senya.bmrlcon)
-	e1:SetOperation(senya.bmrlop)
+	e1:SetCondition(cm.bmrlcon)
+	e1:SetOperation(cm.bmrlop)
 	c:RegisterEffect(e1)
 	if fr then
 		local e2=Effect.CreateEffect(c)
@@ -671,52 +685,53 @@ function senya.bmrl(c,fr)
 		e2:SetCode(EFFECT_SPSUMMON_CONDITION)
 		c:RegisterEffect(e2)
 	end
+	return e1
 end
-function senya.bmrlfilter(c)
-	return senya.bmchkfilter(c) and c:IsFaceup()
+function cm.bmrlfilter(c)
+	return cm.bmchkfilter(c) and c:IsFaceup()
 end
-function senya.bmrlcon(e,c)
+function cm.bmrlcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.CheckReleaseGroup(tp,senya.bmrlfilter,1,nil)
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1 and Duel.CheckReleaseGroup(tp,cm.bmrlfilter,1,nil)
 end
-function senya.bmrlop(e,tp,eg,ep,ev,re,r,rp,c)
+function cm.bmrlop(e,tp,eg,ep,ev,re,r,rp,c)
 	local tp=c:GetControler()
-	local g=Duel.SelectReleaseGroup(tp,senya.bmrlfilter,1,1,nil)
+	local g=Duel.SelectReleaseGroup(tp,cm.bmrlfilter,1,1,nil)
 	Duel.Release(g,REASON_COST)
 end
 
 
 --universals for paranoia
-function senya.pr1(c,lv,atk,hl,max)
-	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),lv,4,senya.provfilter(atk),aux.Stringid(37564765,3))
+function cm.pr1(c,lv,atk,hl,max)
+	aux.AddXyzProcedure(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_DARK),lv,4,cm.provfilter(atk),aux.Stringid(37564765,3))
 	c:EnableReviveLimit()
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_IMMUNE_EFFECT)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetRange(LOCATION_MZONE)
-	e5:SetCondition(senya.primmcon)
-	e5:SetValue(senya.primmfilter(atk,max))
+	e5:SetCondition(cm.primmcon)
+	e5:SetValue(cm.primmfilter(atk,max))
 	c:RegisterEffect(e5)
 end
-function senya.primmcon(e)
+function cm.primmcon(e)
 	return e:GetHandler():GetOverlayCount()>0
 end
 --changes
-function senya.provfilter(atk)
+function cm.provfilter(atk)
 	return function(c)
 		return c:IsFaceup() and c:IsSetCard(0x776) and c:GetAttack()==0 and c:GetDefense()==atk
 	end
 end
-function senya.primmfilter(atk,max,hl)
+function cm.primmfilter(atk,max,hl)
 	if not hl then return aux.TRUE end
 	return function(e,te)
 		return (te:IsActiveType(TYPE_MONSTER) and te:GetOwner()~=e:GetOwner() and ((te:GetHandler():GetAttack()<atk and hl==0) or (te:GetHandler():GetAttack()>atk and hl==1))) or (te:IsActiveType(TYPE_SPELL+TYPE_TRAP) and max)
 	end
 end
 
-function senya.pr2(c,des,tg,op,istg,ctg)
+function cm.pr2(c,des,tg,op,istg,ctg)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -746,15 +761,15 @@ function senya.pr2(c,des,tg,op,istg,ctg)
 	c:RegisterEffect(e5)
 	if op then
 		local e1=Effect.CreateEffect(c)
-		e1:SetDescription(aux.Stringid(c:GetCode(),0))
+		e1:SetDescription(aux.Stringid(c:GetOriginalCode(),0))
 		if ctg then e1:SetCategory(CATEGORY_TOHAND) end
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+EFFECT_TYPE_TRIGGER_O)
 		if istg then
-			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+senya.delay)
+			e1:SetProperty(EFFECT_FLAG_CARD_TARGET+cm.delay)
 		else
-			e1:SetProperty(senya.delay)
+			e1:SetProperty(cm.delay)
 		end
-		e1:SetCountLimit(1,c:GetCode())
+		e1:SetCountLimit(1,c:GetOriginalCode())
 		if tg then e1:SetTarget(tg) end
 		e1:SetOperation(op)
 		c:RegisterEffect(e1)
@@ -765,33 +780,33 @@ end
 --con(usual)=condition tg(battledcard,card)=filter
 --cost=cost
 --xm=drain mat
-function senya.atkdr(c,con,tg,cost,ctlm,ctlmid,xm)
+function cm.atkdr(c,con,tg,cost,ctlm,ctlmid,xm)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e5:SetCode(EVENT_BATTLE_START)
 	if ctlm then e5:SetCountLimit(ctlm,ctlmid) end
-	e5:SetCondition(senya.atkdrcon(con,tg))
+	e5:SetCondition(cm.atkdrcon(con,tg))
 	if cost then e5:SetCost(cost) end
 	if xm then
 		e5:SetLabel(2)
 	else
 		e5:SetLabel(1)
 	end
-	e5:SetTarget(senya.atkdrtg)
-	e5:SetOperation(senya.atkdrop)
+	e5:SetTarget(cm.atkdrtg)
+	e5:SetOperation(cm.atkdrop)
 	c:RegisterEffect(e5)
 end
-function senya.atkdrcon(con,tg)
+function cm.atkdrcon(con,tg)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
 		local bc=c:GetBattleTarget()
 		return (not con or con(e,tp,eg,ep,ev,re,r,rp)) and bc and (not tg or tg(bc,c)) and not bc:IsType(TYPE_TOKEN)
 	end
 end
-function senya.atkdrtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.atkdrtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsType(TYPE_XYZ) end
 end
-function senya.atkdrop(e,tp,eg,ep,ev,re,r,rp)
+function cm.atkdrop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=c:GetBattleTarget()
 	if c:IsRelateToEffect(e) and c:IsFaceup() and tc:IsRelateToBattle() and not tc:IsImmuneToEffect(e) then
@@ -807,7 +822,7 @@ function senya.atkdrop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 --nanahira parts
-function senya.nnhr(c)
+function cm.nnhr(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE)
 	e2:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
@@ -815,23 +830,23 @@ function senya.nnhr(c)
 	e2:SetRange(LOCATION_ONFIELD+LOCATION_GRAVE)
 	e2:SetValue(37564765)
 	c:RegisterEffect(e2)
-	senya.nntr(c)
+	cm.nntr(c)
 end
-function senya.nntr(c)
-	senya.sgreg(c,37564765)
+function cm.nntr(c)
+	cm.sgreg(c,37564765)
 end
-function senya.nncon(og)
+function cm.nncon(og)
 return function(e,tp)
 	tp=tp or e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(senya.nnfilter,tp,LOCATION_MZONE,0,1,nil,og)
+	return Duel.IsExistingMatchingCard(cm.nnfilter,tp,LOCATION_MZONE,0,1,nil,og)
 end
 end
-function senya.nnfilter(c,og)
+function cm.nnfilter(c,og)
 	if not c:IsFaceup() then return end
 	return c:GetOriginalCode()==37564765 or (c:IsCode(37564765) and not og)
 end
 --for infinity negate effect
-function senya.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
+function cm.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
 	local e3=Effect.CreateEffect(c)
 	loc=loc or LOCATION_MZONE
 	e3:SetDescription(aux.Stringid(37564765,5))
@@ -845,25 +860,26 @@ function senya.neg(c,lmct,lmcd,cost,excon,exop,loc,force)
 	e3:SetCountLimit(lmct,lmcd)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	e3:SetRange(loc)
-	e3:SetCondition(senya.negcon(excon))
+	e3:SetCondition(cm.negcon(excon))
 	if cost then e3:SetCost(cost) end
-	e3:SetTarget(senya.negtg)
-	e3:SetOperation(senya.negop(exop))
+	e3:SetTarget(cm.negtg)
+	e3:SetOperation(cm.negop(exop))
 	c:RegisterEffect(e3)
+	return e3
 end
-function senya.negcon(excon)
+function cm.negcon(excon)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and Duel.IsChainNegatable(ev) and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 end
 end
-function senya.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
 	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
 		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
-function senya.negop(exop)
+function cm.negop(exop)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	local chk=Duel.NegateActivation(ev)
 	if re:GetHandler():IsRelateToEffect(re) then
@@ -874,19 +890,20 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 end
-function senya.negtrap(c,lmct,lmcd,cost,excon,exop)
+function cm.negtrap(c,lmct,lmcd,cost,excon,exop)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_NEGATE+CATEGORY_DESTROY)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_CHAINING)
 	e1:SetCountLimit(lmct,lmcd)
-	e1:SetCondition(senya.negcon(excon))
+	e1:SetCondition(cm.negcon(excon))
 	if cost then e1:SetCost(cost) end
-	e1:SetTarget(senya.negtg)
-	e1:SetOperation(senya.negop(exop))
+	e1:SetTarget(cm.negtg)
+	e1:SetOperation(cm.negop(exop))
 	c:RegisterEffect(e1)
+	return e1
 end
-function senya.drawtg(ct)
+function cm.drawtg(ct)
 return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,ct) end
 	Duel.SetTargetPlayer(tp)
@@ -894,26 +911,26 @@ return function(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,ct)
 end
 end
-function senya.drawop(e,tp,eg,ep,ev,re,r,rp)
+function cm.drawop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
-function senya.prsyfilter(c)
+function cm.prsyfilter(c)
 	return c:IsHasEffect(37564600) and c:IsType(TYPE_SYNCHRO)
 end
-function senya.prl4(c,cd)
-	senya.setreg(c,cd,37564600)
+function cm.prl4(c,cd)
+	cm.setreg(c,cd,37564600)
 	aux.AddSynchroProcedure(c,nil,aux.FilterBoolFunction(Card.IsHasEffect,37564600),1)
 	c:EnableReviveLimit()
 end
-function senya.xmcon(ct,excon)
+function cm.xmcon(ct,excon)
 return function(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayCount()>=ct and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
 end
 end
 --counter summon effect universals
 --n=normal f=flip s=special o=opponent only
-function senya.negs(c,tpcode,ctlm,ctlmid,con,cost)
+function cm.negs(c,tpcode,ctlm,ctlmid,con,cost)
 	if not tpcode or bit.band(tpcode,7)==0 then return end
 	ctlmid=ctlmid or 1
 	local e3=Effect.CreateEffect(c)
@@ -928,34 +945,298 @@ function senya.negs(c,tpcode,ctlm,ctlmid,con,cost)
 	else
 		e3:SetLabel(1)
 	end
-	e3:SetCondition(senya.negsdiscon(con))
+	e3:SetCondition(cm.negsdiscon(con))
 	if cost then e3:SetCost(cost) end
-	e3:SetTarget(senya.negsdistg)
-	e3:SetOperation(senya.negsdisop)
+	e3:SetTarget(cm.negsdistg)
+	e3:SetOperation(cm.negsdisop)
 	local e2=e3:Clone()
 	e2:SetCode(EVENT_FLIP_SUMMON)
 	local e1=e3:Clone()
 	e1:SetCode(EVENT_SUMMON)
-	if bit.band(tpcode,1)==1 then c:RegisterEffect(e1) end
-	if bit.band(tpcode,2)==2 then c:RegisterEffect(e2) end
-	if bit.band(tpcode,4)==4 then c:RegisterEffect(e3) end
+	local t={}
+	if bit.band(tpcode,1)==1 then
+		c:RegisterEffect(e1)
+		table.insert(t,e1)
+	end
+	if bit.band(tpcode,2)==2 then
+		c:RegisterEffect(e2)
+		table.insert(t,e2)
+	end
+	if bit.band(tpcode,4)==4 then
+		c:RegisterEffect(e3)
+		table.insert(t,e3)
+	end
+	return table.unpack(t)
 end
-function senya.negsfilter(c,tp,e)
+function cm.negsfilter(c,tp,e)
 	return c:GetSummonPlayer()==tp or e:GetLabel()==1
 end
-function senya.negsdiscon(con)
+function cm.negsdiscon(con)
 return function(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetCurrentChain()==0 and eg:IsExists(senya.negsfilter,1,nil,e,1-tp) and (not con or con(e,tp,eg,ep,ev,re,r,rp))
+	return Duel.GetCurrentChain()==0 and eg:IsExists(cm.negsfilter,1,nil,e,1-tp) and (not con or con(e,tp,eg,ep,ev,re,r,rp))
 end
 end
-function senya.negsdistg(e,tp,eg,ep,ev,re,r,rp,chk)
+function cm.negsdistg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g=eg:Filter(senya.filter,nil,e,1-tp)
+	local g=eg:Filter(cm.filter,nil,e,1-tp)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE_SUMMON,g,g:GetCount(),0,0)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
 end
-function senya.negsdisop(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(senya.negsfilter,nil,e,1-tp)
+function cm.negsdisop(e,tp,eg,ep,ev,re,r,rp)
+	local g=eg:Filter(cm.negsfilter,nil,e,1-tp)
 	Duel.NegateSummon(g)
 	Duel.Destroy(g,REASON_EFFECT)
+end
+function cm.rxyz3(c,rf,desc,f,lv,ct)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_PROC)
+	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(LOCATION_EXTRA)
+	e4:SetValue(SUMMON_TYPE_XYZ)
+	e4:SetCondition(cm.xyzcon3(rf,f,lv,ct,mct))
+	e4:SetOperation(cm.xyzop3(rf,desc,f,lv,ct,mct))
+	c:RegisterEffect(e4)
+	c:EnableReviveLimit()
+end
+function cm.xyzfilter3(c,xyzcard,f,lv)
+	return c:IsFaceup() and c:IsCanBeXyzMaterial(xyzcard) and c:IsXyzLevel(xyzcard,lv) and (not f or f(c))
+end
+function cm.xyzfilter3_kobato(c,xyzcard,rf,f,lv)
+	return cm.xyzfilter3(c,xyzcard,f,lv) and rf and rf(c)
+end
+function cm.xyzcon3(rf,f,lv,ct)
+return function(e,c,og,min,max)
+	if c==nil then return true end
+	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
+	if og then
+		if min then
+			if min>ct or max<ct then return false end
+			if og:IsExists(cm.xyzfilter3,ct,nil,c,f,lv) then return true end
+			if min==ct-1 then
+				local tg=og:Filter(cm.xyzfilter3,nil,c,f,lv)
+				if tg:GetCount()>=ct-1 and tg:IsExists(cm.xyzfilter3_kobato,1,nil,c,rf,f,lv) then return true end
+			end
+			return false
+		else
+			local count=og:GetCount()
+			if count==ct-1 then
+				return og:FilterCount(cm.xyzfilter3,nil,c,f,lv)==ct-1 and og:IsExists(cm.xyzfilter3_kobato,1,nil,c,rf,f,lv)
+			elseif count==ct then
+				return og:FilterCount(cm.xyzfilter3,nil,c,f,lv)==ct
+			end
+			return false
+		end
+	end
+	local tg=Duel.GetMatchingGroup(cm.xyzfilter3,c:GetControler(),LOCATION_MZONE,0,nil,c,f,lv)
+	if tg:GetCount()<ct-1 then return false end
+	return tg:GetCount()>=ct or tg:IsExists(cm.xyzfilter3_kobato,1,nil,c,rf,f,lv)
+end
+end
+function cm.xyzop3(rf,desc,f,lv,ct)
+return function(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
+	local mg=og or Duel.GetMatchingGroup(cm.xyzfilter3,tp,LOCATION_MZONE,0,nil,c,f,lv)
+	if not og or min then
+		local mg1=mg:Filter(cm.xyzfilter3,nil,c,f,lv)
+		local mg2=mg:Filter(cm.xyzfilter3_kobato,nil,c,rf,f,lv)
+		if (not min or min<ct) and (mg1:GetCount()==ct-1 or mg2:GetCount()>0 and Duel.SelectYesNo(tp,desc)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			local tg=mg2:Select(tp,1,1,nil)
+			mg1:Sub(tg)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			mg=mg1:Select(tp,ct-1,ct-1,nil)
+			mg:Merge(tg)
+		else
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			mg=mg1:Select(tp,ct,ct,nil)
+		end
+	end
+	local sg=Group.CreateGroup()
+	local tc=mg:GetFirst()
+	while tc do
+		local sg1=tc:GetOverlayGroup()
+		sg:Merge(sg1)
+		tc=mg:GetNext()
+	end
+	Duel.SendtoGrave(sg,REASON_RULE)
+	c:SetMaterial(mg)
+	Duel.Overlay(c,mg)
+end
+end
+
+--for copying spell
+function cm.scopy(c,loc1,loc2,f,con,cost,ctlm,ctlmid,eloc,x)
+	local e2=Effect.CreateEffect(c)
+	eloc=eloc or LOCATION_MZONE
+	cost=cost or aux.TRUE
+	con=con or aux.TRUE
+	local desc=aux.Stringid(37564765,6)
+	ctlmid=ctlmid or 1
+	e2:SetDescription(desc)
+	e2:SetType(EFFECT_TYPE_QUICK_O)
+	e2:SetRange(eloc)
+	e2:SetCode(EVENT_FREE_CHAIN)
+	e2:SetHintTiming(0x3c0)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
+	if ctlm then e3:SetCountLimit(ctlm,ctlmid) end
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return not Duel.CheckEvent(EVENT_CHAINING) and con(e,tp,eg,ep,ev,re,r,rp)
+	end)
+	e2:SetCost(cost)
+	e2:SetTarget(cm.scopytg1(loc1,loc2,f,x))
+	e2:SetOperation(cm.scopyop)
+	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(desc)
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	if ctlm then e3:SetCountLimit(ctlm,ctlmid) end
+	e3:SetCost(cost)
+	e3:SetCondtion(con)
+	e3:SetTarget(cm.scopytg2(loc1,loc2,f,x))
+	e3:SetOperation(cm.scopyop)
+	c:RegisterEffect(e3)
+	return e2,e3
+end
+function cm.scopyf1(c,f,e,tp)
+	return (c:GetType()==TYPE_SPELL or c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY
+		or c:GetType()==TYPE_TRAP or c:GetType()==TYPE_TRAP+TYPE_COUNTER) 
+		and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(true,true,false) and (not f or f(c,e,tp))
+end
+function cm.scopytg1(loc1,loc2,f,x)
+return function(e,tp,eg,ep,ev,re,r,rp,chk)
+	local og=Duel.GetFieldGroup(tp,loc1,loc2)
+	if x then og:Merge(e:GetHandler():GetOverlayGroup()) end
+	if chk==0 then
+		return og:IsExists(cm.scopyf1,1,nil,f,e,tp)
+	end
+	e:SetLabel(0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=og:FilterSelect(tp,cm.scopyf1,1,1,nil,f,e,tp)
+	local te,ceg,cep,cev,cre,cr,crp=g:GetFirst():CheckActivateEffect(true,true,true)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	local tg=te:GetTarget()
+	if tg then tg(e,tp,ceg,cep,cev,cre,cr,crp,1) end
+	te:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(te)
+end
+end
+function cm.scopyop(e,tp,eg,ep,ev,re,r,rp)
+	local te=e:GetLabelObject()
+	if not te then return end
+	e:SetLabelObject(te:GetLabelObject())
+	local op=te:GetOperation()
+	if op then op(e,tp,eg,ep,ev,re,r,rp) end
+end
+function cm.scopyf2(c,e,tp,eg,ep,ev,re,r,rp,f)
+	if (c:GetType()==TYPE_SPELL or c:GetType()==TYPE_SPELL+TYPE_QUICKPLAY
+		or c:GetType()==TYPE_TRAP or c:GetType()==TYPE_TRAP+TYPE_COUNTER) and c:IsAbleToRemoveAsCost() and (not f or f(c,e,tp,eg,ep,ev,re,r,rp)) then
+		if c:CheckActivateEffect(true,true,false) then return true end
+		local te=c:GetActivateEffect()
+		if te:GetCode()~=EVENT_CHAINING then return false end
+		local tg=te:GetTarget()
+		if tg and not tg(e,tp,eg,ep,ev,re,r,rp,0) then return false end
+		return true
+	else return false end
+end
+function cm.scopytg2(loc1,loc2,f,x)
+return function(e,tp,eg,ep,ev,re,r,rp,chk)
+	local og=Duel.GetFieldGroup(tp,loc1,loc2)
+	if x then og:Merge(e:GetHandler():GetOverlayGroup()) end
+	if chk==0 then
+		return og:IsExists(cm.scopyf2,1,nil,e,tp,eg,ep,ev,re,r,rp,f)
+	end
+	e:SetLabel(0)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=og:FilterSelect(tp,cm.scopyf2,1,1,nil,e,tp,eg,ep,ev,re,r,rp,f)
+	local tc=g:GetFirst()
+	local te,ceg,cep,cev,cre,cr,crp
+	local fchain=cm.scopyf1(tc)
+	if fchain then
+		te,ceg,cep,cev,cre,cr,crp=tc:CheckActivateEffect(true,true,true)
+	else
+		te=tc:GetActivateEffect()
+	end
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	local tg=te:GetTarget()
+	if tg then
+		if fchain then
+			tg(e,tp,ceg,cep,cev,cre,cr,crp,1)
+		else
+			tg(e,tp,eg,ep,ev,re,r,rp,1)
+		end
+	end
+	te:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(te)
+end
+end
+function cm.icopy(c,lmct,lmcd,cost,excon,loc)
+	local e3=Effect.CreateEffect(c)
+	loc=loc or LOCATION_MZONE
+	e3:SetDescription(aux.Stringid(37564765,7))
+	e3:SetType(EFFECT_TYPE_QUICK_O)
+	e3:SetCode(EVENT_CHAINING)
+	e3:SetCountLimit(lmct,lmcd)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+	e3:SetRange(loc)
+	e3:SetCondition(cm.iccon(excon))
+	if cost then e3:SetCost(cost) end
+	e3:SetTarget(cm.ictg)
+	e3:SetOperation(cm.scopyop)
+	c:RegisterEffect(e3)
+	return e3
+end
+function cm.iccon(excon)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	return rp~=tp and (not excon or excon(e,tp,eg,ep,ev,re,r,rp))
+end
+end
+function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk)
+	local te=re:Clone()
+	local tg=te:GetTarget()
+	if chk==0 then
+		local res=false
+		if not tg then return true end
+		if not pcall(function() res=tg(e,tp,eg,ep,ev,re,r,rp,0) end) then return false end
+		return res
+	end
+	e:SetCategory(te:GetCategory())
+	e:SetProperty(te:GetProperty())
+	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
+	te:SetLabelObject(e:GetLabelObject())
+	e:SetLabelObject(te)
+end
+function cm.cneg(c,con,cost,exop,desc,des,loc)
+	loc=loc or LOCATION_MZONE
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e3:SetCode(EVENT_CHAIN_SOLVING)
+	e3:SetRange(loc)
+	e3:SetCondition(cm.negcon(con))
+	e3:SetOperation(cm.cnegop(cost,exop))
+	c:RegisterEffect(e3)
+end
+function cm.cnegcon(con)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsChainDisablable(ev) and (not con or con(e,tp,eg,ep,ev,re,r,rp))
+end
+end
+function cm.cnegop(cost,exop,desc,des)
+return function(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.SelectYesNo(tp,desc) then return end
+	Duel.Hint(HINT_CARD,0,e:GetHandler():GetOriginalCode())
+	if cost then cost(e,tp,eg,ep,ev,re,r,rp) end
+	local chk=Duel.NegateEffect(ev)
+	if re:GetHandler():IsRelateToEffect(re) and des then
+		Duel.Destroy(eg,REASON_EFFECT)
+	end
+	if chk and exop then
+		exop(e,tp,eg,ep,ev,re,r,rp)
+	end
+end
 end

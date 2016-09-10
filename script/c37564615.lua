@@ -7,8 +7,8 @@ function c37564615.filter(c)
 	return c:IsHasEffect(37564600) and c:IsAbleToDeckOrExtraAsCost()
 end
 function c37564615.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c37564615.filter,tp,LOCATION_GRAVE,0,5,nil) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c37564615.filter,tp,LOCATION_GRAVE,0,3,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
-	local g=Duel.SelectMatchingCard(tp,c37564615.filter,tp,LOCATION_GRAVE,0,5,5,nil)
+	local g=Duel.SelectMatchingCard(tp,c37564615.filter,tp,LOCATION_GRAVE,0,3,3,nil)
 	Duel.SendtoDeck(g,nil,2,REASON_COST)
 end

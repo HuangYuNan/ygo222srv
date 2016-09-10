@@ -1,39 +1,61 @@
 --Prim-恋爱的宇宙战争!!
+local m=37564604
+local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
-function c37564604.initial_effect(c)
-	senya.setreg(c,37564604,37564600)
+function cm.initial_effect(c)
+	senya.setreg(c,m,37564600)
 	aux.AddSynchroProcedure(c,nil,aux.NonTuner(senya.prsyfilter),1)
 	c:EnableReviveLimit()
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(37564604,0))
+	e3:SetDescription(aux.Stringid(m,0))
 	e3:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DISABLE)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e3:SetHintTiming(TIMING_DAMAGE_STEP,TIMING_DAMAGE_STEP+0x1c0)
 	e3:SetCountLimit(1)
-	e3:SetCondition(c37564604.condition)
-	e3:SetTarget(c37564604.target)
-	e3:SetOperation(c37564604.operation)
+	e3:SetCost(cm.cost)
+	e3:SetCondition(cm.condition)
+	e3:SetTarget(cm.target)
+	e3:SetOperation(cm.operation)
 	c:RegisterEffect(e3)
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(34834619,0))
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e1:SetRange(LOCATION_GRAVE)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e1:SetCountLimit(1,313131313)
+	e1:SetCondition(c37564604.thcon1)
+	e1:SetTarget(c37564604.sptg)
+	e1:SetOperation(c37564604.spop)
+	c:RegisterEffect(e1)
 end
-function c37564604.condition(e,tp,eg,ep,ev,re,r,rp)
+function cm.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsPlayerCanDiscardDeckAsCost(tp,1) end
+	Duel.DiscardDeck(tp,1,REASON_COST)
+	local tc=Duel.GetOperatedGroup():GetFirst()
+	if tc and tc:IsHasEffect(37564600) then
+		e:SetLabel(1)
+	else e:SetLabel(0) end
+end
+function cm.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentPhase()~=PHASE_DAMAGE or not Duel.IsDamageCalculated()
 end
-function c37564604.filter(c)
+function cm.filter(c)
 	return c:IsFaceup() and not (c:GetAttack()==0 and c:IsDisabled())
 end
-function c37564604.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and c37564604.filter(chkc) end
-	if chk==0 then return Duel.IsExistingTarget(c37564604.filter,tp,0,LOCATION_MZONE,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	Duel.SelectTarget(tp,c37564604.filter,tp,0,LOCATION_MZONE,1,1,nil)
+function cm.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	--if chkc then return chkc:IsLocation(LOCATION_MZONE) and cm.filter(chkc) end
+	if chk==0 then return Duel.IsExistingMatchingCard(cm.filter,tp,0,LOCATION_MZONE,1,nil) end
 end
-function c37564604.operation(e,tp,eg,ep,ev,re,r,rp)
+function cm.operation(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetLabel()==0 then return end
 	local c=e:GetHandler()
-	local tc=Duel.GetFirstTarget()
-	if tc:IsFaceup() and tc:IsRelateToEffect(e) then
+	local g=Duel.GetMatchingGroup(cm.filter,tp,0,LOCATION_MZONE,nil)
+	local tc=g:GetFirst()
+	while tc do
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_SET_ATTACK_FINAL)
@@ -59,5 +81,39 @@ function c37564604.operation(e,tp,eg,ep,ev,re,r,rp)
 			e4:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 			tc:RegisterEffect(e4)
 		end
+		tc=g:GetNext()
+	end
+end
+function c37564604.thcon1(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
+end
+function c37564604.mtfilter(c,e)
+	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564604)
+end
+function c37564604.spfilter(c,e,tp,m)
+	return c:IsCode(37564604) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+		and m:CheckWithSumEqual(Card.GetRitualLevel,6,1,99,c)
+end
+function c37564604.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		local mg=Duel.GetMatchingGroup(c37564604.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
+		return c37564604.spfilter(e:GetHandler(),e,tp,mg)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c37564604.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local mg=Duel.GetMatchingGroup(c37564604.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c37564604.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,6,1,99,tc)
+		tc:SetMaterial(mat)
+		Duel.SendtoDeck(mat,nil,2,REASON_COST)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
 	end
 end

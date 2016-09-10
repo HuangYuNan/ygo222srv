@@ -40,9 +40,11 @@ function c66619916.initial_effect(c)
 	e4:SetOperation(c66619916.recop)
 	c:RegisterEffect(e4)
 end
+function c66619916.cfilter(c,tp)
+	return c:IsFaceup() and c:IsSetCard(0x666) and c:GetSummonPlayer()==tp
+end
 function c66619916.drcon(e,tp,eg,ep,ev,re,r,rp)
-	local tc=eg:GetFirst()
-	return eg:GetCount()==1 and tc:IsSetCard(0x666) and tc:IsControler(tp) and tc:GetSummonType()==SUMMON_TYPE_SYNCHRO 
+	return eg:IsExists(c66619916.cfilter,1,nil,tp)
 end
 function c66619916.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
@@ -51,6 +53,7 @@ function c66619916.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c66619916.drop(e,tp,eg,ep,ev,re,r,rp)
+	if not e:GetHandler():IsRelateToEffect(e)  then return end
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
 end
@@ -83,7 +86,7 @@ function c66619916.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToDeck() end
 	Duel.SetTargetPlayer(tp)
 	Duel.SetTargetParam(1000)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,600)
 end
 function c66619916.recop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)

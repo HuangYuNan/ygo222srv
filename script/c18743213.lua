@@ -48,9 +48,9 @@ end
 function c18743213.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsPlayerCanSpecialSummonMonster(tp,18743214,0,0x4011,1000,1000,1,RACE_MACHINE,ATTRIBUTE_LIGHT) then
-	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+c:GetFieldID())
+	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+e:GetHandler():GetFieldID())
 	local val=(math.random(0,5))
-	Duel.SelectOption(tp,aux.Stringid(18743210,val))
+	Duel.SelectOption(tp,aux.Stringid(18743213,val))
 		for i=1,2 do
 			local token=Duel.CreateToken(tp,18743213+i)
 			Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
@@ -64,9 +64,9 @@ end
 function c18743213.distg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsDestructable() end
 	if chk==0 then return true end
-	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+c:GetFieldID())
+	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+e:GetHandler():GetFieldID())
 	local val=(math.random(7,12))
-	Duel.SelectOption(tp,aux.Stringid(18743210,val))
+	Duel.SelectOption(tp,aux.Stringid(18743213,val))
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectTarget(tp,Card.IsDestructable,tp,0,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
@@ -78,9 +78,9 @@ function c18743213.disop(e,tp,eg,ep,ev,re,r,rp)
 		local g1=Duel.GetMatchingGroup(c18743213.ctfilter,tp,LOCATION_ONFIELD,0,nil)
 		local ct=g1:FilterCount(c18743213.ctfilter,nil,nil)
 		local g=Duel.GetMatchingGroup(c18743213.filter,tp,0,LOCATION_ONFIELD,nil)
-	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+c:GetFieldID())
+	math.randomseed(tonumber(tostring(os.time()):reverse():sub(1,6))+e:GetHandler():GetFieldID())
 	local val=(math.random(13,15))
-	Duel.SelectOption(tp,aux.Stringid(18743210,val))
+	Duel.SelectOption(tp,aux.Stringid(18743213,val))
 		if g:GetCount()>0 and ct>0 then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)

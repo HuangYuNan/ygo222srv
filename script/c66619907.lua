@@ -1,7 +1,7 @@
 --AIW·归来的爱丽丝
 function c66619907.initial_effect(c)
 	--synchro summon
-	aux.AddSynchroProcedure(c,c66619907.tfilter,aux.NonTuner(nil),1)
+	aux.AddSynchroProcedure(c,nil,aux.NonTuner(Card.IsSetCard,0x666),1)
 	c:EnableReviveLimit()
 	--destroy
 	local e1=Effect.CreateEffect(c)

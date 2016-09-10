@@ -1,7 +1,9 @@
 --Prim-旋律教条 ~Miserables~
+local m=37564605
+local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function c37564605.initial_effect(c)
-	senya.prl4(c,37564605)
+	senya.prl4(c,m)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_REMOVE)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
@@ -11,22 +13,18 @@ function c37564605.initial_effect(c)
 	e1:SetTarget(c37564605.distg)
 	e1:SetOperation(c37564605.disop)
 	c:RegisterEffect(e1)
-	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP)
-	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,37564605)
-	e2:SetCost(senya.serlcost)
-	e2:SetTarget(function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-		if chk==0 then return eg:IsExists(c37564605.tfilter,1,e:GetHandler(),tp) end
-		local g=eg:Filter(c37564605.tfilter,nil,tp)
-		Duel.SetTargetCard(eg)
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,g,g:GetCount(),0,0)
-	end)
-	e2:SetOperation(c37564605.op)
-	c:RegisterEffect(e2)
+	--spsummon
+	local e3=Effect.CreateEffect(c)
+	e3:SetDescription(aux.Stringid(34834619,0))
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
+	e3:SetRange(LOCATION_GRAVE)
+	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
+	e3:SetCountLimit(1,313131313)
+	e3:SetCondition(c37564605.thcon1)
+	e3:SetTarget(c37564605.sptg)
+	e3:SetOperation(c37564605.spop)
+	c:RegisterEffect(e3)
 end
 function c37564605.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO
@@ -48,13 +46,36 @@ function c37564605.disop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)
 	end
 end
-function c37564605.filter2(c,e,tp)
-	return c:IsRelateToEffect(e) and c:IsAbleToDeck() and c:GetSummonPlayer()==1-tp
+function c37564605.thcon1(e,tp,eg,ep,ev,re,r,rp)
+	return tp==Duel.GetTurnPlayer()
 end
-function c37564605.tfilter(c,tp)
-	return c:IsAbleToDeck() and c:GetSummonPlayer()==1-tp
+function c37564605.mtfilter(c,e)
+	return c:GetLevel()>0 and c:IsHasEffect(37564600) and c:IsAbleToDeckAsCost() and not c:IsImmuneToEffect(e) and not c:IsCode(37564605)
 end
-function c37564605.op(e,tp,eg,ep,ev,re,r,rp)
-	local g=eg:Filter(c37564605.filter2,nil,e,tp)
-	Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+function c37564605.spfilter(c,e,tp,m)
+	return c:IsCode(37564605) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+		and m:CheckWithSumEqual(Card.GetRitualLevel,4,1,99,c)
+end
+function c37564605.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return false end
+		local mg=Duel.GetMatchingGroup(c37564605.mtfilter,tp,LOCATION_GRAVE,0,e:GetHandler(),e)
+		return c37564605.spfilter(e:GetHandler(),e,tp,mg)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+end
+function c37564605.spop(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local mg=Duel.GetMatchingGroup(c37564605.mtfilter,tp,LOCATION_GRAVE,0,nil,e)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,c37564605.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp,mg)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local mat=mg:SelectWithSumEqual(tp,Card.GetRitualLevel,4,1,99,tc)
+		tc:SetMaterial(mat)
+		Duel.SendtoDeck(mat,nil,2,REASON_COST)
+		Duel.BreakEffect()
+		Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)
+	end
 end

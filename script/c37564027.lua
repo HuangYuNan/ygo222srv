@@ -77,7 +77,7 @@ function cm.xmfilter(c)
 end
 function cm.rcon(e,tp,eg,ep,ev,re,r,rp)
 	return bit.band(r,REASON_COST)~=0 and re:IsHasType(0x7e0) and re:IsActiveType(TYPE_XYZ) and re:GetHandler():IsSetCard(0x770) and e:GetHandler():GetOverlayGroup():IsExists(cm.xmfilter,1,nil)
-and rp==tp and not re:GetHandler()==e:GetHandler()
+and re:GetHandler()~=e:GetHandler()
 end
 
 
