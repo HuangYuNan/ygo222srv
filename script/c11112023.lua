@@ -1,6 +1,6 @@
 --旧时代的象征 古塔
 function c11112023.initial_effect(c)
-	c:EnableCounterPermit(0x15b,LOCATION_FZONE)
+	c:EnableCounterPermit(0x22,LOCATION_FZONE)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
@@ -19,7 +19,7 @@ function c11112023.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_SZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x15b))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x22))
 	e3:SetValue(c11112023.atkval)
 	c:RegisterEffect(e3)
 	local e4=e3:Clone()
@@ -70,7 +70,7 @@ function c11112023.acop(e,tp,eg,ep,ev,re,r,rp)
 end 
 function c11112023.dfilter(c,tp)
 	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD)
-		and c:IsSetCard(0x15b) and c:IsControler(tp) and c:IsReason(REASON_EFFECT)
+		and c:IsSetCard(0x22) and c:IsControler(tp) and c:IsReason(REASON_EFFECT)
 end
 function c11112023.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -82,14 +82,14 @@ function c11112023.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function c11112023.value(e,c)
 	return c:IsFaceup() and c:IsLocation(LOCATION_ONFIELD)
-		and c:IsSetCard(0x15b) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_EFFECT)
+		and c:IsSetCard(0x22) and c:IsControler(e:GetHandlerPlayer()) and c:IsReason(REASON_EFFECT)
 end
 function c11112023.desop(e,tp,eg,ep,ev,re,r,rp)
 	local count=e:GetLabel()
 	e:GetHandler():RemoveCounter(ep,0x22,count*2,REASON_EFFECT)
 end
 function c11112023.thcon1(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_DECK) and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x15b)
+	return e:GetHandler():IsPreviousLocation(LOCATION_DECK) and re:IsActiveType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x22)
 end
 function c11112023.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToHand() end
@@ -109,7 +109,7 @@ function c11112023.thcon2(e,tp,eg,ep,ev,re,r,rp)
 	return ct>0 and c:IsLocation(LOCATION_GRAVE) and c:IsReason(REASON_DESTROY)
 end
 function c11112023.thfilter(c,lv)
-	return c:IsLevelBelow(lv) and c:IsSetCard(0x15b) and c:IsAbleToHand()
+	return c:IsLevelBelow(lv) and c:IsSetCard(0x22) and c:IsAbleToHand()
 end
 function c11112023.thtg2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c11112023.thfilter,tp,LOCATION_DECK,0,1,nil,e:GetLabel()) end

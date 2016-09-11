@@ -3,7 +3,7 @@ function c3205012.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x340),aux.NonTuner(c3205012.synfilter),1)
 	c:EnableReviveLimit()
-	c:SetUniqueOnField(1,1,3205012)
+	c:SetUniqueOnField(1,0,3205012)
 	--spsummon limit
 	local e0=Effect.CreateEffect(c)
 	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)

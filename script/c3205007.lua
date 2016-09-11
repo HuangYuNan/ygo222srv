@@ -1,11 +1,12 @@
 --蒂姆
 function c3205007.initial_effect(c)
-    --Activate
+	--Activate
 	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_ATKCHANGE)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetCountLimit(1,3205007)
+	e1:SetHintTiming(TIMING_DAMAGE_STEP)
 	e1:SetTarget(c3205007.target)
 	e1:SetOperation(c3205007.operation)
 	c:RegisterEffect(e1)
@@ -24,7 +25,7 @@ function c3205007.initial_effect(c)
 	c:RegisterEffect(e2) 
 end
 function c3205007.filter(c)
-	return c:IsFaceup() and c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(0x340) and c:IsType(TYPE_MONSTER) 
 end
 function c3205007.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) and c3205007.filter(chkc) end
@@ -39,11 +40,8 @@ function c3205007.operation(e,tp,eg,ep,ev,re,r,rp)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_UPDATE_ATTACK)
 		e1:SetValue(1000)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+RESET_END)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_UPDATE_DEFENCE)
-		tc:RegisterEffect(e2)
 	end
 end
 function c3205007.tfilter(c,tp)
@@ -63,5 +61,5 @@ function c3205007.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DISABLE,eg,1,0,0)
 end
 function c3205007.negop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.NegateEffect(ev)
+	Duel.NegateEffect(ev)   
 end

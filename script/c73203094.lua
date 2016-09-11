@@ -16,6 +16,7 @@ function c73203094.rfilter(c)
 end
 function c73203094.thfilter(c)
   return c:IsSetCard(0x732) and c:GetLevel()==4 and c:IsAbleToSpecialSummon(e,0,tp,false,false)
+end
 function c73203094.hspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c73203094.rfilter,tp,LOCATION_MZONE,0,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

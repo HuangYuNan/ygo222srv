@@ -25,8 +25,8 @@ function c60150820.initial_effect(c)
 	e3:SetCode(EFFECT_SPSUMMON_PROC_G)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetCountLimit(1)
-	e3:SetCondition(c60150820.spCondition())
-	e3:SetOperation(c60150820.spOperation())
+	e3:SetCondition(c60150820.spCondition)
+	e3:SetOperation(c60150820.spOperation)
 	c:RegisterEffect(e3)
 end
 
@@ -56,9 +56,7 @@ function c60150820.spConditionFilter(c,e,tp)
 	return (c:IsLocation(LOCATION_HAND) or (c:IsFaceup() and c:IsLocation(LOCATION_REMOVED)))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0x3b23) and not c:IsForbidden()
 end
-function c60150820.spCondition()
-	return  
-	function(e,c,og)
+function c60150820.spCondition(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if ft<=0 then return false end
 		local fr=Duel.GetFieldGroupCount(tp,LOCATION_REMOVED,0)
@@ -70,11 +68,8 @@ function c60150820.spCondition()
 			return Duel.IsExistingMatchingCard(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,1,nil) 
 				and Duel.IsExistingMatchingCard(c60150820.spConditionFilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 		end
-	end
 end
-function c60150820.spOperation()
-	return	
-	function(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
+function c60150820.spOperation(e,tp,eg,ep,ev,re,r,rp,c,sg,og)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if ft<=0 then return false end
 		Duel.Hint(HINT_CARD,0,60150820)
@@ -108,7 +103,6 @@ function c60150820.spOperation()
 				tc:RegisterEffect(e1)
 			end
 		end
-	end
 end
 function c60150820.skipop(e,tp,eg,ep,ev,re,r,rp)
     local g=Duel.GetMatchingGroup(Card.IsAbleToRemove,tp,0,LOCATION_ONFIELD,nil)

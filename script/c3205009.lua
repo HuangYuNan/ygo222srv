@@ -1,6 +1,6 @@
 --╫лме
 function c3205009.initial_effect(c)
-	c:SetUniqueOnField(1,1,3205009)
+	c:SetUniqueOnField(1,0,3205009)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
