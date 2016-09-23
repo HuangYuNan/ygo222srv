@@ -1,5 +1,6 @@
 --耶梦加得之毒
 function c60150418.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--Activate
 	local e11=Effect.CreateEffect(c)
 	e11:SetCategory(CATEGORY_EQUIP+CATEGORY_COUNTER)

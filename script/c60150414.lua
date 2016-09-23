@@ -1,5 +1,6 @@
 --希芙之怨
 function c60150414.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--Activate
 	local e11=Effect.CreateEffect(c)
 	e11:SetCategory(CATEGORY_EQUIP+CATEGORY_COUNTER)

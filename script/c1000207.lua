@@ -8,6 +8,7 @@ function c1000207.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_REMOVE)
 	e1:SetCountLimit(1,802)
+	e1:SetCondition(c1000207.recon11)
 	e1:SetTarget(c1000207.drtg)
 	e1:SetOperation(c1000207.drop)
 	c:RegisterEffect(e1)
@@ -20,9 +21,14 @@ function c1000207.initial_effect(c)
 	e2:SetCountLimit(1)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,802)
+	e2:SetCondition(c1000207.condition)
 	e2:SetTarget(c1000207.destg)
 	e2:SetOperation(c1000207.desop)
 	c:RegisterEffect(e2)
+end
+function c1000207.recon11(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(r,REASON_EFFECT)~=0
+		and re:GetHandler():IsSetCard(0x200)
 end
 function c1000207.drtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
@@ -33,6 +39,9 @@ end
 function c1000207.drop(e,tp,eg,ep,ev,re,r,rp)
 	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
 	Duel.Draw(p,d,REASON_EFFECT)
+end
+function c1000207.condition(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:GetHandler():IsSetCard(0x200)
 end
 function c1000207.filter(c)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsDestructable()

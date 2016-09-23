@@ -1,5 +1,6 @@
 --维达的复仇
 function c60150419.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--Activate
 	local e11=Effect.CreateEffect(c)
 	e11:SetCategory(CATEGORY_EQUIP+CATEGORY_COUNTER)

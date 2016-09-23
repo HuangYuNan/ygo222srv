@@ -8,6 +8,7 @@ function c1000203.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e1:SetCode(EVENT_REMOVE)
 	e1:SetCountLimit(1,798)
+	e1:SetCondition(c1000203.recon11)
 	e1:SetTarget(c1000203.rmtg)
 	e1:SetOperation(c1000203.rmop)
 	c:RegisterEffect(e1)
@@ -23,6 +24,10 @@ function c1000203.initial_effect(c)
 	e2:SetTarget(c1000203.sptg)
 	e2:SetOperation(c1000203.spop)
 	c:RegisterEffect(e2)
+end
+function c1000203.recon11(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(r,REASON_EFFECT)~=0
+		and re:GetHandler():IsSetCard(0x200)
 end
 function c1000203.filter(c)
 	return c:IsSetCard(0x200) and c:IsAbleToRemove()
@@ -43,7 +48,7 @@ function c1000203.spfilter(c,e,tp)
 	return c:IsSetCard(0x3200) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function c1000203.condition(e,tp,eg,ep,ev,re,r,rp)
-	return re and not (re:GetHandler():IsType(TYPE_MONSTER) and re:GetHandler():IsSetCard(0x200))
+	return re and re:GetHandler():IsSetCard(0x200)
 end
 function c1000203.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -79,4 +84,3 @@ function c1000203.splimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(0x200)
 end
-

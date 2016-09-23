@@ -1,5 +1,6 @@
 --绝对武装 琪亚娜 卡斯兰娜
 function c60150406.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--xyz summon
 	aux.AddXyzProcedure(c,c60150406.xyzfilter,4,2)
 	c:EnableReviveLimit()
@@ -146,6 +147,7 @@ function c60150406.desop3(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
 	local tc=g:GetFirst()
 	if Duel.Equip(tp,tc,c,true,true)~=0 then
+		Duel.EquipComplete()
 		if tc:IsCode(60150418) then
 			tc:AddCounter(0x1b,5)
 		end
@@ -158,7 +160,6 @@ function c60150406.desop3(e,tp,eg,ep,ev,re,r,rp)
 		if tc:IsCode(60150414) or tc:IsCode(60150415) or tc:IsCode(60150419) or tc:IsCode(60150421) then
 			tc:AddCounter(0x1b,1)
 		end
-		Duel.EquipComplete()
 		if Duel.SelectYesNo(tp,aux.Stringid(60150406,2)) then
 			Duel.BreakEffect()
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)

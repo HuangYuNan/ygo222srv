@@ -1,5 +1,6 @@
 --索尔之锤
 function c60150417.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--Activate
 	local e11=Effect.CreateEffect(c)
 	e11:SetCategory(CATEGORY_EQUIP+CATEGORY_COUNTER)

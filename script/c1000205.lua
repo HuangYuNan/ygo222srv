@@ -8,6 +8,7 @@ function c1000205.initial_effect(c)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
 	e1:SetCode(EVENT_REMOVE)
 	e1:SetCountLimit(1,800)
+	e1:SetCondition(c1000205.recon11)
 	e1:SetTarget(c1000205.destg)
 	e1:SetOperation(c1000205.desop)
 	c:RegisterEffect(e1)
@@ -19,9 +20,17 @@ function c1000205.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetCountLimit(1,800)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e2:SetCondition(c1000205.condition)
 	e2:SetTarget(c1000205.thtg)
 	e2:SetOperation(c1000205.thop)
 	c:RegisterEffect(e2)
+end
+function c1000205.recon11(e,tp,eg,ep,ev,re,r,rp)
+	return bit.band(r,REASON_EFFECT)~=0
+		and re:GetHandler():IsSetCard(0x200)
+end
+function c1000205.condition(e,tp,eg,ep,ev,re,r,rp)
+	return re and re:GetHandler():IsSetCard(0x200)
 end
 function c1000205.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsOnField() and chkc:IsDestructable() end

@@ -1,5 +1,6 @@
 --绝对领域 雷电 芽衣
 function c60150407.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--xyz summon
 	aux.AddXyzProcedure(c,c60150407.xyzfilter,4,2)
 	c:EnableReviveLimit()
@@ -148,6 +149,7 @@ function c60150407.desop2(e,tp,eg,ep,ev,re,r,rp)
 	local tc=g:GetFirst()
 	while tc do
 		Duel.Equip(tp,tc,c,true,true)
+		Duel.EquipComplete()
 		if tc:IsCode(60150418) then
 			tc:AddCounter(0x1b,5)
 		end
@@ -162,7 +164,6 @@ function c60150407.desop2(e,tp,eg,ep,ev,re,r,rp)
 		end
 		tc=g:GetNext()
 	end
-	Duel.EquipComplete()
 end
 function c60150407.aclimit2(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)

@@ -1,5 +1,6 @@
 --提尔的断腕
 function c60150413.initial_effect(c)
+    c:EnableCounterPermit(0x1b)
 	--Activate
 	local e11=Effect.CreateEffect(c)
 	e11:SetCategory(CATEGORY_EQUIP+CATEGORY_COUNTER)
