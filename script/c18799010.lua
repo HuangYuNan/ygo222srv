@@ -54,7 +54,7 @@ function c18799010.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,g:GetCount(),0,0)
 end
 function c18799010.filter(c,e,tp)
-	return c:IsFaceup() and c:IsCanTurnSet() and c:IsLocation(LOCATION_MZONE)
+	return c:IsLocation(LOCATION_MZONE)
 end
 function c18799010.filter2(c,e,tp)
 	return c:IsFacedown() and c:IsLocation(LOCATION_MZONE)

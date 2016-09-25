@@ -26,6 +26,12 @@ function c3205014.initial_effect(c)
 	e5:SetTarget(c3205014.retg)
 	e5:SetOperation(c3205014.reop)
 	c:RegisterEffect(e5)
+	--battle indestructable
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_SINGLE)
+	e4:SetCode(EFFECT_INDESTRUCTABLE_BATTLE)
+	e4:SetValue(1)
+	c:RegisterEffect(e4)
 	end
 	function c3205014.ffilter(c)
 	return  c:IsSetCard(0x340)

@@ -25,7 +25,7 @@ end
 function c18706021.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
 		local mg1=Duel.GetRitualMaterial(tp)
-		return Duel.IsExistingMatchingCard(c18706021.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,mg1) and Duel.IsExistingTarget(c18706021.filter2,tp,0,LOCATION_ONFIELD,1,e:GetHandler())
+		return Duel.IsExistingMatchingCard(c18706021.filter,tp,LOCATION_HAND+LOCATION_GRAVE,0,1,nil,e,tp,mg1) and Duel.IsExistingTarget(c18706021.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler())
 	end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_GRAVE)
 	Duel.SetChainLimit(aux.FALSE)
@@ -45,7 +45,7 @@ function c18706021.activate(e,tp,eg,ep,ev,re,r,rp)
 		tc:SetMaterial(mat)
 		Duel.ReleaseRitualMaterial(mat)
 		if Duel.SpecialSummon(tc,SUMMON_TYPE_RITUAL,tp,tp,true,false,POS_FACEUP)>0 then
-		local g=Duel.SelectTarget(tp,c18706021.filter2,tp,0,LOCATION_ONFIELD,1,1,e:GetHandler())
+		local g=Duel.SelectTarget(tp,c18706021.filter2,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler())
 		local tc=Duel.GetFirstTarget()
 		if tc:IsRelateToEffect(e) then
 		Duel.Destroy(tc,REASON_EFFECT)

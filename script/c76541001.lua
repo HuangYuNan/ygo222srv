@@ -104,34 +104,42 @@ function c76541001.xyzcon(e,c,og,min,max)
 	if c:IsType(TYPE_PENDULUM) and c:IsFaceup() then return false end
 	if og then
 		if min then
-			if min>2 or max<2 then return false end
-			if og:IsExists(c76541001.xyzfilter,2,nil,c) then return true end
-			if min==1 and og:IsExists(c76541001.xyzfilter_kobato,1,nil,c) then return true end
+			if min>3 or max<3 then return false end
+			if og:IsExists(c76541001.xyzfilter,3,nil,c) then return true end
+			if min==2 then
+				local tg=og:Filter(c76541001.xyzfilter,nil,c)
+				if tg:GetCount()>=2 and tg:IsExists(c76541001.xyzfilter_kobato,1,nil,c) then return true end
+			end
 			return false
 		else
 			local count=og:GetCount()
-			if count==1 then
-				return c76541001.xyzfilter_kobato(og:GetFirst(),c)
-			elseif count==2 then
-				return og:FilterCount(c76541001.xyzfilter,nil,c)==2
+			if count==2 then
+				return og:FilterCount(c76541001.xyzfilter,nil,c)==2 and og:IsExists(c76541001.xyzfilter_kobato,1,nil,c)
+			elseif count==3 then
+				return og:FilterCount(c76541001.xyzfilter,nil,c)==3
 			end
 			return false
 		end
 	end
 	local tg=Duel.GetMatchingGroup(c76541001.xyzfilter,c:GetControler(),LOCATION_MZONE,0,nil,c)
-	return tg:GetCount()>=2 or tg:IsExists(c76541001.xyzfilter_kobato,1,nil,c)
+	if tg:GetCount()<2 then return false end
+	return tg:GetCount()>=3 or tg:IsExists(c76541001.xyzfilter_kobato,1,nil,c)
 end
 function c76541001.xyzop(e,tp,eg,ep,ev,re,r,rp,c,og,min,max)
 	local mg=og or Duel.GetMatchingGroup(c76541001.xyzfilter,tp,LOCATION_MZONE,0,nil,c)
 	if not og or min then
 		local mg1=mg:Filter(c76541001.xyzfilter,nil,c)
 		local mg2=mg:Filter(c76541001.xyzfilter_kobato,nil,c)
-		if (not min or min<2) and (mg1:GetCount()==1 or mg2:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(76541001,0))) then
+		if (not min or min<3) and (mg1:GetCount()==2 or mg2:GetCount()>0 and Duel.SelectYesNo(tp,aux.Stringid(76541001,0))) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-			mg=mg2:Select(tp,1,1,nil)
+			local tg=mg2:Select(tp,1,1,nil)
+			mg1:Sub(tg)
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
+			mg=mg1:Select(tp,1,1,nil)
+			mg:Merge(tg)
 		else
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_XMATERIAL)
-			mg=mg1:Select(tp,2,2,nil)
+			mg=mg1:Select(tp,3,3,nil)
 		end
 	end
 	local sg=Group.CreateGroup()

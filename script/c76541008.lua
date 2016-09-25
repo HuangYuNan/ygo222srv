@@ -13,18 +13,20 @@ function c76541008.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_ACTIVATE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetCountLimit(1,76541008)
+	e2:SetHintTiming(TIMING_STANDBY_PHASE+TIMING_END_PHASE)
 	e2:SetCost(c76541008.cost1)
 	e2:SetTarget(c76541008.target)
 	e2:SetOperation(c76541008.activate)
 	c:RegisterEffect(e2)
 	--use twice
 	local e3=e2:Clone()
-	e3:SetCategory(CATEGORY_DRAW)
+	e3:SetCategory(CATEGORY_RECOVER)
 	e3:SetLabel(1)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_REMOVED)
-	e3:SetHintTiming(0,TIMING_STANDBY_PHASE+TIMING_END_PHASE)
 	e3:SetCost(c76541008.cost2)
+	e3:SetTarget(c76541008.target2)
+	e3:SetOperation(c76541008.activate2)
 	c:RegisterEffect(e3)
 end
 function c76541008.rmcheck(e,tp,eg,ep,ev,re,r,rp)
@@ -50,13 +52,20 @@ end
 function c76541008.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsPlayerCanDraw(tp,1) end
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
-	if e:GetLabel()~=1 then Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0) end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,e:GetHandler(),1,0,0)
 end
 function c76541008.activate(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Draw(tp,1,REASON_EFFECT)
 	local c=e:GetHandler()
-	if e:GetLabel()~=1 and c:IsAbleToRemove() and c:IsRelateToEffect(e) then
+	if c:IsAbleToRemove() and c:IsRelateToEffect(e) then
 		c:CancelToGrave()
 		Duel.Remove(c,POS_FACEUP,REASON_EFFECT)
 	end
+end
+function c76541008.target2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,500)
+end
+function c76541008.activate2(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Recover(tp,500,REASON_EFFECT)
 end

@@ -1,6 +1,4 @@
---魔战姬 霞风
 function c73203100.initial_effect(c)
-	c:SetSPSummonOnce(73203100)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(73203100,0))
@@ -8,6 +6,7 @@ function c73203100.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
 	e1:SetCondition(c73203100.spcon)
+  e1:SetCountlimit(1,73203100)
 	e1:SetTarget(c73203100.sptg)
 	e1:SetOperation(c73203100.spop)
 	c:RegisterEffect(e1)
@@ -18,10 +17,11 @@ function c73203100.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(c73203100.cost)
+  e2:SetCountlimit(1,73200000)
 	e2:SetTarget(c73203100.sptg2)
 	e2:SetOperation(c73203100.spop2)
 	c:RegisterEffect(e2)
-end 
+end	
 function c73203100.cfilter(c)
 	return c:IsFaceup() and not c:IsAttribute(ATTRIBUTE_LIGHT)
 end
@@ -37,7 +37,7 @@ end
 function c73203100.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if c:IsRelateToEffect(e) then
-			 Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+             Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 	end
 end
 function c73203100.cost(e,tp,eg,ep,ev,re,r,rp,chk)

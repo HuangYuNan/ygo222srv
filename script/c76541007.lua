@@ -20,6 +20,9 @@ function c76541007.initial_effect(c)
 	e2:SetTarget(c76541007.target)
 	e2:SetOperation(c76541007.operation)
 	c:RegisterEffect(e2)
+	local xg=Group.CreateGroup()
+	xg:KeepAlive()
+	e2:SetLabelObject(xg)
 end
 function c76541007.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()~=tp
@@ -40,18 +43,19 @@ function c76541007.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>=0
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,false)
 		and Duel.IsExistingTarget(c76541007.tgfilter1,tp,LOCATION_MZONE,0,1,nil,e,tp,c)
-		and Duel.IsExistingTarget(c76541007.tgfilter2,tp,LOCATION_GRAVE,0,7,nil) end
+		and Duel.IsExistingTarget(c76541007.tgfilter2,tp,LOCATION_GRAVE,0,4,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
 	local xg=Duel.SelectTarget(tp,c76541007.tgfilter1,tp,LOCATION_MZONE,0,1,1,nil,e,tp,c)
+	e:GetLabelObject():Clear()
+	e:GetLabelObject():Merge(xg)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
-	local rg=Duel.SelectTarget(tp,c76541007.tgfilter2,tp,LOCATION_GRAVE,0,7,7,nil)
+	local rg=Duel.SelectTarget(tp,c76541007.tgfilter2,tp,LOCATION_GRAVE,0,4,4,nil)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,rg,7,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,rg,4,0,0)
 end
 function c76541007.operation(e,tp,eg,ep,ev,re,r,rp)
 	local ex,g1=Duel.GetOperationInfo(0,CATEGORY_REMOVE)
 	local tg=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS)
-	tg:Sub(g1)
 	g1=g1:Filter(Card.IsRelateToEffect,nil,e):Filter(Card.IsAbleToRemove,nil)
 	if g1:GetCount()<=0 then
 		return
@@ -60,7 +64,7 @@ function c76541007.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local c=e:GetHandler()
-	local tc=tg:GetFirst()
+	local tc=e:GetLabelObject():GetFirst()
 	if tc:IsFacedown() or not tc:IsRelateToEffect(e) or tc:IsControler(1-tp) or tc:IsImmuneToEffect(e) then return end
 	if not c:IsRelateToEffect(e) or not c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,true,false) then return end
 	local mg=tc:GetOverlayGroup()

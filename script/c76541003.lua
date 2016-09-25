@@ -28,9 +28,9 @@ function c76541003.initial_effect(c)
 	e2:SetTarget(c76541003.sptarget)
 	e2:SetOperation(c76541003.spoperation)
 	c:RegisterEffect(e2)
-	--remove decktop
+	--recycle
 	local e4=Effect.CreateEffect(c)
-	e4:SetCategory(CATEGORY_REMOVE)
+	e4:SetCategory(CATEGORY_TOHAND)
 	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e4:SetTarget(c76541003.target)
@@ -65,17 +65,21 @@ function c76541003.spoperation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummon(e:GetHandler(),0,tp,tp,false,false,POS_FACEUP)
 	end
 end
+function c76541003.thfilter(c)
+	return c:IsSetCard(0x9d0) and c:IsAbleToHand()
+end
 function c76541003.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
-	local g1=Duel.GetDecktopGroup(tp,2)
-	local g2=Duel.GetDecktopGroup(1-tp,2)
-	g1:Merge(g2)
-	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g1,g1:GetCount(),0,0)
+	local g=Duel.GetMatchingGroup(c76541003.thfilter,tp,LOCATION_GRAVE,0,nil)
+	if g:GetCount()==0 then return end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function c76541003.operation(e,tp,eg,ep,ev,re,r,rp)
-	local g1=Duel.GetDecktopGroup(tp,2)
-	local g2=Duel.GetDecktopGroup(1-tp,2)
-	g1:Merge(g2)
-	Duel.DisableShuffleCheck()
-	Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
+	local g=Duel.GetMatchingGroup(c76541003.thfilter,tp,LOCATION_GRAVE,0,nil)
+	if g:GetCount()==0 then return end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	g=g:Select(tp,1,1,nil)
+	Duel.HintSelection(g)
+	if g:GetFirst():IsHasEffect(EFFECT_NECRO_VALLEY) then return end
+	Duel.SendtoHand(g,nil,REASON_EFFECT)
 end

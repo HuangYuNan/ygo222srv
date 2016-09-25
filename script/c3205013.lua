@@ -2,14 +2,7 @@
 function c3205013.initial_effect(c)
 	--synchro summon
 	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x340),aux.NonTuner(Card.IsSetCard,0x340),1)
-	c:EnableReviveLimit()
-	--cannot 
-	local e0=Effect.CreateEffect(c)
-	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetCode(EFFECT_SPSUMMON_CONDITION)
-	e0:SetValue(aux.synlimit)
-	c:RegisterEffect(e0)  
+	c:EnableReviveLimit() 
     --destroy
     local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(3205013,0))

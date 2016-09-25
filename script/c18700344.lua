@@ -67,7 +67,7 @@ function c18700344.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and tc:IsRelateToEffect(e)
-		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK) then
+		and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
 		c:SetCardTarget(tc)
 		tc:RegisterFlagEffect(18700344,RESET_EVENT+0x1fe0000,0,0)
 		local e1=Effect.CreateEffect(e:GetHandler())
@@ -78,11 +78,23 @@ function c18700344.operation(e,tp,eg,ep,ev,re,r,rp)
 		tc:RegisterEffect(e1)
 		Duel.SpecialSummonComplete()
 	end
+	--oath effects
+	local e1=Effect.CreateEffect(e:GetHandler())
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(c18700344.splimit)
+	Duel.RegisterEffect(e1,tp)
 end
 function c18700344.checkop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetHandler():IsDisabled() then
 		e:SetLabel(1)
 	else e:SetLabel(0) end
+end
+function c18706020.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(0xabb)
 end
 function c18700344.desop(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabelObject():GetLabel()~=0 then return end

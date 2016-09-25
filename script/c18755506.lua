@@ -165,7 +165,7 @@ function c18755506.op2(e,tp,eg,ep,ev,re,r,rp)
 	xyz:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(18755506,1))
+	e2:SetDescription(aux.Stringid(18755506,2))
 	e2:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	e2:SetType(EFFECT_TYPE_FIELD)

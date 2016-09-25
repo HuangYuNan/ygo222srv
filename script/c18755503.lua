@@ -30,7 +30,7 @@ function c18755503.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.RegisterEffect(e1,tp)
 end
 function c18755503.filter(c)
-	return c:IsFaceup()
+	return c:IsFaceup() and not c:IsAttackBelow(0)
 end
 function c18755503.distg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c18755503.filter,tp,0,LOCATION_MZONE,1,nil) end

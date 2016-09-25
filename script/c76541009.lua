@@ -65,8 +65,8 @@ function c76541009.spoperation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c76541009.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.ConfirmDecktop(tp,6)
-	local g1=Duel.GetDecktopGroup(tp,6):Filter(Card.IsSetCard,nil,0x9d0)
+	Duel.ConfirmDecktop(tp,4)
+	local g1=Duel.GetDecktopGroup(tp,4):Filter(Card.IsSetCard,nil,0x9d0)
 	Duel.Remove(g1,POS_FACEUP,REASON_EFFECT)
 	Duel.ShuffleDeck(tp)
 end

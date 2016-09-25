@@ -18,43 +18,30 @@ function c18706038.initial_effect(c)
 	e3:SetOperation(c18706038.spop)
 	c:RegisterEffect(e3)
 end
-function c18706038.costfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_MONSTER)
-end
-function c18706038.mfilter(c)
-	return c:IsSetCard(0xabb) and c:IsSetCard(0x6d) and not c:IsCode(18706038)
-end
 function c18706038.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if Duel.IsExistingTarget(c18706038.mfilter,tp,LOCATION_MZONE,0,1,nil) then 
-	if chk==0 then return Duel.CheckReleaseGroup(tp,c18706038.costfilter,1,nil) end
-	local g=Duel.SelectReleaseGroup(tp,c18706038.costfilter,1,1,nil)
-	Duel.Release(g,REASON_COST)
-	else
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
-	end
 end
 function c18706038.spfilter(c,e,tp)
-	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:IsSetCard(0xabb) and c:IsSetCard(0x6d) and c:GetLevel()>=5
+	return c:IsCanBeSpecialSummoned(e,0,tp,false,false) and (c:IsCode(18706051) or c:IsCode(18706031) or c:IsCode(18706018) or c:IsCode(18706016) or c:IsCode(18706015))
 end
 function c18706038.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chkc then return chkc:IsLocation(LOCATION_EXTRA) and chkc:IsControler(tp) and c18706038.spfilter(chkc,e,tp) end
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingTarget(c18706038.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
+		and Duel.IsExistingMatchingCard(c18706038.spfilter,tp,LOCATION_EXTRA,0,1,nil,e,tp) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_EXTRA)
 end
 function c18706038.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectTarget(tp,c18706038.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
-	  local e1=Effect.CreateEffect(c)
+	local g=Duel.SelectMatchingCard(tp,c18706038.spfilter,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) then
+	  local e1=Effect.CreateEffect(e:GetHandler())
 	  e1:SetType(EFFECT_TYPE_SINGLE)
 	  e1:SetCode(EFFECT_SET_BASE_ATTACK)
 	  e1:SetValue(1900)
 	  e1:SetReset(RESET_EVENT+0x1fe0000)
-	  tc:RegisterEffect(e1)
+	  tc:RegisterEffect(e1,true)
 	  Duel.SpecialSummonComplete()
 	end
 end

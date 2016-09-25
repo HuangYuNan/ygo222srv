@@ -52,12 +52,12 @@ function c18750410.filter(c)
 end
 function c18750410.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
-	if chk==0 then return Duel.IsExistingTarget(c18750403.filter,tp,0,LOCATION_ONFIELD,1,nil)
-		and Duel.IsExistingTarget(c18750403.desfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
+	if chk==0 then return Duel.IsExistingTarget(c18750410.filter,tp,0,LOCATION_ONFIELD,1,nil)
+		and Duel.IsExistingTarget(c18750410.desfilter,tp,LOCATION_ONFIELD,0,1,e:GetHandler()) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g1=Duel.SelectTarget(tp,c18750403.desfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
+	local g1=Duel.SelectTarget(tp,c18750410.desfilter,tp,LOCATION_ONFIELD,0,1,1,e:GetHandler())
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g2=Duel.SelectTarget(tp,c18750403.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g2=Duel.SelectTarget(tp,c18750410.filter,tp,0,LOCATION_ONFIELD,1,1,nil)
 	g1:Merge(g2)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g1,2,0,0)
 end
@@ -96,13 +96,14 @@ function c18750410.filter2(c)
 	return c:IsAbleToGrave()
 end
 function c18750410.target3(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c18750410.filter2,tp,0,LOCATION_ONFIELD,1,nil) end
-	local g=Duel.GetMatchingGroup(c18750410.filter2,tp,0,LOCATION_ONFIELD,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c18750410.filter2,tp,0,LOCATION_ONFIELD+LOCATION_HAND
+,1,nil) end
+	local g=Duel.GetMatchingGroup(c18750410.filter2,tp,0,LOCATION_ONFIELD+LOCATION_HAND,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 end
 function c18750410.operation3(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,c18750410.filter2,tp,0,LOCATION_ONFIELD,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,c18750410.filter2,tp,0,LOCATION_ONFIELD+LOCATION_HAND,1,1,nil)
 	if g:GetCount()>0 then
 		Duel.HintSelection(g)
 		Duel.SendtoGrave(g,REASON_EFFECT)
