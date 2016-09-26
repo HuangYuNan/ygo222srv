@@ -1,4 +1,7 @@
 function c73201010.initial_effect(c)
+	 --synchro summon
+	aux.AddSynchroProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,0x730),aux.NonTuner(c73201010.sfilter),2)
+	c:EnableReviveLimit()
 	--cannot special summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
@@ -20,7 +23,7 @@ function c73201010.initial_effect(c)
 	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetValue(aux.tgval)
+	e3:SetValue(1)
 	c:RegisterEffect(e3)
 	--actlimit
 	local e4=Effect.CreateEffect(c)
@@ -45,6 +48,9 @@ function c73201010.initial_effect(c)
 	e5:SetTarget(c73201010.distg)
 	e5:SetOperation(c73201010.disop)
 	c:RegisterEffect(e5)
+end
+function c73201010.sfilter(c)
+	return c:IsSetCard(0x730) and c:IsType(TYPE_SYNCHRO)
 end
 function c73201010.aclimit(e,re,tp)
 	return not re:GetHandler():IsImmuneToEffect(e)

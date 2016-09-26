@@ -1,4 +1,5 @@
 function c73201002.initial_effect(c)
+	Duel.EnableGlobalFlag(GLOBALFLAG_SELF_TOGRAVE)
 	c:SetSPSummonOnce(73201002)
 	--self destroy
 	local e1=Effect.CreateEffect(c)
@@ -21,15 +22,16 @@ function c73201002.initial_effect(c)
 	e2:SetOperation(c73201002.operation)
 	c:RegisterEffect(e2)
 	--SpecialSummon
-	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
-	e1:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e1:SetType(EFFECT_TYPE_IGNITION)
-	e1:SetCode(EVENT_FREE_CHAIN)
-	e2:SetCountLimit(1,73201002)
-	e1:SetTarget(c73201002.sptarget)
-	e1:SetOperation(c73201002.spoperation)
-	c:RegisterEffect(e1)
+	local e3=Effect.CreateEffect(c)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetCode(EVENT_FREE_CHAIN)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1,73201002)
+	e3:SetTarget(c73201002.sptarget)
+	e3:SetOperation(c73201002.spoperation)
+	c:RegisterEffect(e3)
 end
 function c73201002.sdfilter(c)
 	return c:IsFaceup() and not c:IsSetCard(0x730)
@@ -51,7 +53,7 @@ end
 function c73201002.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(c73201002.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c73201002.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end

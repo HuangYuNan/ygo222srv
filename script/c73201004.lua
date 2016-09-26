@@ -1,4 +1,5 @@
 function c73201004.initial_effect(c)
+	Duel.EnableGlobalFlag(GLOBALFLAG_SELF_TOGRAVE)
 	c:SetSPSummonOnce(73201004)
 	--self destroy
 	local e1=Effect.CreateEffect(c)
@@ -55,7 +56,7 @@ end
 function c73201004.operation(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(c73201004.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,c73201004.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 	if g:GetCount()>0 then
 		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 	end
@@ -70,7 +71,7 @@ function c73201004.htarget(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_DRAW,nil,0,tp,1)
 end
 function c73201004.hoperation(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.SendtoGrave(tp,c73201004.hfilter,1,1,REASON_EFFECT)~=0 then
+	if Duel.SendtoGrave(c73201004.hfilter,1,1,REASON_EFFECT)~=0 then
 		Duel.Draw(tp,1,REASON_EFFECT)
 	end
 end
