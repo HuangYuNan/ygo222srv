@@ -22,6 +22,29 @@ function cm.initial_effect(c)
 	e2:SetTarget(cm.target2)
 	e2:SetOperation(cm.operation)
 	c:RegisterEffect(e2)
+	local e3=Effect.CreateEffect(c)
+	e3:SetType(EFFECT_TYPE_SINGLE)
+	e3:SetCode(EFFECT_IMMUNE_EFFECT)
+	e3:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e3:SetRange(LOCATION_MZONE)
+	e3:SetLabelObject(e2)
+	e3:SetCondition(function(e)
+		return e:GetHandler():GetFlagEffect(37560520)>0
+	end)
+	e3:SetValue(cm.efilter)
+	c:RegisterEffect(e3)
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e4:SetCode(EVENT_CHAINING)
+	e4:SetRange(LOCATION_MZONE)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e4:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return re:GetHandler()==e:GetHandler()
+	end)
+	e4:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		e:GetHandler():RegisterFlagEffect(37560520,RESET_EVENT+0x1fe0000+RESET_CHAIN,0,1)
+	end)
+	c:RegisterEffect(e4)
 end
 function cm.condition(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -55,10 +78,12 @@ end
 function cm.filter2(c,e,tp,eg,ep,ev,re,r,rp)
 		if c:CheckActivateEffect(true,true,false) then return true end
 		local te=c:GetActivateEffect()
-		if te:GetCode()~=EVENT_CHAINING then return false end
+		--if te:GetCode()~=EVENT_CHAINING then return false end
 		local tg=te:GetTarget()
-		if tg and not tg(e,tp,eg,ep,ev,re,r,rp,0) then return false end
-		return true
+		if not tg then return true end
+		local res=false
+		if not pcall(function() res=tg(e,tp,eg,ep,ev,re,r,rp,0) end) then return false end
+		return res
 end
 function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -67,7 +92,6 @@ function cm.target2(e,tp,eg,ep,ev,re,r,rp,chk)
 		return cm.filter2(re:GetHandler(),e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:SetLabel(0)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 	local tc=re:GetHandler()
 	local te,ceg,cep,cev,cre,cr,crp
 	local fchain=cm.filter1(tc)
@@ -95,4 +119,7 @@ function cm.operation(e,tp,eg,ep,ev,re,r,rp)
 	e:SetLabelObject(te:GetLabelObject())
 	local op=te:GetOperation()
 	if op then op(e,tp,eg,ep,ev,re,r,rp) end
+end
+function cm.efilter(e,te)
+	return te:GetOwnerPlayer()~=e:GetHandlerPlayer() or te==e:GetLabelObject()
 end

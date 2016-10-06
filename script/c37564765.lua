@@ -5,6 +5,7 @@ table=require('table')
 io=require('io')
 --7CG universal scripts
 --test parts
+aux.BeginPuzzle=aux.TRUE
 cm.delay=0x14000
 cm.fix=0x40400
 if not Card.GetDefense then
@@ -15,20 +16,40 @@ if not Card.GetDefense then
 	Card.IsDefensePos=Card.IsDefencePos
 	Card.IsDefenseBelow=Card.IsDefenceBelow
 	Card.IsDefenseAbove=Card.IsDefenceAbove
+	aux.tgval=1
+	POS_FACEUP_DEFENSE=POS_FACEUP_DEFENCE
+	POS_FACEDOWN_DEFENSE=POS_FACEDOWN_DEFENCE
+	POS_DEFENSE=POS_FACEDOWN_DEFENCE
+	ASSUME_DEFENSE=ASSUME_DEFENCE
+	EFFECT_UPDATE_DEFENSE=EFFECT_UPDATE_DEFENCE
+	EFFECT_SET_DEFENSE=EFFECT_SET_DEFENCE
+	EFFECT_SET_DEFENSE_FINAL=EFFECT_SET_DEFENCE_FINAL
+	EFFECT_SET_BASE_DEFENSE=EFFECT_SET_BASE_DEFENCE 
+	EFFECT_SWAP_DEFENSE_FINAL=EFFECT_SWAP_DEFENCE_FINAL
+	EFFECT_DEFENSE_ATTACK=EFFECT_DEFENCE_ATTACK
+	HINTMSG_DEFENSE=HINTMSG_DEFENCE
+	HINTMSG_FACEUPDEFENSE=HINTMSG_FACEUPDEFENCE
+	HINTMSG_FACEDOWNDEFENSE=HINTMSG_FACEDOWNDEFENCE
+	Duel.SendtoExtraP=Duel.PSendtoExtra
+	Card.IsFusionSetCard=Card.IsSetCard
+	Card.IsFusionCode=Card.IsCode
 end
 --effect setcode tech
 cm.setchk=cm.setchk or {}
-function cm.setreg(c,cd,setcd)   
-	if not cm.setchk[cd] then
-		cm.setchk[cd]=true
+function cm.setreg(c,m,setcd)
+	if c:IsStatus(STATUS_COPYING_EFFECT) then return false end
+	m=m or c:GetOriginalCode()
+	if not cm.setchk[m] then
+		cm.setchk[m]=true
 		local ex=Effect.GlobalEffect()
 		ex:SetType(EFFECT_TYPE_FIELD)
-		ex:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE)
+		ex:SetProperty(EFFECT_FLAG_SET_AVAILABLE+EFFECT_FLAG_IGNORE_RANGE+EFFECT_FLAG_IGNORE_IMMUNE)
 		ex:SetCode(setcd)
 		ex:SetTargetRange(0xff,0xff)
-		ex:SetTarget(aux.TargetBoolFunction(Card.IsCode,cd))
+		ex:SetTarget(aux.TargetBoolFunction(Card.IsCode,m))
 		Duel.RegisterEffect(ex,0)
-	end
+		return true
+	else return false end
 end
 function cm.sgreg(c,setcd)
 	local e1=Effect.CreateEffect(c)
@@ -838,11 +859,11 @@ end
 function cm.nncon(og)
 return function(e,tp)
 	tp=tp or e:GetHandlerPlayer()
-	return Duel.IsExistingMatchingCard(cm.nnfilter,tp,LOCATION_MZONE,0,1,nil,og)
+	return Duel.IsExistingMatchingCard(cm.nnfilter,tp,LOCATION_ONFIELD,0,1,nil,og)
 end
 end
 function cm.nnfilter(c,og)
-	if not c:IsFaceup() then return end
+	if not c:IsFaceup() then return false end
 	return c:GetOriginalCode()==37564765 or (c:IsCode(37564765) and not og)
 end
 --for infinity negate effect
@@ -1078,7 +1099,7 @@ function cm.scopy(c,loc1,loc2,f,con,cost,ctlm,ctlmid,eloc,x)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(0x3c0)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
-	if ctlm then e3:SetCountLimit(ctlm,ctlmid) end
+	if ctlm then e2:SetCountLimit(ctlm,ctlmid) end
 	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
 		return not Duel.CheckEvent(EVENT_CHAINING) and con(e,tp,eg,ep,ev,re,r,rp)
 	end)
@@ -1094,7 +1115,7 @@ function cm.scopy(c,loc1,loc2,f,con,cost,ctlm,ctlmid,eloc,x)
 	e3:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
 	if ctlm then e3:SetCountLimit(ctlm,ctlmid) end
 	e3:SetCost(cost)
-	e3:SetCondtion(con)
+	e3:SetCondition(con)
 	e3:SetTarget(cm.scopytg2(loc1,loc2,f,x))
 	e3:SetOperation(cm.scopyop)
 	c:RegisterEffect(e3)
@@ -1213,12 +1234,13 @@ function cm.ictg(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabelObject(te)
 end
 function cm.cneg(c,con,cost,exop,desc,des,loc)
+	local e3=Effect.CreateEffect(c)
 	loc=loc or LOCATION_MZONE
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e3:SetCode(EVENT_CHAIN_SOLVING)
 	e3:SetRange(loc)
-	e3:SetCondition(cm.negcon(con))
-	e3:SetOperation(cm.cnegop(cost,exop))
+	e3:SetCondition(cm.cnegcon(con))
+	e3:SetOperation(cm.cnegop(cost,exop,desc,des))
 	c:RegisterEffect(e3)
 end
 function cm.cnegcon(con)
@@ -1233,10 +1255,89 @@ return function(e,tp,eg,ep,ev,re,r,rp)
 	if cost then cost(e,tp,eg,ep,ev,re,r,rp) end
 	local chk=Duel.NegateEffect(ev)
 	if re:GetHandler():IsRelateToEffect(re) and des then
-		Duel.Destroy(eg,REASON_EFFECT)
+		Duel.Destroy(re:GetHandler(),REASON_EFFECT)
 	end
 	if chk and exop then
 		exop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
+end
+function cm.lfus(c,m,at)
+	cm.setreg(c,m,37564800)
+	c:EnableReviveLimit()
+	aux.AddFusionProcFun2(c,aux.FilterBoolFunction(Card.IsHasEffect,37564800),aux.FilterBoolFunction(cm.attf,at),true)
+end
+function cm.attf(c,att)
+	local f=Card.IsFusionAttribute or Card.IsAttribute
+	return f(c,att)
+end
+function cm.leff(c,m)
+	cm.setreg(c,m,37564800)
+	local e2=Effect.CreateEffect(c)
+	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+	e2:SetCode(EVENT_BE_MATERIAL)
+	e2:SetCondition(function(e,tp,eg,ep,ev,re,r,rp)
+		return bit.band(r,REASON_FUSION)~=0
+	end)
+	e2:SetOperation(function(e,tp,eg,ep,ev,re,r,rp)
+		local rc=eg:GetFirst()
+		while rc do
+			if rc:GetFlagEffect(m-4000)==0 then
+				local mt=_G["c"..m]
+				mt.effect_operation_3L(rc,e:GetHandler(),false)
+				if not rc:IsType(TYPE_EFFECT) then
+					local e2=Effect.CreateEffect(e:GetHandler())
+					e2:SetType(EFFECT_TYPE_SINGLE)
+					e2:SetCode(EFFECT_ADD_TYPE)
+					e2:SetValue(TYPE_EFFECT)
+					e2:SetReset(RESET_EVENT+0x1fe0000)
+					rc:RegisterEffect(e2,true)
+				end
+				rc:RegisterFlagEffect(m-4000,RESET_EVENT+0x1fe0000,EFFECT_FLAG_CLIENT_HINT,1,0,m*16+1)
+			end
+			rc=eg:GetNext()
+		end
+	end)
+	c:RegisterEffect(e2)
+	return e2
+end
+function cm.lres(chk)
+	if chk then
+		return 0x1fe1000+RESET_PHASE+PHASE_END,2
+	else
+		return 0x1fe1000,1
+	end
+end
+function cm.selectdiff(tp,desc,g,maxatt,maxct,chkf,f,chk)
+	local gg=g:Filter(cm.selectf1,nil,chkf,maxatt,f)
+	local att=maxatt
+	if chk then return gg:IsExists(cm.selectf2,1,nil,g,att,maxatt,1,maxct,chkf) end
+	local tg=Group.CreateGroup()
+	for i=1,maxct do
+		Duel.Hint(HINT_SELECTMSG,tp,desc)
+		local sg=gg:FilterSelect(tp,cm.selectf2,1,1,nil,g,att,maxatt,i,maxct,chkf)
+		local act=1
+		while act<maxatt do
+			if bit.band(chkf(sg:GetFirst()),act)~=0 then att=att-act end
+			act=act*2
+		end
+		gg:Sub(sg)
+		tg:Merge(sg)
+	end
+	return tg
+end
+function cm.selectf1(c,chkf,maxatt,f)
+	return bit.band(chkf(c),maxatt)~=0 and (not f or f(c))
+end
+function cm.selectf2(c,g,att,maxatt,ct,maxct,chkf)
+	if ct==maxct then return bit.band(chkf(c),att)~=0 end
+	local cg=g:Clone()
+	local act=1
+	while act<maxatt do
+		if bit.band(chkf(c),act)~=0 then att=att-act end
+		act=act*2
+	end
+	cg:RemoveCard(c)
+	return cg:IsExists(cm.selectf2,1,nil,cg,att,maxatt,ct+1,maxct,chkf)
 end

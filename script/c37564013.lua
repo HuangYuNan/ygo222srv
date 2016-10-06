@@ -1,6 +1,6 @@
 --Prim
-local cm=c37564013
 local m=37564013
+local cm=_G["c"..m]
 if not pcall(function() require("expansions/script/c37564765") end) then require("script/c37564765") end
 function cm.initial_effect(c)
 	senya.setreg(c,m,37564600)
@@ -86,7 +86,7 @@ function cm.initial_effect(c)
 		end)
 		e0:SetTarget(cm.mttg)
 		e0:SetOperation(cm.mtop)
-		c:RegisterEffect(e0)
+		--c:RegisterEffect(e0)
 end
 function cm.mtfilter(c)
 	return c:IsSetCard(0x770)
@@ -156,7 +156,7 @@ function cm.sppcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	c:RegisterFlagEffect(m,RESET_CHAIN,0,1)
 end
 function cm.fffilter(c,e,tp)
-	return c:IsType(TYPE_XYZ) and not c:IsCode(m) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:IsType(TYPE_XYZ) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function cm.spptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
