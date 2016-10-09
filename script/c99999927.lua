@@ -76,7 +76,7 @@ function c99999927.initial_effect(c)
 	c:RegisterEffect(e8)
 end
 function c99999927.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999927.scyfilter2(c)
 	return c:IsRace(RACE_WARRIOR) and c:IsAttribute(ATTRIBUTE_WIND)
@@ -136,11 +136,11 @@ function c99999927.spfilter1(c,tp)
 	if c:GetLevel()>0 then
 	lv=c:GetLevel()
 	end
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToGraveAsCost() 
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToGraveAsCost() 
 	and Duel.IsExistingMatchingCard(c99999927.spfilter2,tp,LOCATION_MZONE,0,1,c,lv)
 end
 function c99999927.spfilter2(c,lv)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))  and c:IsAbleToGraveAsCost()
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))  and c:IsAbleToGraveAsCost()
 	and c:GetLevel()==lv
 end
 function c99999927.spfilter3(c)

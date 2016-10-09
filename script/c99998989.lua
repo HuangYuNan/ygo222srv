@@ -42,7 +42,7 @@ function c99998989.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c99998989.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99998989.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end

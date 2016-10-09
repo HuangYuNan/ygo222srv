@@ -80,7 +80,7 @@ function c99999981.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c99999981.thfilter(c)
-return   (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToDeck() and c:GetCode()~=99999981
+return   (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToDeck() and c:GetCode()~=99999981
 end
 function c99999981.wwtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

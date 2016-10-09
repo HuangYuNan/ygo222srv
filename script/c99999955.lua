@@ -99,7 +99,7 @@ end
 		c:RegisterEffect(e1)
 end--]]
 function c99999955.thfilter(c)
-return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToDeck() and c:GetCode()~=99999955
+return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToDeck() and c:GetCode()~=99999955
 end
 function c99999955.wwtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

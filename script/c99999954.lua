@@ -44,7 +44,7 @@ function c99999954.initial_effect(c)
 	c:RegisterEffect(e5)--]]
 end
 function c99999954.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999954.secon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ

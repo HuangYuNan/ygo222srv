@@ -50,13 +50,13 @@ function c99999966.filter1(c)
 	return bit.band(tpe,TYPE_SPELL)~=0 and bit.band(tpe,TYPE_CONTINUOUS+TYPE_EQUIP)~=0 and c:IsAbleToDeck()
 end
 function c99999966.filter2(c)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToHand()
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToHand()
 end
 function c99999966.filter3(c)
-	return c:IsType(TYPE_MONSTER) and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToDeck()
+	return c:IsType(TYPE_MONSTER) and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToDeck()
 end
 function c99999966.filter4(c)
-	return c:IsType(TYPE_MONSTER) and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToHand()
+	return c:IsType(TYPE_MONSTER) and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToHand()
 end
 function c99999966.target1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return  Duel.IsExistingMatchingCard(c99999966.filter2,tp,LOCATION_DECK,0,1,nil) end

@@ -70,7 +70,7 @@ function c99998981.initial_effect(c)
 	c:RegisterEffect(e9)
 end
 function c99998981.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99998981.becon(e)
 	local tc=e:GetHandler()

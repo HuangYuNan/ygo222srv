@@ -6,6 +6,7 @@ function c101169151.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_SUMMON_PROC)
 	e1:SetTargetRange(LOCATION_HAND,LOCATION_HAND)
+	e1:SetProperty(EFFECT_FLAG_CHAIN_UNIQUE)
 	e1:SetCondition(c101169151.otcon)
 	e1:SetTarget(c101169151.ottg)
 	e1:SetOperation(c101169151.otop)
@@ -77,7 +78,7 @@ function c101169151.otcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(c101169151.rmfilter,tp,LOCATION_HAND,0,1,nil)
+		and Duel.IsExistingMatchingCard(c101169151.rmfilter,tp,LOCATION_HAND,0,1,nil) and (Duel.GetActivityCount(tp,ACTIVITY_NORMALSUMMON)==0 or Duel.IsExistingMatchingCard(Duel.IsCode,tp,LOCATION_ONFIELD,0,1,nil,101169182))
 end
 function c101169151.ottg(e,c)
 	local mi,ma=c:GetTributeRequirement()

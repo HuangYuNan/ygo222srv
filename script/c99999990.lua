@@ -15,7 +15,7 @@ function c99999990.cfilter(c)
 	return c:IsType(TYPE_EQUIP) and c:IsAbleToGraveAsCost()
 end
 function c99999990.filter(c)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))  and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))  and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function c99999990.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return     Duel.IsExistingMatchingCard(c99999990.cfilter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil) end

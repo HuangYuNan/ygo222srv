@@ -50,7 +50,7 @@ function c99999961.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c99999961.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999961.value(e,re,rp)
 	return rp~=e:GetHandlerPlayer()

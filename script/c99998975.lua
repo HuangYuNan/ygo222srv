@@ -33,7 +33,7 @@ function c99998975.initial_effect(c)
 	c:RegisterEffect(e3)	
 end
 function c99998975.xyzfilter(c)
-	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAttribute(ATTRIBUTE_LIGHT)
+	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAttribute(ATTRIBUTE_LIGHT)
 end
 function c99998975.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) end

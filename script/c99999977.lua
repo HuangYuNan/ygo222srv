@@ -101,7 +101,7 @@ function c99999977.initial_effect(c)
 	c:RegisterEffect(e11)--]]
 end
 function c99999977.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999977.eqfilter(c)
 	return c:IsCode(99999981) 

@@ -61,7 +61,7 @@ function c99998979.disfilter(c)
     return  c:IsType(TYPE_SPELL) and c:IsType(TYPE_EQUIP) and c:IsDiscardable()
 end
 function c99998979.ovfilter(c)
-	return c:IsFaceup() and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return c:IsFaceup() and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))
 	and c:IsRace(RACE_WARRIOR) and c:IsType(TYPE_SYNCHRO)
 end
 function c99998979.xyzop(e,tp,chk)

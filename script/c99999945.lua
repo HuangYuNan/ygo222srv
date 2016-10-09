@@ -74,7 +74,7 @@ function c99999945.descon(e)
 	or not  Duel.IsExistingMatchingCard(c99999945.actfilter2,e:GetHandlerPlayer(),LOCATION_SZONE,0,1,nil)
 end
 function c99999945.thfilter(c)
-	return(c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
+	return(c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsType(TYPE_MONSTER) and c:IsAbleToDeck()
 end
 function c99999945.thfilter2(c)
 	return c:IsSetCard(0x2e2) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()

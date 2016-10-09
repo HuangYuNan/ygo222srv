@@ -55,7 +55,7 @@ function c99999995.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,c99999995.costfilter,1,1,REASON_COST+REASON_DISCARD)
 end
 function c99999995.spfilter(c,e,tp)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999995
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)  or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and  c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999995
 end
 function c99999995.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -99,7 +99,7 @@ end
 end
 end
 function c99999995.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and (c:IsType(TYPE_XYZ) or c:IsType(TYPE_SYNCHRO))
+	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)  or c:IsSetCard(0x2e6)) and (c:IsType(TYPE_XYZ) or c:IsType(TYPE_SYNCHRO))
 end
 function c99999995.val(e,c)
   return   c:IsType(TYPE_EQUIP) 

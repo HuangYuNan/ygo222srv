@@ -78,8 +78,8 @@ function c99999940.initial_effect(c)
 	e11:SetCode(EFFECT_CANNOT_SUMMON)
 	c:RegisterEffect(e11)
 	end
-function c99999940.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+function c99999940.synfilter(c) 
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999940.secon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO

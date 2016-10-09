@@ -55,13 +55,13 @@ end
 
 
 function c101169141.secon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()==SUMMON_TYPE_ADVANCE
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_ADVANCE or e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL
 end
 function c101169141.filter(c)
-	return c:IsCode(101169142) and not c:IsForbidden()
+	return (c:IsCode(101169142) or c:IsCode(101169184)) and not c:IsForbidden()
 end
 function c101169141.setg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c101169141.filter,tp,LOCATION_DECK,0,1,nil) and Duel.CheckLocation(tp,LOCATION_SZONE,5) end
+	if chk==0 then return Duel.IsExistingMatchingCard(c101169141.filter,tp,LOCATION_DECK,0,1,nil) end
 end
 function c101169141.seop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)

@@ -68,7 +68,7 @@ function c99999952.initial_effect(c)
 	c:RegisterEffect(e2)--]]
 end
 function c99999952.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999952.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():CheckRemoveOverlayCard(tp,1,REASON_COST) and e:GetHandler():GetFlagEffect(99999952)==0 and Duel.CheckLPCost(tp,1000) end

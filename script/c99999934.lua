@@ -56,7 +56,7 @@ function c99999934.ntcon(e,c)
 	return c:GetLevel()>4 and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0 and Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0)==0
 end
 function c99999934.spfilter(c,e,tp)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999934
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999934
 end
 function c99999934.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and  Duel.IsExistingMatchingCard(c99999934.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,1,nil,e,tp) end
@@ -91,10 +91,10 @@ function c99999934.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c99999934.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return not  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))
 end
 function c99999934.limfilter(c,tp)
-	return c:GetSummonPlayer()==tp and  c:IsFaceup() and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return c:GetSummonPlayer()==tp and  c:IsFaceup() and  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))
 end
 function c99999934.limcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(c99999934.limfilter,1,nil,tp) 
@@ -115,8 +115,8 @@ end
 function c99999934.actcon(e)
 	local a=Duel.GetAttacker()
 	local d=Duel.GetAttackTarget()
-	return ( a and a:IsControler(e:GetHandlerPlayer()) and (a:IsSetCard(0x2e0) or a:IsSetCard(0x2e1)))
-	 or (d and d:IsControler(e:GetHandlerPlayer()) and  (d:IsSetCard(0x2e0) or d:IsSetCard(0x2e1)))
+	return ( a and a:IsControler(e:GetHandlerPlayer()) and (a:IsSetCard(0x2e0) or a:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)))
+	 or (d and d:IsControler(e:GetHandlerPlayer()) and  (d:IsSetCard(0x2e0) or d:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)))
 end
 function c99999934.limop2(e,tp,eg,ep,ev,re,r,rp)
 	if  e:GetHandler():GetFlagEffect(99999934)~=0 then

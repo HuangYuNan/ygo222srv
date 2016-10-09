@@ -38,7 +38,7 @@ function c99999931.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c99999931.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999931.tgcon(e)
 	return e:GetHandler():GetOverlayCount()~=0 and Duel.GetCurrentPhase()==PHASE_MAIN1 or Duel.GetCurrentPhase()==PHASE_MAIN2

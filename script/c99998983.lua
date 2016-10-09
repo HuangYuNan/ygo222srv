@@ -55,7 +55,7 @@ function c99998983.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 function c99998983.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99998983.filter(c)
 	local code=c:GetCode()

@@ -42,7 +42,7 @@ function c99999937.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 end
 function c99999937.refilter(c,e,tp)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsLevelBelow(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999937
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsLevelBelow(8) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and c:GetCode()~=99999937
 end
 function c99999937.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>-1
@@ -74,7 +74,7 @@ function c99999937.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 end
 function c99999937.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsType(TYPE_EFFECT) 
+	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsType(TYPE_EFFECT) 
 end
 function c99999937.filter(c)
 	local code=c:GetCode()

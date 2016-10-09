@@ -64,13 +64,13 @@ function c99998990.initial_effect(c)
 	e8:SetCountLimit(1)
 	e8:SetOperation(c99998990.cop)
 	c:RegisterEffect(e8)
-	--Attribute Dark
+	--Attribute
 	local e9=Effect.CreateEffect(c)
 	e9:SetType(EFFECT_TYPE_SINGLE)
 	e9:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e9:SetCode(EFFECT_ADD_ATTRIBUTE)
 	e9:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
-	e9:SetValue(ATTRIBUTE_LIGHT)
+	e9:SetValue(ATTRIBUTE_FIRE)
 	c:RegisterEffect(e9)
 end
 function c99998990.ffilter(c)

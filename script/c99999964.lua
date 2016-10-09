@@ -29,7 +29,7 @@ function c99999964.initial_effect(c)
 
 end
 function c99999964.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999964.secon(e,tp,eg,ep,ev,re,r,rp)
 return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO

@@ -39,7 +39,6 @@ function c18787002.initial_effect(c)
 	e2:SetOperation(c18787002.spop)
 	c:RegisterEffect(e2)
 end
-c18787002.pendulum_level=4
 function c18787002.tgcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_XYZ
 end

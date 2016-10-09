@@ -50,7 +50,7 @@ function c99998958.becon(e)
 	return e:GetHandler():IsAttackable()
 end
 function c99998958.spfilter1(c,tp,fc)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial(fc)
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAbleToGraveAsCost() and c:IsCanBeFusionMaterial(fc)
 		and Duel.IsExistingMatchingCard(c99998958.spfilter2,tp,LOCATION_MZONE,0,1,c,fc)
 end
 function c99998958.spfilter2(c,fc)

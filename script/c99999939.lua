@@ -108,9 +108,11 @@ function c99999939.negop(e,tp,eg,ep,ev,re,r,rp)
 		tc=g1:GetNext()
 	end
 end
+function c99999939.xyzfilter(c)
+	return c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
+end
 function c99999939.xyzcon(e,tp,eg,ep,ev,re,r,rp)
-	 return not (e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x2e0)  
-	 or e:GetHandler():GetOverlayGroup():IsExists(Card.IsSetCard,1,nil,0x2e1))
+	 return not (e:GetHandler():GetOverlayGroup():IsExists(c99999939.xyzfilter,1,nil)  
 end
 --[[function c99999939.damcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp

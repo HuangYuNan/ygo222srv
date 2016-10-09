@@ -44,7 +44,7 @@ function c99999998.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c99999998.xyzfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99999998.eqfilter(c)
 	return c:IsCode(99999970) 
@@ -116,7 +116,7 @@ function c99999998.ovfilter1(c)
 	return c:IsSetCard(0x62e0) and c:IsFaceup()
 end
 function c99999998.ovfilter2(c)
-	return (c:IsType(TYPE_EQUIP) and cLIsType(TYPE_SPELL)) and c:IsAbleToGraveAsCost()
+	return (c:IsType(TYPE_EQUIP) and c:IsType(TYPE_SPELL)) and c:IsAbleToGraveAsCost()
 end
 function c99999998.spcon(e,c)
 	if  Duel.IsExistingMatchingCard(c99999998.ovfilter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,2,nil) and

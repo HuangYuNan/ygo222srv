@@ -81,16 +81,9 @@ function c99991094.initial_effect(c)
 	e8:SetValue(c99991094.effval)
 	e8:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
 	c:RegisterEffect(e8)
-	--add setcode
-	local e9=Effect.CreateEffect(c)
-	e9:SetType(EFFECT_TYPE_SINGLE)
-	e9:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e9:SetCode(EFFECT_ADD_SETCODE)
-	e9:SetValue(0x2e0)
-	c:RegisterEffect(e9)
 end
 function c99991094.synfilter(c)
-	return c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7) 
 end
 function c99991094.eqcheck(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipGroup()
@@ -104,7 +97,7 @@ function c99991094.thfilter(c)
 	return c:IsCode(99999976) 
 end
 function c99991094.sfilter(c)
-	return c:IsType(TYPE_FIELD) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:IsAbleToHand()
+	return c:IsType(TYPE_FIELD) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5)) and c:IsAbleToHand()
 end
 function c99991094.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c99991094.thfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil) end

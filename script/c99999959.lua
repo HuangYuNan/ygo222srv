@@ -114,5 +114,5 @@ function c99999959.op(e,tp,eg,ep,ev,re,r,rp)
 end
 function c99999959.limit(e,c)
 	if not c then return false end
-	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return not (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))
 end

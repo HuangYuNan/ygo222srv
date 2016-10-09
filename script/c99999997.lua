@@ -50,7 +50,7 @@ function c99999997.initial_effect(c)
 	c:RegisterEffect(e5)
 end
 function c99999997.xyzfilter(c)
-	return c:IsAttribute(ATTRIBUTE_LIGHT) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1))
+	return c:IsAttribute(ATTRIBUTE_LIGHT) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7))
 end
 function c99999997.filter(c)
 	local code=c:GetCode()

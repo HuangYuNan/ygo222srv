@@ -38,7 +38,7 @@ function c99998994.initial_effect(c)
 	c:RegisterEffect(e3)
 end
 function c99998994.synfilter(c)
-	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)
+	return  c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)
 end
 function c99998994.eqcheck(e,tp,eg,ep,ev,re,r,rp)
 	local g=e:GetHandler():GetEquipGroup()

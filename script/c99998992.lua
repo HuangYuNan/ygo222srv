@@ -38,7 +38,7 @@ function c99998992.initial_effect(c)
 	e5:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e5:SetCode(EFFECT_ADD_ATTRIBUTE)
 	e5:SetRange(LOCATION_MZONE+LOCATION_GRAVE)
-	e5:SetValue(ATTRIBUTE_LIGHT)
+	e5:SetValue(ATTRIBUTE_FIRE)
 	c:RegisterEffect(e5)
 end
 function c99998992.costfilter(c)

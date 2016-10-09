@@ -103,7 +103,7 @@ function c99999980.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function c99999980.hfilter(c)
-	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)) and c:GetCode()~=99999980 and c:IsAbleToHand()
+	return (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1)  or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:GetCode()~=99999980 and c:IsAbleToHand()
 end
 function c99999980.wwtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local c=e:GetHandler()

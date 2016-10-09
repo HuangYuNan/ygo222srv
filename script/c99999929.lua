@@ -43,7 +43,7 @@ function c99999929.filter(c,e,tp)
 	return  c:IsAttribute(ATTRIBUTE_DARK) and not c:IsType(TYPE_TOKEN) and Duel.IsExistingMatchingCard(c99999929.filter2,tp,LOCATION_EXTRA,0,1,nil,e,tp)
 end
 function c99999929.filter2(c,e,tp)
-    return  c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_XYZ) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5)) 
+    return  c:IsAttribute(ATTRIBUTE_DARK) and c:IsType(TYPE_XYZ) and (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) 
 	and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c99999929.dtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -98,7 +98,7 @@ function c99999929.splimit2(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsAttribute(0xff-ATTRIBUTE_LIGHT)
 end
 function c99999929.filter3(c,e,tp)
-	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e5)) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return  (c:IsSetCard(0x2e0) or c:IsSetCard(0x2e1) or c:IsSetCard(0x2e6) or c:IsSetCard(0x2e7)) and c:IsAttribute(ATTRIBUTE_LIGHT) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end 
 function c99999929.ltg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
