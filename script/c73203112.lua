@@ -1,19 +1,18 @@
---mozhanjidansheng
+--魔战姬
 function c73203112.initial_effect(c)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
-	e1:SetCountLimit(EFFECT_COUNT_CODE_OATH)
 	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCountLimit(1,73203112)
 	e1:SetCost(c73203112.cost)
 	e1:SetTarget(c73203112.target)
 	e1:SetOperation(c73203112.activate)
 	c:RegisterEffect(e1)
 end
 function c73203112.costfilter(c,e,tp)
-	return c:IsAbleToGraveAsCost()
-		and Duel.IsExistingMatchingCard(c73203112.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp)
+	return c:IsAbleToGraveAsCost() and Duel.IsExistingMatchingCard(c73203112.filter,tp,LOCATION_HAND+LOCATION_DECK,0,1,c,e,tp)
 end
 function c73203112.filter(c,e,tp)
 	return c:IsSetCard(0x732) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)

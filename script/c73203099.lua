@@ -1,4 +1,3 @@
-﻿--魔战姬 暮雪
 function c73203099.initial_effect(c)
 	--special summon
 	local e1=Effect.CreateEffect(c)
