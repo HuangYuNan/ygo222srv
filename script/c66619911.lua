@@ -5,12 +5,20 @@ function c66619911.initial_effect(c)
 	c:EnableReviveLimit()
 	--atk/def
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(66619911,1))
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e1:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e1:SetCondition(c66619911.con)
 	e1:SetOperation(c66619911.op)
 	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetDescription(aux.Stringid(66619911,2))
+	e2:SetCondition(c66619911.con)
+	e2:SetTarget(c66619911.rectg)
+	e2:SetOperation(c66619911.recop)
+	c:RegisterEffect(e2)
 	--attack up
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(58712976,0))
@@ -36,7 +44,7 @@ end
 function c66619911.op(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(66619911,1))
+	e1:SetDescription(aux.Stringid(66619911,3))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
 	e1:SetCode(EFFECT_UPDATE_ATTACK)
@@ -53,7 +61,22 @@ end
 function c66619911.atkval(e,c)
 	return e:GetHandler():GetOverlayCount()*300
 end
-function c66619911.cfilter(c)
+function c66619911.filter2(c,e,tp)
+	return c:IsCode(66619917) and c:IsAbleToHand()
+end
+function c66619911.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619911.filter2,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+end
+function c66619911.recop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+	local g=Duel.SelectMatchingCard(tp,c66619911.filter2,tp,LOCATION_DECK,0,1,1,nil)
+	if g:GetCount()>0 then
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
+	end
+end
+function c66619911.cffilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_CONTINUOUS) and c:IsAbleToGraveAsCost()
 end
 function c66619911.cost(e,tp,eg,ep,ev,re,r,rp,chk)

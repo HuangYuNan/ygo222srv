@@ -5,7 +5,7 @@ function c66619907.initial_effect(c)
 	c:EnableReviveLimit()
 	--destroy
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(20366274,1))
+	e1:SetDescription(aux.Stringid(66619907,1))
 	e1:SetCategory(CATEGORY_TODECK)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetCode(EVENT_BATTLE_START)
@@ -16,10 +16,11 @@ function c66619907.initial_effect(c)
 	c:RegisterEffect(e1)
 	--th
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(29200014,0))
-	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetDescription(aux.Stringid(66619907,0))
+	e2:SetCategory(CATEGORY_TOGRAVE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e2:SetCondition(c66619907.recon)
 	e2:SetCost(c66619907.drcost)
 	e2:SetTarget(c66619907.settg)
 	e2:SetOperation(c66619907.setop)
@@ -52,10 +53,18 @@ function c66619907.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoDeck(bc,nil,2,REASON_EFFECT)
 	end
 end
+function c66619907.recon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SYNCHRO 
+end
+function c66619907.costfilter(c)
+	return c:IsSetCard(0x666) and c:IsType(TYPE_MONSTER) and c:IsAbleToGraveAsCost()
+end
+function c66619907.cfilter1(c)
+	return c:IsCode(66619916) and c:IsFaceup()
+end
 function c66619907.drcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c66619907.cfilter,tp,LOCATION_ONFIELD,0,1,nil) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g=Duel.SelectMatchingCard(tp,c66619907.cfilter,tp,LOCATION_ONFIELD,0,1,1,nil)
+	if chk==0 then return Duel.IsExistingMatchingCard(c66619907.cfilter1,tp,LOCATION_SZONE,0,1,nil) and Duel.IsExistingMatchingCard(c66619907.costfilter,tp,LOCATION_HAND,0,1,nil) end
+	local g=Duel.SelectMatchingCard(tp,c66619907.costfilter,tp,LOCATION_HAND,0,1,1,nil)
 	Duel.SendtoGrave(g,REASON_COST)
 end
 function c66619907.filter(c)
