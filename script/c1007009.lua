@@ -135,6 +135,9 @@ end
 function c1007009.cfilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0xa245)
 end
+function c1007009.check()
+	return Duel.IsExistingMatchingCard(c1007009.cfilter1,0,LOCATION_MZONE,0,1,nil)
+end
 function c1007009.descon(e)
-	return not Duel.IsExistingMatchingCard(c1007009.cfilter1,tp,LOCATION_ONFIELD,0,1,nil)
+	return not c1007009.check()
 end

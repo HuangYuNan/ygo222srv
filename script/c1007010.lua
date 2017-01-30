@@ -20,7 +20,7 @@ function c1007010.initial_effect(c)
 	local e7=Effect.CreateEffect(c)
 	e7:SetType(EFFECT_TYPE_SINGLE)
 	e7:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e7:SetRange(LOCATION_SZONE+LOCATION_MZONE)
+	e7:SetRange(LOCATION_MZONE)
 	e7:SetCode(EFFECT_SELF_DESTROY)
 	e7:SetCondition(c1007010.descon)
 	c:RegisterEffect(e7)
@@ -94,12 +94,16 @@ end
 function c1007010.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
+		Duel.Hint(HINT_CARD,0,1007031)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
 end
 function c1007010.cfilter1(c)
 	return c:IsFaceup() and c:IsSetCard(0xa245)
 end
+function c1007010.check()
+	return Duel.IsExistingMatchingCard(c1007010.cfilter1,0,LOCATION_MZONE,0,1,nil)
+end
 function c1007010.descon(e)
-	return not Duel.IsExistingMatchingCard(c1007010.cfilter1,tp,LOCATION_MZONE,0,1,nil)
+	return not c1007010.check()
 end

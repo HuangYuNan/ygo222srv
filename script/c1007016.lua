@@ -16,16 +16,16 @@ function c1007016.initial_effect(c)
 	c:RegisterEffect(e1)
 	--
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(1855932,0))
-	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e2:SetCondition(c1007016.xycon)
+	e2:SetDescription(aux.Stringid(1007016,0))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetCost(c1007016.sscost)
 	e2:SetTarget(c1007016.target)
 	e2:SetOperation(c1007016.activate)
 	c:RegisterEffect(e2)
 	--spsummon
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(19990008,0))
+	e3:SetDescription(aux.Stringid(1007016,0))
 	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e3:SetCode(EVENT_PHASE+PHASE_STANDBY)
@@ -45,7 +45,7 @@ function c1007016.initial_effect(c)
 	c:RegisterEffect(e5)
 	--pos change
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(1100054,1))
+	e1:SetDescription(aux.Stringid(1007016,2))
 	e1:SetCategory(CATEGORY_TOKEN+CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_MZONE)
@@ -90,8 +90,9 @@ function c1007016.spop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
-function c1007016.xycon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():GetSummonType()~=SUMMON_TYPE_PENDULUM or e:GetHandler():GetSummonType()~=SUMMON_TYPE_XYZ 
+function c1007016.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
+	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function c1007016.filter(c,tp)
 	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
@@ -107,17 +108,8 @@ function c1007016.activate(e,tp,eg,ep,ev,re,r,rp)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
 		local cost=te:GetCost()
-		local fop=te:GetOperation()
 		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		local ftg=te:GetTarget()
-		if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		else e:SetProperty(0) end
-		if ftg then 
-			ftg(e,tp,eg,ep,ev,re,r,rp,chk)
-		end
-		if fop then fop(e,tp,eg,ep,ev,re,r,rp) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
+		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end
 function c1007016.descon(e,tp,eg,ep,ev,re,r,rp)
@@ -171,7 +163,7 @@ function c1007016.repfilter(c,tp)
 end
 function c1007016.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return eg:IsExists(c1007016.repfilter,1,e:GetHandler(),tp) and not e:GetHandler():IsStatus(STATUS_DESTROY_CONFIRMED) end
-	return Duel.SelectYesNo(tp,aux.Stringid(1007026,0))
+	return Duel.SelectYesNo(tp,aux.Stringid(1007026,3))
 end
 function c1007016.repval(e,c)
 	return c1007016.repfilter(c,e:GetHandlerPlayer())
@@ -220,7 +212,7 @@ function c1007016.tkop(e,tp,eg,ep,ev,re,r,rp)
 			e2:SetRange(LOCATION_MZONE)
 			e2:SetCode(EFFECT_IMMUNE_EFFECT)
 			e2:SetValue(c1007016.efilter)
-			e2:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_DAMAGE)
+			e2:SetReset(RESET_EVENT+0x1fe0000)
 			token:RegisterEffect(e2)
 			local e3=Effect.CreateEffect(e:GetHandler())
 			e3:SetDescription(aux.Stringid(26593852,0))
@@ -236,74 +228,16 @@ end
 function c1007016.efilter(e,te)
 	return te:GetOwner()~=e:GetOwner()
 end
-function c1007016.descon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_MZONE)
-end
-function c1007016.dfilter1(c)
-	return c:IsDestructable()
-end
 function c1007016.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007016.dfilter1,tp,LOCATION_SZONE,LOCATION_SZONE,1,c) and Duel.IsPlayerCanSpecialSummonMonster(tp,1007026,0,0x4011,100,100,2,RACE_WINDBEAST,ATTRIBUTE_DARK) end
-	Duel.SetOperationInfo(0,CATEGORY_TOKEN,nil,1,0,0)
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,0)
+	local c=e:GetHandler()
+	local tc=Duel.GetAttacker()
+	if tc==c then tc=Duel.GetAttackTarget() end
+	if chk==0 then return tc and tc:IsFaceup() end
+	Duel.SetOperationInfo(0,CATEGORY_DESTROY,tc,1,0,0)
 end
 function c1007016.desop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<1 then return end
-	if Duel.IsPlayerCanSpecialSummonMonster(tp,1007026,0,0x4011,100,100,2,RACE_WINDBEAST,ATTRIBUTE_DARK) then
-		local token=Duel.CreateToken(tp,1007026)
-		Duel.SpecialSummonStep(token,0,tp,tp,false,false,POS_FACEUP)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetDescription(aux.Stringid(1007016,0))
-		e2:SetCategory(CATEGORY_RECOVER)
-		e2:SetType(EFFECT_TYPE_IGNITION)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e2:SetRange(LOCATION_MZONE)
-		e2:SetCost(c1007016.recost)
-		e2:SetTarget(c1007016.rectg)
-		e2:SetOperation(c1007016.recop)
-		e2:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e2)
-		local e12=Effect.CreateEffect(e:GetHandler())
-		e12:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-		e12:SetCode(EFFECT_DESTROY_REPLACE)
-		e12:SetRange(LOCATION_MZONE)
-		e12:SetTarget(c1007016.reptg)
-		e12:SetValue(c1007016.repval)
-		e12:SetOperation(c1007016.repop)
-		e12:SetReset(RESET_EVENT+0x1fe0000)
-		token:RegisterEffect(e12)
-		Duel.SpecialSummonComplete()
-	end
-	local sg=Duel.GetMatchingGroup(c1007016.dfilter1,tp,LOCATION_SZONE,LOCATION_SZONE,e:GetHandler())
-	if Duel.Destroy(sg,REASON_EFFECT)~=0 then
-		Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-	end
-end
-function c1007016.recost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return e:GetHandler():IsReleasable() end
-	Duel.Release(e:GetHandler(),REASON_COST)
-end
-function c1007016.rectg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return true end
-	Duel.SetTargetPlayer(tp)
-	Duel.SetTargetParam(1000)
-	Duel.SetOperationInfo(0,CATEGORY_RECOVER,nil,0,tp,1000)
-end
-function c1007016.recop(e,tp,eg,ep,ev,re,r,rp)
-	local p,d=Duel.GetChainInfo(0,CHAININFO_TARGET_PLAYER,CHAININFO_TARGET_PARAM)
-	Duel.Recover(p,d,REASON_EFFECT)
-end
-function c1007016.repfilter(c,tp)
-	return c:IsFaceup() and c:IsControler(tp) and c:IsLocation(LOCATION_MZONE) and c:IsSetCard(0x245)
-		and (c:IsReason(REASON_BATTLE) or (c:IsReason(REASON_EFFECT) and c:GetReasonPlayer()~=tp))
-end
-function c1007016.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return eg:IsExists(c1007016.repfilter,1,e:GetHandler(),tp) and not e:GetHandler():IsStatus(STATUS_DESTROY_CONFIRMED) end
-	return Duel.SelectYesNo(tp,aux.Stringid(1007026,0))
-end
-function c1007016.repval(e,c)
-	return c1007016.repfilter(c,e:GetHandlerPlayer())
-end
-function c1007016.repop(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Destroy(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)
+	local c=e:GetHandler()
+	local tc=Duel.GetAttacker()
+	if tc==c then tc=Duel.GetAttackTarget() end
+	if tc:IsRelateToBattle() then Duel.Destroy(tc,REASON_EFFECT) end
 end

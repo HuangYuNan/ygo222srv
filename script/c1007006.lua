@@ -25,9 +25,10 @@ function c1007006.initial_effect(c)
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_MZONE)
+	e3:SetCountLimit(1)
 	e3:SetCost(c1007006.sscost)
-	e3:SetTarget(c1007006.detg1)
-	e3:SetOperation(c1007006.deop1)
+	e3:SetTarget(c1007006.detg)
+	e3:SetOperation(c1007006.deop)
 	c:RegisterEffect(e3)
 	--ritual material
 	local e4=Effect.CreateEffect(c)
@@ -91,17 +92,8 @@ function c1007006.deop(e,tp,eg,ep,ev,re,r,rp)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
 		local cost=te:GetCost()
-		local fop=te:GetOperation()
 		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		local ftg=te:GetTarget()
-		if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		else e:SetProperty(0) end
-		if ftg then 
-			ftg(e,tp,eg,ep,ev,re,r,rp,chk,tc)
-		end
-		if fop then fop(e,tp,eg,ep,ev,re,r,rp,tc) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
+		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end
 function c1007006.cfilter(c,tp)
@@ -127,33 +119,6 @@ end
 function c1007006.sscost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
-end
-function c1007006.filter2(c,tp)
-	return c:IsSetCard(0x3245) and (c:IsType(TYPE_SPELL) or c:IsType(TYPE_TRAP)) and c:GetActivateEffect():IsActivatable(tp)
-end
-function c1007006.detg1(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(c1007006.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,tp) end
-end
-function c1007006.deop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(1007006,3))
-	local tc=Duel.SelectMatchingCard(tp,c1007006.filter2,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,tp):GetFirst()
-	if tc and (tc:IsType(TYPE_FIELD) or Duel.GetLocationCount(tp,LOCATION_SZONE)>0) then
-		Duel.MoveToField(tc,tp,tp,LOCATION_SZONE,POS_FACEUP,true)
-		local te=tc:GetActivateEffect()
-		local tep=tc:GetControler()
-		local cost=te:GetCost()
-		local fop=te:GetOperation()
-		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		local ftg=te:GetTarget()
-		if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		else e:SetProperty(0) end
-		if ftg then 
-			ftg(e,tp,eg,ep,ev,re,r,rp,chk,tc)
-		end
-		if fop then fop(e,tp,eg,ep,ev,re,r,rp,tc) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
-	end
 end
 function c1007006.tkcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()

@@ -66,7 +66,7 @@ function c1007008.splimit(e,c)
 	return not c:IsSetCard(0x245)
 end
 function c1007008.filter(c,e,tp,ft)
-	return c:IsSetCard(0x245) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,357,tp,false,false)))
+	return c:IsFaceup() and c:IsSetCard(0x245) and c:IsType(TYPE_MONSTER) and (c:IsAbleToHand() or (ft>0 and c:IsCanBeSpecialSummoned(e,357,tp,false,false)))
 end
 function c1007008.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -208,17 +208,8 @@ function c1007008.operation(e,tp,eg,ep,ev,re,r,rp)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
 		local cost=te:GetCost()
-		local fop=te:GetOperation()
 		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		local ftg=te:GetTarget()
-		if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		else e:SetProperty(0) end
-		if ftg then 
-			ftg(e,tp,eg,ep,ev,re,r,rp,chk,tc)
-		end
-		if fop then fop(e,tp,eg,ep,ev,re,r,rp,tc) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
+		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end
 function c1007008.setcost(e,tp,eg,ep,ev,re,r,rp,chk)

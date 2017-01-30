@@ -59,7 +59,7 @@ function c1007012.filter2(c)
 	return c:IsFaceup() and c:IsRace(RACE_SPELLCASTER)
 end
 function c1007012.value(e,c)
-	return Duel.GetMatchingGroupCount(c1007012.filter2,0,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,nil)*300
+	return Duel.GetMatchingGroupCount(c1007012.filter2,0,LOCATION_EXTRA+LOCATION_GRAVE,LOCATION_EXTRA+LOCATION_GRAVE,nil)*100
 end
 function c1007012.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_BATTLE+REASON_EFFECT)

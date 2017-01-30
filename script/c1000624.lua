@@ -38,7 +38,7 @@ function c1000624.initial_effect(c)
 	e1:SetOperation(c1000624.naop)
 	c:RegisterEffect(e1)
 end
-function c1000624.filter(c)
+function c1000624.sfilter(c)
 	return c:IsFaceup() and (c:IsSetCard(0x3204) or c:IsSetCard(0xa204) or c:IsSetCard(0x5b23) or c:IsSetCard(0x6b25) or c:IsSetCard(0xc204) or c:IsSetCard(0x3205)) and c:IsType(TYPE_MONSTER)
 end
 function c1000624.cpfilter(c)
