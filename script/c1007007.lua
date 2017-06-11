@@ -109,17 +109,8 @@ function c1007007.deop(e,tp,eg,ep,ev,re,r,rp)
 		local te=tc:GetActivateEffect()
 		local tep=tc:GetControler()
 		local cost=te:GetCost()
-		local fop=te:GetOperation()
 		if cost then cost(te,tep,eg,ep,ev,re,r,rp,1) end
-		local ftg=te:GetTarget()
-		if te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) then
-			e:SetProperty(EFFECT_FLAG_CARD_TARGET)
-		else e:SetProperty(0) end
-		if ftg then 
-			ftg(e,tp,eg,ep,ev,re,r,rp,chk,tc)
-		end
-		if fop then fop(e,tp,eg,ep,ev,re,r,rp,tc) end
-		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,tc:GetActivateEffect(),0,tp,tp,Duel.GetCurrentChain())
+		Duel.RaiseEvent(tc,EVENT_CHAIN_SOLVED,te,0,tp,tp,Duel.GetCurrentChain())
 	end
 end
 function c1007007.defilter3(c)

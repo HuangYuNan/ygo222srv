@@ -4,7 +4,7 @@ function c1007014.initial_effect(c)
 	c:EnableReviveLimit()
 	--des
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE+CATEGORY_DRAW)
+	e1:SetCategory(CATEGORY_DESTROY)
 	e1:SetDescription(aux.Stringid(1007014,1))
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetCountLimit(1)
@@ -62,22 +62,10 @@ function c1007014.dddtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(c1007014.filter,tp,0,LOCATION_ONFIELD,1,nil) end
 	local g=Duel.GetMatchingGroup(c1007014.filter,tp,0,LOCATION_MZONE,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,g:GetCount(),0,0)
-	Duel.SetOperationInfo(0,CATEGORY_DAMAGE,nil,0,1-tp,0)
 end
 function c1007014.dddop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(c1007014.filter,tp,0,LOCATION_MZONE,nil)
-	local ct=Duel.Destroy(g,REASON_EFFECT)
-	local dg=Duel.GetOperatedGroup()
-	local tc=dg:GetFirst()
-	local dam=0
-	while tc do
-		local atk=tc:GetTextAttack()
-		if atk<0 then atk=0 end
-		dam=dam+atk
-		tc=dg:GetNext()
-	end
-	Duel.Damage(1-tp,dam,REASON_EFFECT)
-	Duel.Draw(tp,ct,REASON_EFFECT)
+	Duel.Destroy(g,REASON_EFFECT)
 end
 function c1007014.immcon(e)
 	return e:GetHandler():GetOverlayCount()>0

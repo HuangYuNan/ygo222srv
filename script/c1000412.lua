@@ -11,12 +11,11 @@ function c1000412.initial_effect(c)
 	e1:SetOperation(c1000412.activate)
 	c:RegisterEffect(e1)
 end
-function c1000412.filter1(c)
-	return c:IsFaceup() and c:IsSetCard(0xa201) and c:IsType(TYPE_MONSTER)
+function c1000412.filter1(c,e,tp,xyzc)
+	return c:IsFaceup() and c:IsSetCard(0xa201) and c:IsType(TYPE_MONSTER) and c:IsCanBeXyzMaterial(xyzc)
 end
 function c1000412.filter2(c,e,tp)
-	return c:IsCode(1000427)
-		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
+	return c:IsCode(1000427) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_XYZ,tp,false,false)
 end
 function c1000412.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_MZONE) and c1000412.filter1(chkc,e,tp) end

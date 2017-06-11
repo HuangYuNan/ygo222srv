@@ -84,17 +84,9 @@ function c1000808.spop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(EVENT_BATTLE_DESTROYING)
 	e1:SetCountLimit(1,EFFECT_COUNT_CODE_SINGLE)
 	e1:SetTarget(c1000808.thtg)
-	e1:SetOperation(c1000808.thop1)
+	e1:SetOperation(c1000808.thop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	c:RegisterEffect(e2)
-end
-function c1000808.thop1(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	local g=Duel.SelectMatchingCard(tp,c1000808.thfilter,tp,LOCATION_DECK,0,1,1,nil)
-	if g:GetCount()>0 then
-		Duel.SendtoHand(g,nil,REASON_EFFECT)
-		Duel.ConfirmCards(1-tp,g)
-	end
 end

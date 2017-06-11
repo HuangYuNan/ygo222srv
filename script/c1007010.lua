@@ -94,7 +94,6 @@ end
 function c1007010.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	if g:GetCount()>0 then
-		Duel.Hint(HINT_CARD,0,1007031)
 		Duel.Destroy(g,REASON_EFFECT)
 	end
 end

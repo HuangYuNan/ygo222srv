@@ -22,6 +22,9 @@ function c1007017.initial_effect(c)
 	e6:SetValue(c1007017.efilter)
 	c:RegisterEffect(e6)
 end
+function c1007017.filter1(c)
+	return c:IsSetCard(0xc245)
+end
 function c1007017.con(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetOverlayGroup():IsExists(c1007017.filter1,1,nil)
 end
